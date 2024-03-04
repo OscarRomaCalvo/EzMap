@@ -1,0 +1,30 @@
+[
+  {
+    "pointName": "Valla Roja",
+    "latitude": 40.642427,
+    "longitude": -3.158791,
+    "type": "reference",
+    "image": "https://st.depositphotos.com/1001311/3411/i/450/depositphotos_34119767-stock-photo-3d-golden-number-collection-1.jpg"
+  },
+  {
+    "pointName": "Final cuesta",
+    "latitude": 40.641278,
+    "longitude": -3.160285,
+    "type": "ejemplo",
+    "image": "https://st.depositphotos.com/1001311/3411/i/450/depositphotos_34119767-stock-photo-3d-golden-number-collection-1.jpg"
+  },
+  {
+    "pointName": "Esquina",
+    "latitude": 40.640880,
+    "longitude": -3.158908,
+    "type": "reference",
+    "image": "https://st.depositphotos.com/1001311/3411/i/450/depositphotos_34119767-stock-photo-3d-golden-number-collection-1.jpg"
+  },
+  {
+    "pointName": "Instituto Aguas Vivas",
+    "latitude": 40.640210,
+    "longitude": -3.159549,
+    "type": "destination",
+    "image": "https://st.depositphotos.com/1001311/3411/i/450/depositphotos_34119767-stock-photo-3d-golden-number-collection-1.jpg"
+  }
+]
