@@ -25,7 +25,6 @@ class PopUpImage extends StatelessWidget {
         child: Image(
           image: NetworkImage(imageURL),
           fit: BoxFit.cover,
-          height: double.infinity,
           width: double.infinity,
         ),
       ),
