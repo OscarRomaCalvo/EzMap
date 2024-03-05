@@ -191,7 +191,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 mapController: _mapController,
                 polylineCoordinates: _polylineCoordinates,
                 currentLocation: _currentLocation!,
-                mapRotation: _mapRotation);
+                mapRotation: _mapRotation,
+                destination: _routeDestination);
           case 'ejemplo':
             return CustomButton("hola", _continueRoute, true);
           default:

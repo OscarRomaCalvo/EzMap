@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+import 'package:prueba_ezmaps_estatica/customWidgets/ExistRoutePopUp.dart';
 import 'package:prueba_ezmaps_estatica/customWidgets/InstructionWidget.dart';
 import 'package:prueba_ezmaps_estatica/customWidgets/NextStepPopUp.dart';
 
-import 'CustomButton.dart';
 import 'PopUpMarker.dart';
 
 class NavigationWidget extends StatelessWidget {
@@ -18,6 +18,7 @@ class NavigationWidget extends StatelessWidget {
   final List<LatLng> polylineCoordinates;
   final LocationData currentLocation;
   final double mapRotation;
+  final destination;
 
   const NavigationWidget({
     Key? key,
@@ -30,6 +31,7 @@ class NavigationWidget extends StatelessWidget {
     required this.polylineCoordinates,
     required this.currentLocation,
     required this.mapRotation,
+    required this.destination,
   }) : super(key: key);
 
   List<Marker> _renderRouteMarkers() {
@@ -102,8 +104,10 @@ class NavigationWidget extends StatelessWidget {
                         PolylineLayer(polylines: [
                           Polyline(
                             points: polylineCoordinates,
-                            strokeWidth: 8,
-                            color: Colors.greenAccent,
+                            strokeWidth: 9,
+                            color: Color(0xFF4791DB),
+                            borderStrokeWidth: 3,
+                            borderColor: Color(0xFF8EC4FB),
                           ),
                         ]),
                         MarkerLayer(
@@ -113,12 +117,21 @@ class NavigationWidget extends StatelessWidget {
                                 Marker(
                                   point: LatLng(currentLocation.latitude!,
                                       currentLocation.longitude!),
-                                  width: 50,
-                                  height: 50,
-                                  child: const Icon(
-                                    Icons.navigation,
-                                    color: Color(0xFF4791DB),
-                                    size: 50,
+                                  width: 60,
+                                  height: 60,
+                                  child: const Stack(
+                                    children: [
+                                      Icon(
+                                        Icons.navigation,
+                                        color: Color(0xFF4791DB),
+                                        size: 60,
+                                      ),
+                                      Icon(
+                                        Icons.navigation_outlined,
+                                        color: Colors.white,
+                                        size: 60,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -137,7 +150,7 @@ class NavigationWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CustomButton("SALIR", () {}, false),
+            ExistRoutePopUp(destination),
             NextStepPopUp(
               exampleRoute[index]['pointName'],
               exampleRoute[index]['image'],
