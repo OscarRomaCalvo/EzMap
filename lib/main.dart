@@ -10,7 +10,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:prueba_ezmaps_estatica/customWidgets/EndRoutePopUp.dart';
+import 'package:prueba_ezmaps_estatica/customWidgets/EndRouteWidget.dart';
 import 'package:prueba_ezmaps_estatica/customWidgets/NavigationWidget.dart';
 
 void main() {
