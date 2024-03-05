@@ -10,8 +10,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:prueba_ezmaps_estatica/customWidgets/EndRoutePopUp.dart';
 import 'package:prueba_ezmaps_estatica/customWidgets/NavigationWidget.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -44,11 +44,21 @@ class _MyHomePageState extends State<MyHomePage> {
   double _heading = 0.0;
   double _mapRotation = 0.0;
   late MapController _mapController;
-  var routeOrigin = {
+
+  final _routeOrigin = {
     'pointName': 'Casa',
     'latitude': 40.642825,
     'longitude': -3.159397
   };
+
+  final _routeDestination = {
+    "pointName": "Instituto Aguas Vivas",
+    "latitude": 40.640210,
+    "longitude": -3.159549,
+    "image":
+        "https://st.depositphotos.com/1001311/3411/i/450/depositphotos_34119767-stock-photo-3d-golden-number-collection-1.jpg"
+  };
+
   bool _completedLoad = false;
   int _index = 0;
   var _exampleRoute = [];
@@ -67,11 +77,11 @@ class _MyHomePageState extends State<MyHomePage> {
       _getRoute();
       _completedLoad = true;
       /*
-      DESHABILITADO DURANTE EL DESARROLLO PARA NO HACER PETICIONES INNECESARIAS*/
+      DESHABILITADO DURANTE EL DESARROLLO PARA NO HACER PETICIONES INNECESARIAS
       Timer _timer = Timer.periodic(Duration(seconds: 45), (timer) {
         _getRoute();
       });
-
+      */
     });
   }
 
@@ -162,30 +172,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_index < _exampleRoute.length) {
-      switch (_exampleRoute[_index]['type']) {
-        case 'reference' || 'destination':
-          return NavigationWidget(
-              completedLoad: _completedLoad,
-              index: _index,
-              exampleSteps: _exampleSteps,
-              exampleRoute: _exampleRoute,
-              continueRoute: _continueRoute,
-              mapController: _mapController,
-              polylineCoordinates: _polylineCoordinates,
-              currentLocation: _currentLocation!,
-              mapRotation: _mapRotation);
-        case 'ejemplo':
-          return CustomButton("hola", _continueRoute, true);
-        default:
-          return Text("Allgo ha fallado");
-      }
-    } else {
+    if (!_completedLoad) {
       return const Scaffold(
         body: Center(
-          child: Text("Ruta completada"),
+          child: CircularProgressIndicator(),
         ),
       );
+    } else {
+      if (_index < _exampleRoute.length) {
+        switch (_exampleRoute[_index]['type']) {
+          case 'reference' || 'destination':
+            return NavigationWidget(
+                completedLoad: _completedLoad,
+                index: _index,
+                exampleSteps: _exampleSteps,
+                exampleRoute: _exampleRoute,
+                continueRoute: _continueRoute,
+                mapController: _mapController,
+                polylineCoordinates: _polylineCoordinates,
+                currentLocation: _currentLocation!,
+                mapRotation: _mapRotation);
+          case 'ejemplo':
+            return CustomButton("hola", _continueRoute, true);
+          default:
+            return Text("Allgo ha fallado");
+        }
+      } else {
+        return EndRouteWidget(_routeDestination);
+      }
     }
   }
 }
