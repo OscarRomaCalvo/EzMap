@@ -138,8 +138,8 @@ class NearFromPointWidget extends StatelessWidget {
                 Navigator.of(context).pop();
               }, false),
               CustomButton("CONTINUAR", () {
-                continueRoute();
                 Navigator.of(context).pop();
+                continueRoute();
               },
                   true),
             ],

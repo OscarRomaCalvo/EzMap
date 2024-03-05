@@ -21,15 +21,15 @@ class PopUpMarker extends StatelessWidget {
         );
       },
       child: Container(
-        padding: EdgeInsets.all(4.0),
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.all(4.0),
+        decoration: const BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white,
         ),
         child: CircleAvatar(
           radius: 16,
           backgroundColor: Colors.white,
-          backgroundImage: NetworkImage(imageURL,),
+          backgroundImage: NetworkImage(imageURL),
         ),
       ),
     );

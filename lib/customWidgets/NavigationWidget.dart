@@ -13,7 +13,6 @@ class NavigationWidget extends StatelessWidget {
   final int index;
   final exampleSteps;
   final exampleRoute;
-  final bool Function() isFarFromPoint;
   final VoidCallback continueRoute;
   final MapController mapController;
   final List<LatLng> polylineCoordinates;
@@ -26,7 +25,6 @@ class NavigationWidget extends StatelessWidget {
     required this.index,
     required this.exampleSteps,
     required this.exampleRoute,
-    required this.isFarFromPoint,
     required this.continueRoute,
     required this.mapController,
     required this.polylineCoordinates,
@@ -48,6 +46,16 @@ class NavigationWidget extends StatelessWidget {
       markers.add(marker);
     }
     return markers;
+  }
+
+  bool _isFarFromPoint() {
+    LatLng currentLatLng =
+    LatLng(currentLocation.latitude!, currentLocation.longitude!);
+    LatLng nextStepLatLng = LatLng(exampleRoute[index]['latitude'] as double,
+        exampleRoute[index]['longitude'] as double);
+    double distance =
+    const Distance().as(LengthUnit.Meter, currentLatLng, nextStepLatLng);
+    return distance > 10;
   }
 
   @override
@@ -133,7 +141,7 @@ class NavigationWidget extends StatelessWidget {
             NextStepPopUp(
               exampleRoute[index]['pointName'],
               exampleRoute[index]['image'],
-              isFarFromPoint(),
+              _isFarFromPoint(),
               continueRoute,
             ),
           ],

@@ -11,10 +11,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:prueba_ezmaps_estatica/customWidgets/NavigationWidget.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/PopUpMarker.dart';
 
-import 'customWidgets/InstructionWidget.dart';
-import 'customWidgets/NextStepPopUp.dart';
 
 void main() {
   runApp(const MyApp());
@@ -70,12 +67,11 @@ class _MyHomePageState extends State<MyHomePage> {
       _getRoute();
       _completedLoad = true;
       /*
-      DESHABILITADO DURANTE EL DESARROLLO PARA NO HACER PETICIONES INNECESARIAS
+      DESHABILITADO DURANTE EL DESARROLLO PARA NO HACER PETICIONES INNECESARIAS*/
       Timer _timer = Timer.periodic(Duration(seconds: 45), (timer) {
         _getRoute();
-        print("RECALCULADA LA RUTA");
       });
-       */
+
     });
   }
 
@@ -157,64 +153,34 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  bool _isFarFromPoint() {
-    LatLng currentLatLng =
-        LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!);
-    LatLng nextStepLatLng = LatLng(_exampleRoute[_index]['latitude'] as double,
-        _exampleRoute[_index]['longitude'] as double);
-    double distance =
-        const Distance().as(LengthUnit.Meter, currentLatLng, nextStepLatLng);
-    return distance > 10;
-  }
-
   void _continueRoute() {
     setState(() {
-      if (_index < _exampleRoute.length - 1) {
-        _index++;
-        _getRoute();
-      }
+      _index++;
+      _getRoute();
     });
-  }
-
-  List<Marker> _renderRouteMarkers(var exampleRoute) {
-    List<Marker> markers = [];
-    for (var i = 0; i < exampleRoute.length; i++) {
-      var point = exampleRoute[i];
-      var marker = Marker(
-        point:
-        LatLng(point['latitude'] as double, point['longitude'] as double),
-        width: 50,
-        height: 50,
-        child: PopUpMarker(point['image']),
-      );
-      markers.add(marker);
-    }
-    return markers;
   }
 
   @override
   Widget build(BuildContext context) {
-    if(_index < _exampleRoute.length ){
-      switch(_exampleRoute[_index]['type']){
+    if (_index < _exampleRoute.length) {
+      switch (_exampleRoute[_index]['type']) {
         case 'reference' || 'destination':
           return NavigationWidget(
-            completedLoad: _completedLoad,
-            index: _index,
-            exampleSteps: _exampleSteps,
-            exampleRoute: _exampleRoute,
-            isFarFromPoint: _isFarFromPoint,
-            continueRoute: _continueRoute,
-            mapController: _mapController,
-            polylineCoordinates: _polylineCoordinates,
-            currentLocation: _currentLocation!,
-            mapRotation: _mapRotation);
+              completedLoad: _completedLoad,
+              index: _index,
+              exampleSteps: _exampleSteps,
+              exampleRoute: _exampleRoute,
+              continueRoute: _continueRoute,
+              mapController: _mapController,
+              polylineCoordinates: _polylineCoordinates,
+              currentLocation: _currentLocation!,
+              mapRotation: _mapRotation);
         case 'ejemplo':
-          return CustomButton("hola", _continueRoute ,true);
+          return CustomButton("hola", _continueRoute, true);
         default:
           return Text("Allgo ha fallado");
       }
-
-    } else{
+    } else {
       return const Scaffold(
         body: Center(
           child: Text("Ruta completada"),
@@ -222,5 +188,4 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
   }
-
 }
