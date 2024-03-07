@@ -14,6 +14,10 @@
     "image": "https://st.depositphotos.com/1001311/3411/i/450/depositphotos_34119767-stock-photo-3d-golden-number-collection-1.jpg"
   },
   {
+    "pointName": "SIERRA DE GUADALUPE",
+    "type" : "metro"
+  },
+  {
     "pointName": "Esquina",
     "latitude": 40.640880,
     "longitude": -3.158908,

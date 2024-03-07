@@ -29,7 +29,7 @@ class ExistRoutePopUp extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
-                        "Cancelar ruta con destino:",
+                        "Cancelar ruta con destino ",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -41,7 +41,7 @@ class ExistRoutePopUp extends StatelessWidget {
                       Text(
                         destination["pointName"],
                         style: const TextStyle(
-                          fontSize: 25,
+                          fontSize: 30,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
@@ -78,7 +78,7 @@ class ExistRoutePopUp extends StatelessWidget {
             'TERMINAR',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),

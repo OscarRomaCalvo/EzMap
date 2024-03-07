@@ -4,13 +4,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:location/location.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/CustomButton.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:prueba_ezmaps_estatica/customWidgets/EndRouteWidget.dart';
+import 'package:prueba_ezmaps_estatica/customWidgets/MetroNavigation/MetroNavigationWidget.dart';
 import 'package:prueba_ezmaps_estatica/customWidgets/NavigationWidget.dart';
 
 void main() {
@@ -193,8 +193,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 currentLocation: _currentLocation!,
                 mapRotation: _mapRotation,
                 destination: _routeDestination);
-          case 'ejemplo':
-            return CustomButton("hola", _continueRoute, true);
+          case 'metro':
+            return MetroNavigationWidget(_exampleRoute[_index]["pointName"], _exampleSteps[_index], _continueRoute);
           default:
             return Text("Allgo ha fallado");
         }

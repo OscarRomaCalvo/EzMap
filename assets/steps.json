@@ -17,6 +17,20 @@
   },
   {
     "step1": {
+      "destination": "Parada1",
+      "direction": "Dirección",
+      "line" : "1",
+      "stops" : 4
+    },
+    "step2": {
+      "destination": "Sol",
+      "direction": "LaLuna",
+      "line" : "6",
+      "stops" : 1
+    }
+  },
+  {
+    "step1": {
       "text": "Cruza el último PASO DE CEBRA",
       "image": "https://static.vecteezy.com/system/resources/thumbnails/006/737/316/small_2x/astronaut-floating-in-space-cartoon-icon-illustration-space-technology-icon-concept-isolated-premium-flat-cartoon-style-vector.jpg"
     }

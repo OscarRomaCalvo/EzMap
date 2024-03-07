@@ -45,7 +45,7 @@ class NextStepPopUp extends StatelessWidget {
             'CONTINUAR',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -68,10 +68,20 @@ class FarFromPointWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            "Estás lejos de $pointName",
-            style: const TextStyle(
+          const Text(
+            "Estás lejos de ",
+            style: TextStyle(
               fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+            softWrap: true,
+          ),
+          const SizedBox(height: 20.0),
+          Text(
+            pointName,
+            style: const TextStyle(
+              fontSize: 30,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
@@ -119,7 +129,7 @@ class NearFromPointWidget extends StatelessWidget {
           Text(
             pointName,
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 30,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,

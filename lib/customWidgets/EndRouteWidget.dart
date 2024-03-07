@@ -40,7 +40,7 @@ class EndRouteWidget extends StatelessWidget {
                     Text(
                       destination["pointName"],
                       style: const TextStyle(
-                        fontSize: 25,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,

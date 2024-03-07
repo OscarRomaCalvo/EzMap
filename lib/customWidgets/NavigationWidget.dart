@@ -37,26 +37,29 @@ class NavigationWidget extends StatelessWidget {
   List<Marker> _renderRouteMarkers() {
     List<Marker> markers = [];
     for (var i = 0; i < exampleRoute.length; i++) {
-      var point = exampleRoute[i];
-      var marker = Marker(
-        point:
-        LatLng(point['latitude'] as double, point['longitude'] as double),
-        width: 50,
-        height: 50,
-        child: PopUpMarker(point['image']),
-      );
-      markers.add(marker);
+      if (exampleRoute[i]['type'] == 'reference' ||
+          exampleRoute[i]['type'] == 'destination') {
+        var point = exampleRoute[i];
+        var marker = Marker(
+          point:
+              LatLng(point['latitude'] as double, point['longitude'] as double),
+          width: 50,
+          height: 50,
+          child: PopUpMarker(point['image']),
+        );
+        markers.add(marker);
+      }
     }
     return markers;
   }
 
   bool _isFarFromPoint() {
     LatLng currentLatLng =
-    LatLng(currentLocation.latitude!, currentLocation.longitude!);
+        LatLng(currentLocation.latitude!, currentLocation.longitude!);
     LatLng nextStepLatLng = LatLng(exampleRoute[index]['latitude'] as double,
         exampleRoute[index]['longitude'] as double);
     double distance =
-    const Distance().as(LengthUnit.Meter, currentLatLng, nextStepLatLng);
+        const Distance().as(LengthUnit.Meter, currentLatLng, nextStepLatLng);
     return distance > 10;
   }
 
@@ -65,7 +68,8 @@ class NavigationWidget extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 25, left: 25, right: 25, bottom: 0),
+          padding:
+              const EdgeInsets.only(top: 25, left: 25, right: 25, bottom: 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -79,7 +83,7 @@ class NavigationWidget extends StatelessWidget {
                   height: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child:  InstructionWidget(exampleSteps[index]),
+                    child: InstructionWidget(exampleSteps[index]),
                   ),
                 ),
               ),
@@ -99,7 +103,7 @@ class NavigationWidget extends StatelessWidget {
                       children: [
                         TileLayer(
                           urlTemplate:
-                          'https://api.mapbox.com/styles/v1/oscarro/clsxlxk5s00bq01mee7tm7502/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoib3NjYXJybyIsImEiOiJjbHNjeXo5bGkwcHU4MmpubzM3dHZlc253In0.XC-Sp1-ecbNP0mCBpjhsxw',
+                              'https://api.mapbox.com/styles/v1/oscarro/clsxlxk5s00bq01mee7tm7502/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoib3NjYXJybyIsImEiOiJjbHNjeXo5bGkwcHU4MmpubzM3dHZlc253In0.XC-Sp1-ecbNP0mCBpjhsxw',
                         ),
                         PolylineLayer(polylines: [
                           Polyline(
