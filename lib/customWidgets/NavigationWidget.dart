@@ -99,6 +99,7 @@ class NavigationWidget extends StatelessWidget {
                             currentLocation.longitude!),
                         initialZoom: 18,
                         initialRotation: mapRotation,
+                        interactionOptions: const InteractionOptions(flags: InteractiveFlag.none)
                       ),
                       children: [
                         TileLayer(

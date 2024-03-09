@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../CustomButton.dart';
 
-class InitStepWidget extends StatelessWidget {
-  final step;
-  final VoidCallback startOnMetroNavigation;
+class MLTransferWidget extends StatelessWidget {
+  final VoidCallback doTransfer;
+  final String previousLine;
+  final String previousDestination;
+  final String nextLine;
+  final String nextDirection;
 
-  InitStepWidget(this.step, this.startOnMetroNavigation);
-
-
+  const MLTransferWidget(this.doTransfer, this.previousLine,
+      this.previousDestination, this.nextLine, this.nextDirection);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,27 @@ class InitStepWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(
-          "Utiliza",
+          "Has llegado a",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+          softWrap: true,
+        ),
+        const SizedBox(height: 20),
+        Text(
+          previousDestination,
+          style: const TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+          softWrap: true,
+        ),
+        const SizedBox(height: 50),
+        const Text(
+          "Tienes que hacer transbordo a",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -29,21 +51,22 @@ class InitStepWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(
-              image: AssetImage("assets/images/line${step["line"]}-metro.png"),
+              image: AssetImage("assets/images/line$nextLine-ml.png"),
               height: 50,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             Text(
-              "Línea ${step["line"]}",
-              style: TextStyle(
+              "Línea $nextLine",
+              style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
-        ),RichText(
+        ),
+        RichText(
           textAlign: TextAlign.center,
           softWrap: true,
           text: TextSpan(
@@ -57,7 +80,7 @@ class InitStepWidget extends StatelessWidget {
                 text: "dirección: ",
               ),
               TextSpan(
-                text: step["direction"],
+                text: nextDirection,
                 style: const TextStyle(
                   fontSize: 30,
                 ),
@@ -75,7 +98,7 @@ class InitStepWidget extends StatelessWidget {
           child: Column(
             children: [
               const Text(
-                "Pulsa cuando estés en el metro",
+                "Pulsa para iniciar el transbordo",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -84,13 +107,11 @@ class InitStepWidget extends StatelessWidget {
                 softWrap: true,
               ),
               const SizedBox(height: 20),
-              CustomButton("SIGUIENTE", startOnMetroNavigation, true),
+              CustomButton("SIGUIENTE", doTransfer, true),
             ],
-          )
-        )
+          ),
+        ),
       ],
     );
   }
 }
-
-

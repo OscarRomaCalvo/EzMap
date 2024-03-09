@@ -10,40 +10,63 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:prueba_ezmaps_estatica/customWidgets/EndRouteWidget.dart';
+import 'package:prueba_ezmaps_estatica/customWidgets/MLNavigation/MLNavigationWidget.dart';
 import 'package:prueba_ezmaps_estatica/customWidgets/MetroNavigation/MetroNavigationWidget.dart';
 import 'package:prueba_ezmaps_estatica/customWidgets/NavigationWidget.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Asegura la inicialización de Flutter
+
+  //PRELOAD JSON DATA (ROUTE AND STEPS)
+  String routeJsonString = await rootBundle.loadString('assets/routePoints.json');
+  String stepsJsonString = await rootBundle.loadString('assets/steps.json');
+
+  var routeData = json.decode(routeJsonString);
+  var stepsData = json.decode(stepsJsonString);
+
+  //PRELOAD INITIAL LOCATION
+  var locationService = Location();
+  var iniLocation = await locationService.getLocation();
+
+  runApp(MyApp(routeData, stepsData, iniLocation));
 }
-
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final routeData;
+  final stepsData;
+  final iniLocation;
 
+  const MyApp(this.routeData, this.stepsData, this.iniLocation);
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: NavigationPage(title: 'Flutter Demo Home Page', routeData: routeData, stepsData: stepsData, iniLocation: iniLocation),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
+class NavigationPage extends StatefulWidget {
+  NavigationPage({Key? key, required this.title, required this.routeData, required this.stepsData, required this.iniLocation}) : super(key: key);
   final String title;
+  final routeData;
+  final stepsData;
+  final iniLocation;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<NavigationPage> createState() => _NavigationPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  LocationData? _currentLocation;
+class _NavigationPageState extends State<NavigationPage> {
+  late LocationData _currentLocation;
   double _heading = 0.0;
   double _mapRotation = 0.0;
   late MapController _mapController;
+  late Timer _locationTimer;
+
+  String _getLocationCompleted = "melon";
+  String _loadJSONCompleted = "sandia";
 
   final _routeOrigin = {
     'pointName': 'Casa',
@@ -65,29 +88,36 @@ class _MyHomePageState extends State<MyHomePage> {
   var _exampleSteps = [];
   PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
+  StreamSubscription<LocationData>? _locationSubscription;
+  StreamSubscription<CompassEvent>? _compassSubscription;
+  bool _isOnWalkNavigation = false;
 
   @override
   void initState() {
     super.initState();
     _mapController = MapController();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _getLocation();
-      await _loadJSON();
-      _getCompassHeading();
-      _getRoute();
-      _completedLoad = true;
-      /*
-      DESHABILITADO DURANTE EL DESARROLLO PARA NO HACER PETICIONES INNECESARIAS
-      Timer _timer = Timer.periodic(Duration(seconds: 45), (timer) {
-        _getRoute();
+      setState(() {
+        _currentLocation = widget.iniLocation;
+        _getLocationCompleted = "completada";
+        _exampleSteps= widget.stepsData;
+        _exampleRoute= widget.routeData;
+        _loadJSONCompleted = "completada";
+        _completedLoad = true;
       });
-      */
+  }
+
+  Future<void> _getLocation() async {
+    var locationService = Location();
+    var newLocation = await locationService.getLocation();
+    setState(() {
+      _currentLocation = newLocation;
+      _getLocationCompleted = "completada";
     });
   }
 
   Future<void> _loadJSON() async {
     String routeJsonString =
-        await rootBundle.loadString('assets/routePoints.json');
+    await rootBundle.loadString('assets/routePoints.json');
     String stepsJsonString = await rootBundle.loadString('assets/steps.json');
 
     var routeData = json.decode(routeJsonString);
@@ -97,6 +127,30 @@ class _MyHomePageState extends State<MyHomePage> {
       _exampleSteps = stepsData;
     });
   }
+
+  void _subscribeToLocationChanges() {
+    var locationService = Location();
+    double distance = 0.0;
+    _locationSubscription =
+        locationService.onLocationChanged.listen((LocationData newLocation) {
+      setState(() {
+        _currentLocation = newLocation;
+        LatLng newLatLng =
+            LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!);
+        _currentLocation = newLocation;
+        _mapController.move(newLatLng, 18);
+        if (_polylineCoordinates.length > 1) {
+          distance = const Distance()
+              .as(LengthUnit.Meter, _polylineCoordinates[1], newLatLng);
+          _polylineCoordinates[0] = newLatLng;
+          if (distance < 10) {
+            _polylineCoordinates.removeAt(1);
+          }
+        }
+      });
+    });
+  }
+
 
   void _getRoute() {
     String currentLocationStr =
@@ -126,31 +180,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return convertedCoordinates;
   }
 
-  Future<void> _getLocation() async {
-    var locationService = Location();
-    _currentLocation = await locationService.getLocation();
-
-    locationService.onLocationChanged.listen((LocationData newLocation) {
-      setState(() {
-        _currentLocation = newLocation;
-        LatLng newLatLng =
-            LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!);
-        double distance = const Distance()
-            .as(LengthUnit.Meter, _polylineCoordinates[1], newLatLng);
-        setState(() {
-          _currentLocation = newLocation;
-          _mapController.move(newLatLng, 18);
-          _polylineCoordinates[0] = newLatLng;
-          if (distance < 10) {
-            _polylineCoordinates.removeAt(1);
-          }
-        });
-      });
-    });
-  }
-
-  Future<void> _getCompassHeading() async {
-    FlutterCompass.events?.listen((event) {
+  void _suscribeToCompassChanges() {
+    _compassSubscription = FlutterCompass.events?.listen((CompassEvent event) {
       setState(() {
         _heading = event.heading ?? 0.0;
         double newRotation = 360 - _heading;
@@ -166,22 +197,43 @@ class _MyHomePageState extends State<MyHomePage> {
   void _continueRoute() {
     setState(() {
       _index++;
-      _getRoute();
     });
+    if (_isOnWalkNavigation && _index < _exampleRoute.length) {
+      _getRoute();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (!_completedLoad) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
+      return Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("GET POSITION = $_getLocationCompleted"),
+            Text("GET JSON = $_loadJSONCompleted"),
+            CircularProgressIndicator(),
+          ],
         ),
       );
     } else {
       if (_index < _exampleRoute.length) {
         switch (_exampleRoute[_index]['type']) {
           case 'reference' || 'destination':
+            if (!_isOnWalkNavigation) {
+              setState(() {
+                _isOnWalkNavigation = true;
+              });
+              _getRoute();
+              _subscribeToLocationChanges();
+              _suscribeToCompassChanges();
+              _locationTimer =
+                  Timer.periodic(const Duration(seconds: 30), (timer) {
+                //TODO: quitar el comentario, solo está durante el desarrollo.
+                //_getRoute();
+                print("Coger Route");
+              });
+            }
             return NavigationWidget(
                 completedLoad: _completedLoad,
                 index: _index,
@@ -194,9 +246,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 mapRotation: _mapRotation,
                 destination: _routeDestination);
           case 'metro':
-            return MetroNavigationWidget(_exampleRoute[_index]["pointName"], _exampleSteps[_index], _continueRoute);
+            if (_isOnWalkNavigation) {
+              _locationSubscription!.pause();
+              _compassSubscription!.pause();
+              _locationTimer.cancel();
+              _isOnWalkNavigation = false;
+            }
+            return MetroNavigationWidget(_exampleRoute[_index]["pointName"],
+                _exampleSteps[_index], _continueRoute);
+          case 'ml':
+            if (_isOnWalkNavigation) {
+              _locationSubscription!.pause();
+              _compassSubscription!.pause();
+              _locationTimer.cancel();
+              _isOnWalkNavigation = false;
+            }
+            return MLNavigationWidget(_exampleRoute[_index]["pointName"],
+                _exampleSteps[_index], _continueRoute);
           default:
-            return Text("Allgo ha fallado");
+            return const Text("Allgo ha fallado");
         }
       } else {
         return EndRouteWidget(_routeDestination);

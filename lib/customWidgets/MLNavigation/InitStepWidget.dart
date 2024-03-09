@@ -4,9 +4,9 @@ import '../CustomButton.dart';
 
 class InitStepWidget extends StatelessWidget {
   final step;
-  final VoidCallback startOnMetroNavigation;
+  final VoidCallback startOnMLNavigation;
 
-  InitStepWidget(this.step, this.startOnMetroNavigation);
+  InitStepWidget(this.step, this.startOnMLNavigation);
 
 
 
@@ -29,15 +29,15 @@ class InitStepWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(
-              image: AssetImage("assets/images/line${step["line"]}-metro.png"),
+              image: AssetImage("assets/images/line${step["line"]}-ml.png"),
               height: 50,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             Text(
               "Línea ${step["line"]}",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
@@ -75,7 +75,7 @@ class InitStepWidget extends StatelessWidget {
           child: Column(
             children: [
               const Text(
-                "Pulsa cuando estés en el metro",
+                "Pulsa cuando estés en el metro ligero",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -84,7 +84,7 @@ class InitStepWidget extends StatelessWidget {
                 softWrap: true,
               ),
               const SizedBox(height: 20),
-              CustomButton("SIGUIENTE", startOnMetroNavigation, true),
+              CustomButton("SIGUIENTE", startOnMLNavigation, true),
             ],
           )
         )

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 import '../CustomButton.dart';
 
-class OnMetroWidget extends StatefulWidget {
+class OnMLWidget extends StatefulWidget {
   int stops;
   final String stopName;
-  final VoidCallback continueMetroNavigation;
-  OnMetroWidget(this.stops, this.stopName, this.continueMetroNavigation);
+  final VoidCallback continueMLNavigation;
+  OnMLWidget(this.stops, this.stopName, this.continueMLNavigation);
 
   @override
-  State<OnMetroWidget> createState() => _OnMetroWidgetState();
+  State<OnMLWidget> createState() => _OnMLWidgetState();
 }
 
-class _OnMetroWidgetState extends State<OnMetroWidget> {
+class _OnMLWidgetState extends State<OnMLWidget> {
   _reduceStops() {
     if (widget.stops > 1) {
       setState(() {
@@ -45,7 +45,7 @@ class _OnMetroWidgetState extends State<OnMetroWidget> {
           textAlign: TextAlign.center,
           softWrap: true,
         ),
-        (widget.stops > 1) ? MultipleStops(widget.stops, _reduceStops) : LastStop(widget.continueMetroNavigation),
+        (widget.stops > 1) ? MultipleStops(widget.stops, _reduceStops) : LastStop(widget.continueMLNavigation),
       ],
     );
   }
@@ -87,7 +87,7 @@ class LastStop extends StatelessWidget {
           child: Column(
             children: [
               const Text(
-                "Pulsa cuando haya una parada",
+                "Pulsa cuando hayas bajado del metro ligero",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -162,7 +162,7 @@ class MultipleStops extends StatelessWidget {
           child: Column(
             children: [
               const Text(
-                "Pulsa cuando estés en el metro",
+                "Pulsa cuando haya una parada",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

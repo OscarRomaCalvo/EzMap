@@ -1,7 +1,7 @@
 [
   {
     "step1": {
-      "text": "Llega a la VALLA ROJA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "text": "Llega a la VALLA ROJA",
       "image": "https://static.vecteezy.com/system/resources/thumbnails/006/737/316/small_2x/astronaut-floating-in-space-cartoon-icon-illustration-space-technology-icon-concept-isolated-premium-flat-cartoon-style-vector.jpg"
     }
   },
@@ -26,6 +26,20 @@
       "destination": "Sol",
       "direction": "LaLuna",
       "line" : "6",
+      "stops" : 1
+    }
+  },
+  {
+    "step1": {
+      "destination": "Melocoton",
+      "direction": "Sandía",
+      "line" : "1",
+      "stops" : 3
+    },
+    "step2": {
+      "destination": "Sol",
+      "direction": "LaLuna",
+      "line" : "3",
       "stops" : 1
     }
   },

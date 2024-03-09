@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../CustomButton.dart';
 
-class EnterMetroWidget extends StatelessWidget {
+class EnterMLWidget extends StatelessWidget {
   final String originStation;
-  final VoidCallback startMetroNavigation;
+  final VoidCallback startMLNavigation;
 
-  EnterMetroWidget(this.originStation, this.startMetroNavigation);
+  EnterMLWidget(this.originStation, this.startMLNavigation);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class EnterMetroWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(
-          "Entra a la estación de metro",
+          "Entra a la estación de metro ligero",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -24,7 +24,7 @@ class EnterMetroWidget extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         const Image(
-          image: AssetImage("assets/images/metro-logo.png"),
+          image: AssetImage("assets/images/ml-logo.png"),
           width: double.infinity,
         ),
         const SizedBox(height: 20),
@@ -38,7 +38,7 @@ class EnterMetroWidget extends StatelessWidget {
           softWrap: true,
         ),
         const SizedBox(height: 20),
-        CustomButton("SIGUIENTE", startMetroNavigation, true),
+        CustomButton("SIGUIENTE", startMLNavigation, true),
       ],
     );
   }

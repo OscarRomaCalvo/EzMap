@@ -18,6 +18,10 @@
     "type" : "metro"
   },
   {
+    "pointName": "SIERRA DE GUADALUPE",
+    "type" : "ml"
+  },
+  {
     "pointName": "Esquina",
     "latitude": 40.640880,
     "longitude": -3.158908,
