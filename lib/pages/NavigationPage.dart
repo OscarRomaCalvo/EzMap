@@ -209,7 +209,7 @@ class _NavigationPageState extends State<NavigationPage> {
                 continueRoute: _continueRoute,
                 mapController: _mapController,
                 polylineCoordinates: _polylineCoordinates,
-                currentLocation: _currentLocation!,
+                currentLocation: _currentLocation,
                 mapRotation: _mapRotation,
                 destination: _routeDestination);
           case 'metro':
