@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/CustomButton.dart';
+import 'package:ez_maps/customWidgets/CustomButton.dart';
 
 import 'PopUpImage.dart';
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:prueba_ezmaps_estatica/pages/NavigationPage.dart';
+import 'package:ez_maps/pages/NavigationPage.dart';
 
 class PermissionScreen extends StatefulWidget {
   @override

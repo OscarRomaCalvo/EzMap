@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/CustomButton.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/PopUpImage.dart';
+import 'package:ez_maps/customWidgets/CustomButton.dart';
+import 'package:ez_maps/customWidgets/PopUpImage.dart';
 
 class EndRouteWidget extends StatelessWidget {
   final destination;

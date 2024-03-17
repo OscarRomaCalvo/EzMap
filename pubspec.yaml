@@ -1,4 +1,4 @@
-name: prueba_ezmaps_estatica
+name: ez_maps
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -41,6 +41,7 @@ dependencies:
   http: any
   flutter_polyline_points: any
   permission_handler: ^11.3.0
+  firebase_core: ^2.27.1
 
 dev_dependencies:
   flutter_test:

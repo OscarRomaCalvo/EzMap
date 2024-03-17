@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/MLNavigation/EnterMLWidget.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/MLNavigation/MLTransferWidget.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/MLNavigation/OnMLWidget.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/MLNavigation/InitStepWidget.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/MLNavigation/MLEndWidget.dart';
+import 'package:ez_maps/customWidgets/MLNavigation/EnterMLWidget.dart';
+import 'package:ez_maps/customWidgets/MLNavigation/MLTransferWidget.dart';
+import 'package:ez_maps/customWidgets/MLNavigation/OnMLWidget.dart';
+import 'package:ez_maps/customWidgets/MLNavigation/InitStepWidget.dart';
+import 'package:ez_maps/customWidgets/MLNavigation/MLEndWidget.dart';
 
 
 

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/ExistRoutePopUp.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/InstructionWidget.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/NextStepPopUp.dart';
+import 'package:ez_maps/customWidgets/ExistRoutePopUp.dart';
+import 'package:ez_maps/customWidgets/InstructionWidget.dart';
+import 'package:ez_maps/customWidgets/NextStepPopUp.dart';
 
 import 'PopUpMarker.dart';
 

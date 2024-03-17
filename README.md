@@ -1,4 +1,4 @@
-# prueba_ezmaps_estatica
+# ez_maps
 
 A new Flutter project.
 

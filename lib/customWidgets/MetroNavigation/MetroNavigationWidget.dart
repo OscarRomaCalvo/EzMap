@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/MetroNavigation/InitStepWidget.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/MetroNavigation/MetroEndWidget.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/MetroNavigation/MetroTransferWidget.dart';
+import 'package:ez_maps/customWidgets/MetroNavigation/InitStepWidget.dart';
+import 'package:ez_maps/customWidgets/MetroNavigation/MetroEndWidget.dart';
+import 'package:ez_maps/customWidgets/MetroNavigation/MetroTransferWidget.dart';
 
 import 'EnterMetroWidget.dart';
 import 'OnMetroWidget.dart';

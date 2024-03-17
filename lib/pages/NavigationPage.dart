@@ -8,10 +8,10 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
-import 'package:prueba_ezmaps_estatica/customWidgets/EndRouteWidget.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/MLNavigation/MLNavigationWidget.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/MetroNavigation/MetroNavigationWidget.dart';
-import 'package:prueba_ezmaps_estatica/customWidgets/NavigationWidget.dart';
+import 'package:ez_maps/customWidgets/EndRouteWidget.dart';
+import 'package:ez_maps/customWidgets/MLNavigation/MLNavigationWidget.dart';
+import 'package:ez_maps/customWidgets/MetroNavigation/MetroNavigationWidget.dart';
+import 'package:ez_maps/customWidgets/NavigationWidget.dart';
 
 class NavigationPage extends StatefulWidget {
   NavigationPage(

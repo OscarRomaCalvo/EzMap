@@ -1,4 +1,4 @@
-package com.example.prueba_ezmaps_estatica
+package com.example.ez_maps
 
 import io.flutter.embedding.android.FlutterActivity
 
