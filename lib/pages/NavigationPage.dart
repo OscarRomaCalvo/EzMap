@@ -8,14 +8,19 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:prueba_ezmaps_estatica/customWidgets/EndRouteWidget.dart';
 import 'package:prueba_ezmaps_estatica/customWidgets/MLNavigation/MLNavigationWidget.dart';
 import 'package:prueba_ezmaps_estatica/customWidgets/MetroNavigation/MetroNavigationWidget.dart';
 import 'package:prueba_ezmaps_estatica/customWidgets/NavigationWidget.dart';
 
 class NavigationPage extends StatefulWidget {
-  NavigationPage({Key? key, required this.title, required this.routeData, required this.stepsData, required this.iniLocation}) : super(key: key);
+  NavigationPage(
+      {Key? key,
+      required this.title,
+      required this.routeData,
+      required this.stepsData,
+      required this.iniLocation})
+      : super(key: key);
   final String title;
   final routeData;
   final stepsData;
@@ -46,7 +51,7 @@ class _NavigationPageState extends State<NavigationPage> {
     "latitude": 40.640210,
     "longitude": -3.159549,
     "image":
-    "https://st.depositphotos.com/1001311/3411/i/450/depositphotos_34119767-stock-photo-3d-golden-number-collection-1.jpg"
+        "https://st.depositphotos.com/1001311/3411/i/450/depositphotos_34119767-stock-photo-3d-golden-number-collection-1.jpg"
   };
 
   bool _completedLoad = false;
@@ -66,32 +71,10 @@ class _NavigationPageState extends State<NavigationPage> {
     setState(() {
       _currentLocation = widget.iniLocation;
       _getLocationCompleted = "completada";
-      _exampleSteps= widget.stepsData;
-      _exampleRoute= widget.routeData;
+      _exampleSteps = widget.stepsData;
+      _exampleRoute = widget.routeData;
       _loadJSONCompleted = "completada";
       _completedLoad = true;
-    });
-  }
-
-  Future<void> _getLocation() async {
-    var locationService = Location();
-    var newLocation = await locationService.getLocation();
-    setState(() {
-      _currentLocation = newLocation;
-      _getLocationCompleted = "completada";
-    });
-  }
-
-  Future<void> _loadJSON() async {
-    String routeJsonString =
-    await rootBundle.loadString('assets/routePoints.json');
-    String stepsJsonString = await rootBundle.loadString('assets/steps.json');
-
-    var routeData = json.decode(routeJsonString);
-    var stepsData = json.decode(stepsJsonString);
-    setState(() {
-      _exampleRoute = routeData;
-      _exampleSteps = stepsData;
     });
   }
 
@@ -100,24 +83,23 @@ class _NavigationPageState extends State<NavigationPage> {
     double distance = 0.0;
     _locationSubscription =
         locationService.onLocationChanged.listen((LocationData newLocation) {
-          setState(() {
-            _currentLocation = newLocation;
-            LatLng newLatLng =
+      setState(() {
+        _currentLocation = newLocation;
+        LatLng newLatLng =
             LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
-            _currentLocation = newLocation;
-            _mapController.move(newLatLng, 18);
-            if (_polylineCoordinates.length > 1) {
-              distance = const Distance()
-                  .as(LengthUnit.Meter, _polylineCoordinates[1], newLatLng);
-              _polylineCoordinates[0] = newLatLng;
-              if (distance < 10) {
-                _polylineCoordinates.removeAt(1);
-              }
-            }
-          });
-        });
+        _currentLocation = newLocation;
+        _mapController.move(newLatLng, 18);
+        if (_polylineCoordinates.length > 1) {
+          distance = const Distance()
+              .as(LengthUnit.Meter, _polylineCoordinates[1], newLatLng);
+          _polylineCoordinates[0] = newLatLng;
+          if (distance < 10) {
+            _polylineCoordinates.removeAt(1);
+          }
+        }
+      });
+    });
   }
-
 
   void _getRoute() {
     String currentLocationStr =
@@ -126,7 +108,7 @@ class _NavigationPageState extends State<NavigationPage> {
         "${_exampleRoute[_index]['longitude']}%2C${_exampleRoute[_index]['latitude']}";
     http
         .get(Uri.parse(
-        "https://api.mapbox.com/directions/v5/mapbox/walking/$currentLocationStr$nextStepStr?alternatives=false&continue_straight=true&geometries=polyline&overview=full&steps=false&access_token=sk.eyJ1Ijoib3NjYXJybyIsImEiOiJjbHN4bGM2cWowNDlpMmpvNWZ4aHU5NnRnIn0.qd21NR_okn06OeHnjrhqFA"))
+            "https://api.mapbox.com/directions/v5/mapbox/walking/$currentLocationStr$nextStepStr?alternatives=false&continue_straight=true&geometries=polyline&overview=full&steps=false&access_token=sk.eyJ1Ijoib3NjYXJybyIsImEiOiJjbHN4bGM2cWowNDlpMmpvNWZ4aHU5NnRnIn0.qd21NR_okn06OeHnjrhqFA"))
         .then((response) {
       var jsonResponse = jsonDecode(response.body);
       String routeGeometry = jsonResponse["routes"][0]["geometry"];
@@ -139,10 +121,10 @@ class _NavigationPageState extends State<NavigationPage> {
 
   List<LatLng> _decodePolyline(String routeGeometry) {
     List<PointLatLng> pointLatLngCoordinates =
-    _polylinePoints.decodePolyline(routeGeometry);
+        _polylinePoints.decodePolyline(routeGeometry);
     List<LatLng> convertedCoordinates = pointLatLngCoordinates
         .map((PointLatLng pointLatLng) =>
-        LatLng(pointLatLng.latitude, pointLatLng.longitude))
+            LatLng(pointLatLng.latitude, pointLatLng.longitude))
         .toList();
     return convertedCoordinates;
   }
@@ -196,10 +178,10 @@ class _NavigationPageState extends State<NavigationPage> {
               _suscribeToCompassChanges();
               _locationTimer =
                   Timer.periodic(const Duration(seconds: 30), (timer) {
-                    //TODO: quitar el comentario, solo está durante el desarrollo.
-                    //_getRoute();
-                    print("Coger Route");
-                  });
+                //TODO: quitar el comentario, solo está durante el desarrollo.
+                //_getRoute();
+                print("Coger Route");
+              });
             }
             return NavigationWidget(
                 completedLoad: _completedLoad,
