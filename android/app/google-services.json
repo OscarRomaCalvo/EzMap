@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "825947133679",
+    "project_id": "ezmaps-f08a5",
+    "storage_bucket": "ezmaps-f08a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825947133679:android:7a4f641b15153b9f32ad1a",
+        "android_client_info": {
+          "package_name": "com.example.ez_maps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFnEBl653M6hITSUjRON03ZY5qdo641GE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

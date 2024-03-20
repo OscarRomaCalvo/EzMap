@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ez_maps/pages/RouteSelectionPage.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_maps/pages/PermissionScreen.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: PermissionScreen(),
+      home: RouteSelectionPage(),
     );
   }
 }

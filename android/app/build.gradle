@@ -49,6 +49,8 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
+        //Necesario ya que el número de métodos de mi app ha superado 64K
     }
 
     buildTypes {
