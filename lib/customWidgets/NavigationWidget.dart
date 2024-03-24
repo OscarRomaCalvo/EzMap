@@ -45,7 +45,7 @@ class NavigationWidget extends StatelessWidget {
               LatLng(point['latitude'] as double, point['longitude'] as double),
           width: 50,
           height: 50,
-          child: PopUpMarker(point['image']),
+          child: PopUpMarker(imageURL: point['image']),
         );
         markers.add(marker);
       }

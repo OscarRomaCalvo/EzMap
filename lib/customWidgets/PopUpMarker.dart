@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class PopUpMarker extends StatelessWidget {
   final String imageURL;
+  final double size;
 
-  PopUpMarker(this.imageURL);
+  PopUpMarker({required this.imageURL, this.size=16});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class PopUpMarker extends StatelessWidget {
           color: Colors.white,
         ),
         child: CircleAvatar(
-          radius: 16,
+          radius: size,
           backgroundColor: Colors.white,
           backgroundImage: NetworkImage(imageURL),
         ),
