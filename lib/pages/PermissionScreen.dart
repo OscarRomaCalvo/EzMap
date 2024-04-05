@@ -65,11 +65,10 @@ class _PermissionScreenState extends State<PermissionScreen> {
                 //PRELOAD INITIAL LOCATION
                 var locationService = Location();
                 var iniLocation = await locationService.getLocation();
-
-                Navigator.push(
+                /*Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NavigationPage(title: "Navegacion", routeData: routeData, stepsData: stepsData, iniLocation: iniLocation)),
-                );
+                  MaterialPageRoute(builder: (context) => NavigationPage(routeData: routeData, stepsData: stepsData, iniLocation: iniLocation)),
+                );*/
               },
               child: Text('Ir a la Segunda Pantalla'),
             ),

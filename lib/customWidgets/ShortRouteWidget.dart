@@ -1,15 +1,16 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 
 import '../models/ShortRoute.dart';
 import 'InitRoutePopUp.dart';
 import 'PopUpMarker.dart';
 
 class ShortRouteWidget extends StatelessWidget {
-  ShortRoute shortRoute;
+  final ShortRoute shortRoute;
+  LocationData iniLocation;
 
-  ShortRouteWidget(this.shortRoute);
+  ShortRouteWidget(
+      {super.key, required this.shortRoute, required this.iniLocation});
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +20,15 @@ class ShortRouteWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: GestureDetector(
-        onTap:() {
+        onTap: () {
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return Dialog(
-                child: InitRoutePopUp(shortRoute: shortRoute,),
+                child: InitRoutePopUp(
+                  shortRoute: shortRoute,
+                  iniLocation: iniLocation,
+                ),
               );
             },
           );
@@ -36,7 +40,8 @@ class ShortRouteWidget extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Column(children: [
-                    PopUpMarker(imageURL: shortRoute.origin.pointImage, size:25),
+                    PopUpMarker(
+                        imageURL: shortRoute.origin.pointImage, size: 25),
                     Text(
                       shortRoute.origin.name,
                       style: const TextStyle(
@@ -46,11 +51,13 @@ class ShortRouteWidget extends StatelessWidget {
                     )
                   ]),
                 ),
-                const Icon(Icons.arrow_right_alt, color: Color(0xFF4791DB), size: 70),
+                const Icon(Icons.arrow_right_alt,
+                    color: Color(0xFF4791DB), size: 70),
                 Expanded(
                   flex: 1,
                   child: Column(children: [
-                    PopUpMarker(imageURL: shortRoute.destination.pointImage, size:25),
+                    PopUpMarker(
+                        imageURL: shortRoute.destination.pointImage, size: 25),
                     Text(
                       shortRoute.destination.name,
                       style: const TextStyle(

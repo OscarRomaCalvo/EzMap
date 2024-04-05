@@ -9,6 +9,7 @@ import 'package:latlong2/latlong.dart';
 import '../models/RoutePoint.dart';
 import '../models/RoutePointTypes.dart';
 import '../models/ShortRoute.dart';
+import 'NavigationPage.dart';
 
 class RouteSelectionPage extends StatefulWidget {
   const RouteSelectionPage({super.key});
@@ -24,7 +25,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   bool _getLocationCompleted = false;
   bool _loadRoutesCompleted = false;
   List<ShortRoute> _nearRoutes = [];
-  late LocationData _location;
+  late LocationData _iniLocation;
 
   @override
   void initState() {
@@ -40,13 +41,13 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   Future<void> _getLocation() async {
     var iniLocation = await locationService.getLocation();
     setState(() {
-      _location = iniLocation;
+      _iniLocation = iniLocation;
       _getLocationCompleted = true;
     });
   }
 
   bool _isNearOrigin(var routeOriginPoint) {
-    LatLng currentLatLng = LatLng(_location.latitude!, _location.longitude!);
+    LatLng currentLatLng = LatLng(_iniLocation.latitude!, _iniLocation.longitude!);
     double distance =
         const Distance().as(LengthUnit.Meter, currentLatLng, routeOriginPoint);
     return distance < 50;
@@ -58,12 +59,12 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
       event.data()?.forEach((routeName, routeInformation) {
         RoutePoint origin = RoutePoint(
             name: routeInformation["origin"]["name"],
-            type: RoutePointTypes.origin,
+            type: "origin",
             pointImage: routeInformation["origin"]["image"],
             location: routeInformation["origin"]["location"]);
         RoutePoint destination = RoutePoint(
             name: routeInformation["destination"]["name"],
-            type: RoutePointTypes.destination,
+            type: "destination",
             pointImage: routeInformation["destination"]["image"],
             location: routeInformation["destination"]["location"]);
         LatLng routeOriginLatLng =
@@ -88,7 +89,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
       children: _nearRoutes.map((shortRoute) {
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
-          child: ShortRouteWidget(shortRoute),
+          child: ShortRouteWidget(shortRoute: shortRoute, iniLocation: _iniLocation ),
         );
       }).toList(),
     );

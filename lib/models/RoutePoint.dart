@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'RoutePointTypes.dart';
-
-class RoutePoint{
+class RoutePoint {
   String name;
-  RoutePointTypes type;
+  String type;
   String pointImage;
   GeoPoint location;
 
-  RoutePoint({required this.name,this.type=RoutePointTypes.reference, required this.pointImage, required this.location});
+  RoutePoint(
+      {required this.name,
+      required this.type,
+      required this.pointImage,
+      required this.location});
 }

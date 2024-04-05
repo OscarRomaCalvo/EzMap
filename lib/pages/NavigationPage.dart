@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:location/location.dart';
@@ -13,32 +14,26 @@ import 'package:ez_maps/customWidgets/MLNavigation/MLNavigationWidget.dart';
 import 'package:ez_maps/customWidgets/MetroNavigation/MetroNavigationWidget.dart';
 import 'package:ez_maps/customWidgets/NavigationWidget.dart';
 
+import '../models/RoutePoint.dart';
+
 class NavigationPage extends StatefulWidget {
-  NavigationPage(
-      {Key? key,
-      required this.title,
-      required this.routeData,
-      required this.stepsData,
-      required this.iniLocation})
+  NavigationPage({Key? key, required this.routeName, required this.iniLocation})
       : super(key: key);
-  final String title;
-  final routeData;
-  final stepsData;
-  final iniLocation;
+
+  final String routeName;
+  final LocationData iniLocation;
 
   @override
   State<NavigationPage> createState() => _NavigationPageState();
 }
 
 class _NavigationPageState extends State<NavigationPage> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   late LocationData _currentLocation;
-  double _heading = 0.0;
   double _mapRotation = 0.0;
   late MapController _mapController;
   late Timer _locationTimer;
-
-  String _getLocationCompleted = "melon";
-  String _loadJSONCompleted = "sandia";
 
   final _routeOrigin = {
     'pointName': 'Casa',
@@ -56,8 +51,8 @@ class _NavigationPageState extends State<NavigationPage> {
 
   bool _completedLoad = false;
   int _index = 0;
-  var _exampleRoute = [];
-  var _exampleSteps = [];
+  List<RoutePoint> _routeWaypoints = [];
+  var _routeSteps = [];
   PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
   StreamSubscription<LocationData>? _locationSubscription;
@@ -68,13 +63,39 @@ class _NavigationPageState extends State<NavigationPage> {
   void initState() {
     super.initState();
     _mapController = MapController();
+    _getRouteInformation();
     setState(() {
       _currentLocation = widget.iniLocation;
-      _getLocationCompleted = "completada";
-      _exampleSteps = widget.stepsData;
-      _exampleRoute = widget.routeData;
-      _loadJSONCompleted = "completada";
-      _completedLoad = true;
+    });
+  }
+
+  void _getRouteInformation() {
+    List<RoutePoint> routeWaypoints = [];
+    _firestore
+        .collection("routes")
+        .doc("idUsuario1")
+        .collection(widget.routeName)
+        .doc("infoRoute")
+        .get()
+        .then((event) {
+      _routeSteps = event.data()?["steps"];
+      event.data()?["waypoints"].forEach((waypoint) {
+        RoutePoint routePoint = RoutePoint(
+            name: waypoint["name"],
+            type: waypoint["type"],
+            pointImage: waypoint["pointImage"],
+            location: waypoint["location"]);
+
+        routeWaypoints.add(routePoint);
+      });
+
+      setState(() {
+        _routeSteps = _routeSteps;
+        _routeWaypoints = routeWaypoints;
+        _completedLoad = true;
+      });
+
+      _getRoute();
     });
   }
 
@@ -105,7 +126,7 @@ class _NavigationPageState extends State<NavigationPage> {
     String currentLocationStr =
         "${_currentLocation.longitude!}%2C${_currentLocation.latitude!}%3B";
     String nextStepStr =
-        "${_exampleRoute[_index]['longitude']}%2C${_exampleRoute[_index]['latitude']}";
+        "${_routeWaypoints[_index].location.longitude}%2C${_routeWaypoints[_index].location.latitude}";
     http
         .get(Uri.parse(
             "https://api.mapbox.com/directions/v5/mapbox/walking/$currentLocationStr$nextStepStr?alternatives=false&continue_straight=true&geometries=polyline&overview=full&steps=false&access_token=sk.eyJ1Ijoib3NjYXJybyIsImEiOiJjbHN4bGM2cWowNDlpMmpvNWZ4aHU5NnRnIn0.qd21NR_okn06OeHnjrhqFA"))
@@ -131,15 +152,16 @@ class _NavigationPageState extends State<NavigationPage> {
 
   void _suscribeToCompassChanges() {
     _compassSubscription = FlutterCompass.events?.listen((CompassEvent event) {
-      setState(() {
-        _heading = event.heading ?? 0.0;
-        double newRotation = 360 - _heading;
-        double diffRotation = (_mapRotation - newRotation).abs();
-        if (diffRotation > 1.0) {
+      var heading = event.heading ?? 0.0;
+      double newRotation = 360 - heading;
+      double diffRotation = (_mapRotation - newRotation).abs();
+      if (diffRotation > 0.1) {
+        print("ENTRA");
+        setState(() {
           _mapRotation = newRotation;
           _mapController.rotate(newRotation);
-        }
-      });
+        });
+      }
     });
   }
 
@@ -147,33 +169,27 @@ class _NavigationPageState extends State<NavigationPage> {
     setState(() {
       _index++;
     });
-    if (_isOnWalkNavigation && _index < _exampleRoute.length) {
-      _getRoute();
+    if (_isOnWalkNavigation && _index < _routeWaypoints.length) {
+      _getRouteInformation();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     if (!_completedLoad) {
-      return Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("GET POSITION = $_getLocationCompleted"),
-            Text("GET JSON = $_loadJSONCompleted"),
-            CircularProgressIndicator(),
-          ],
-        ),
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
       );
     } else {
-      if (_index < _exampleRoute.length) {
-        switch (_exampleRoute[_index]['type']) {
+      if (_index < _routeWaypoints.length) {
+        RoutePoint actualPoint = _routeWaypoints[_index];
+        switch (actualPoint.type) {
           case 'reference' || 'destination':
             if (!_isOnWalkNavigation) {
               setState(() {
                 _isOnWalkNavigation = true;
               });
-              _getRoute();
+              _getRouteInformation();
               _subscribeToLocationChanges();
               _suscribeToCompassChanges();
               _locationTimer =
@@ -186,8 +202,8 @@ class _NavigationPageState extends State<NavigationPage> {
             return NavigationWidget(
                 completedLoad: _completedLoad,
                 index: _index,
-                exampleSteps: _exampleSteps,
-                exampleRoute: _exampleRoute,
+                routeSteps: _routeSteps,
+                routeWaypoints: _routeWaypoints,
                 continueRoute: _continueRoute,
                 mapController: _mapController,
                 polylineCoordinates: _polylineCoordinates,
@@ -201,8 +217,8 @@ class _NavigationPageState extends State<NavigationPage> {
               _locationTimer.cancel();
               _isOnWalkNavigation = false;
             }
-            return MetroNavigationWidget(_exampleRoute[_index]["pointName"],
-                _exampleSteps[_index], _continueRoute);
+            return MetroNavigationWidget(
+                actualPoint.name, _routeSteps[_index], _continueRoute);
           case 'ml':
             if (_isOnWalkNavigation) {
               _locationSubscription!.pause();
@@ -210,8 +226,8 @@ class _NavigationPageState extends State<NavigationPage> {
               _locationTimer.cancel();
               _isOnWalkNavigation = false;
             }
-            return MLNavigationWidget(_exampleRoute[_index]["pointName"],
-                _exampleSteps[_index], _continueRoute);
+            return MLNavigationWidget(
+                actualPoint.name, _routeSteps[_index], _continueRoute);
           default:
             return const Text("Allgo ha fallado");
         }

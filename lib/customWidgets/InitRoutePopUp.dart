@@ -1,13 +1,17 @@
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 
 import '../models/ShortRoute.dart';
+import '../pages/NavigationPage.dart';
 import 'CustomButton.dart';
 
 class InitRoutePopUp extends StatelessWidget {
   final ShortRoute shortRoute;
+  LocationData iniLocation;
 
-  const InitRoutePopUp({super.key, required this.shortRoute});
+  InitRoutePopUp(
+      {super.key, required this.shortRoute, required this.iniLocation});
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +74,13 @@ class InitRoutePopUp extends StatelessWidget {
                   Navigator.of(context).pop();
                 }, false),
                 CustomButton("EMPEZAR", () {
-                  Navigator.of(context).pop();
-                  print("EMPEZAMOOOOS");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NavigationPage(
+                            routeName: shortRoute.routeName,
+                            iniLocation: iniLocation)),
+                  );
                 }, true),
               ],
             ),

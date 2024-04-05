@@ -6,13 +6,14 @@ import 'package:ez_maps/customWidgets/ExistRoutePopUp.dart';
 import 'package:ez_maps/customWidgets/InstructionWidget.dart';
 import 'package:ez_maps/customWidgets/NextStepPopUp.dart';
 
+import '../models/RoutePoint.dart';
 import 'PopUpMarker.dart';
 
 class NavigationWidget extends StatelessWidget {
   final bool completedLoad;
   final int index;
-  final exampleSteps;
-  final exampleRoute;
+  final routeSteps;
+  final List<RoutePoint> routeWaypoints;
   final VoidCallback continueRoute;
   final MapController mapController;
   final List<LatLng> polylineCoordinates;
@@ -24,8 +25,8 @@ class NavigationWidget extends StatelessWidget {
     Key? key,
     required this.completedLoad,
     required this.index,
-    required this.exampleSteps,
-    required this.exampleRoute,
+    required this.routeSteps,
+    required this.routeWaypoints,
     required this.continueRoute,
     required this.mapController,
     required this.polylineCoordinates,
@@ -36,16 +37,16 @@ class NavigationWidget extends StatelessWidget {
 
   List<Marker> _renderRouteMarkers() {
     List<Marker> markers = [];
-    for (var i = 0; i < exampleRoute.length; i++) {
-      if (exampleRoute[i]['type'] == 'reference' ||
-          exampleRoute[i]['type'] == 'destination') {
-        var point = exampleRoute[i];
+    for (var i = 0; i < routeWaypoints.length; i++) {
+      if (routeWaypoints[i].type == 'reference' ||
+          routeWaypoints[i].type == 'destination') {
+        RoutePoint routePoint = routeWaypoints[i];
         var marker = Marker(
           point:
-              LatLng(point['latitude'] as double, point['longitude'] as double),
+              LatLng(routePoint.location.latitude, routePoint.location.longitude),
           width: 50,
           height: 50,
-          child: PopUpMarker(imageURL: point['image']),
+          child: PopUpMarker(imageURL: routePoint.pointImage),
         );
         markers.add(marker);
       }
@@ -56,8 +57,8 @@ class NavigationWidget extends StatelessWidget {
   bool _isFarFromPoint() {
     LatLng currentLatLng =
         LatLng(currentLocation.latitude!, currentLocation.longitude!);
-    LatLng nextStepLatLng = LatLng(exampleRoute[index]['latitude'] as double,
-        exampleRoute[index]['longitude'] as double);
+    LatLng nextStepLatLng = LatLng(routeWaypoints[index].location.latitude,
+        routeWaypoints[index].location.longitude);
     double distance =
         const Distance().as(LengthUnit.Meter, currentLatLng, nextStepLatLng);
     return distance > 10;
@@ -83,7 +84,7 @@ class NavigationWidget extends StatelessWidget {
                   height: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: InstructionWidget(exampleSteps[index]),
+                    child: InstructionWidget(routeSteps[index]),
                   ),
                 ),
               ),
@@ -157,8 +158,8 @@ class NavigationWidget extends StatelessWidget {
           children: [
             ExistRoutePopUp(destination),
             NextStepPopUp(
-              exampleRoute[index]['pointName'],
-              exampleRoute[index]['image'],
+              routeWaypoints[index].name,
+              routeWaypoints[index].pointImage,
               _isFarFromPoint(),
               continueRoute,
             ),
