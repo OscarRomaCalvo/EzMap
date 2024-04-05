@@ -12,7 +12,20 @@
           "package_name": "com.example.ez_maps"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "825947133679-fe2if3bb6oah1pfv9esv38f9jptlh2ru.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ez_maps",
+            "certificate_hash": "70a1c4060422cea7c25f89f9d5eb5b75eccec50f"
+          }
+        },
+        {
+          "client_id": "825947133679-cki9df4g531t881km0m54g8l47i2quev.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDFnEBl653M6hITSUjRON03ZY5qdo641GE"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "825947133679-cki9df4g531t881km0m54g8l47i2quev.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

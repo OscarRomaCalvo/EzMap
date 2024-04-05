@@ -1,10 +1,7 @@
-import 'dart:convert';
-
+import 'package:ez_maps/pages/RouteSelectionPage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:location/location.dart';
+
 import 'package:permission_handler/permission_handler.dart';
-import 'package:ez_maps/pages/NavigationPage.dart';
 
 class PermissionScreen extends StatefulWidget {
   @override
@@ -38,37 +35,28 @@ class _PermissionScreenState extends State<PermissionScreen> {
               onPressed: () async {
                 if (!await Permission.location.isGranted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('No hay permiso de acceso a la ubicación.')),
+                    const SnackBar(content: Text('No hay permiso de acceso a la ubicación.')),
                   );
                 }else{
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Permiso de acceso a la ubicación concedido.')),
+                    const SnackBar(content: Text('Permiso de acceso a la ubicación concedido.')),
                   );
                 }
               },
-              child: Text('Verificar Permiso de Ubicación'),
+              child: const Text('Verificar Permiso de Ubicación'),
             ),
             ElevatedButton(
               onPressed: () {
                 checkPermissions();
               },
-              child: Text('Volver a Solicitar Permisos'),
+              child: const Text('Volver a Solicitar Permisos'),
             ),
             ElevatedButton(
               onPressed: () async {
-                String routeJsonString = await rootBundle.loadString('assets/routePoints.json');
-                String stepsJsonString = await rootBundle.loadString('assets/steps.json');
-
-                var routeData = json.decode(routeJsonString);
-                var stepsData = json.decode(stepsJsonString);
-
-                //PRELOAD INITIAL LOCATION
-                var locationService = Location();
-                var iniLocation = await locationService.getLocation();
-                /*Navigator.push(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NavigationPage(routeData: routeData, stepsData: stepsData, iniLocation: iniLocation)),
-                );*/
+                  MaterialPageRoute(builder: (context) => RouteSelectionPage()),
+                );
               },
               child: Text('Ir a la Segunda Pantalla'),
             ),
