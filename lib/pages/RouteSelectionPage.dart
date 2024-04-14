@@ -1,13 +1,11 @@
 import 'package:ez_maps/customWidgets/ShortRouteWidget.dart';
 import 'package:flutter/material.dart';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../models/RoutePoint.dart';
-import '../models/RoutePointTypes.dart';
 import '../models/ShortRoute.dart';
 
 class RouteSelectionPage extends StatefulWidget {
