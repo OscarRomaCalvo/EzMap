@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:ez_maps/pages/InitSessionPage.dart';
+import 'package:ez_maps/pages/RouteSelectionPage.dart';
+import 'package:ez_maps/services/AuthService.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_maps/pages/PermissionScreen.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -23,35 +26,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<PermissionStatus>(
-      future: Permission.location.status,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+    return  MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AuthService>(
+              create: (context) => AuthService()),
+        ],
+        builder: (context, child) {
+          print("ACUTAL USER");
           return MaterialApp(
-            title: 'EZ maps',
-            theme: ThemeData(),
-            home: const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
+            debugShowCheckedModeBanner: false,
+            home: context.watch<AuthService>().user == null ?
+            InitSessionPage() : const RouteSelectionPage(),
           );
-        } else {
-          if (snapshot.data == PermissionStatus.granted) {
-            return MaterialApp(
-              title: 'Flutter Demo',
-              theme: ThemeData(),
-              home: InitSessionPage(),
-            );
-          } else {
-            return MaterialApp(
-              title: 'Flutter Demo',
-              theme: ThemeData(),
-              home: PermissionScreen(),
-            );
-          }
-        }
-      },
-    );
+        });
   }
 }

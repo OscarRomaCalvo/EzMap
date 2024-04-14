@@ -1,14 +1,24 @@
-import 'package:ez_maps/pages/InitSessionPage.dart';
-import 'package:ez_maps/pages/RouteSelectionPage.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthService {
+class AuthService with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   User? _user;
-  static Stream<User?> get userStream => FirebaseAuth.instance.authStateChanges();
+  User? get user => _user;
+  set user(User? currentUser) {
+    _user = currentUser;
+    notifyListeners();
+  }
+   AuthService() {
+    _auth.authStateChanges().listen((User? currentUser) {
+      user = currentUser;
+      print("USUARIO");
+      print(_user);
+    });
+  }
 
   Future<void> signInWithGoogle() async {
     try {
@@ -33,7 +43,4 @@ class AuthService {
     await _googleSignIn.signOut();
   }
 
-  User? getUser() {
-    return _user;
-  }
 }
