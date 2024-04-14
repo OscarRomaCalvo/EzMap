@@ -5,8 +5,6 @@ import 'package:ez_maps/customWidgets/MLNavigation/OnMLWidget.dart';
 import 'package:ez_maps/customWidgets/MLNavigation/InitStepWidget.dart';
 import 'package:ez_maps/customWidgets/MLNavigation/MLEndWidget.dart';
 
-
-
 class MLNavigationWidget extends StatefulWidget {
   final String originStation;
   final steps;
@@ -19,7 +17,9 @@ class MLNavigationWidget extends StatefulWidget {
 }
 
 class _MLNavigationWidgetState extends State<MLNavigationWidget> {
-  Widget _actualWidget = const CircularProgressIndicator();
+  Widget _actualWidget = const CircularProgressIndicator(
+    valueColor: AlwaysStoppedAnimation(Color(0xFF4791DB)),
+  );
   int _actualStep = 1;
 
   @override
@@ -30,25 +30,34 @@ class _MLNavigationWidgetState extends State<MLNavigationWidget> {
     });
   }
 
-  void _setInitStep(){
+  void _setInitStep() {
     setState(() {
-      _actualWidget = InitStepWidget(widget.steps["step$_actualStep"], _setOnMLStep);
+      _actualWidget =
+          InitStepWidget(widget.steps["step$_actualStep"], _setOnMLStep);
     });
   }
 
-  void _setOnMLStep(){
+  void _setOnMLStep() {
     setState(() {
-      _actualWidget = OnMLWidget(widget.steps["step$_actualStep"]["stops"], widget.steps["step$_actualStep"]["destination"], _doTransferOrEndML);
+      _actualWidget = OnMLWidget(widget.steps["step$_actualStep"]["stops"],
+          widget.steps["step$_actualStep"]["destination"], _doTransferOrEndML);
     });
   }
 
-  void _doTransferOrEndML(){
+  void _doTransferOrEndML() {
     setState(() {
       _actualStep++;
-      if(widget.steps["step$_actualStep"]!=null){
-        _actualWidget = MLTransferWidget(_setInitStep, widget.steps["step${_actualStep-1}"]["line"],widget.steps["step${_actualStep-1}"]["destination"], widget.steps["step$_actualStep"]["line"], widget.steps["step$_actualStep"]["direction"]);
+      if (widget.steps["step$_actualStep"] != null) {
+        _actualWidget = MLTransferWidget(
+            _setInitStep,
+            widget.steps["step${_actualStep - 1}"]["line"],
+            widget.steps["step${_actualStep - 1}"]["destination"],
+            widget.steps["step$_actualStep"]["line"],
+            widget.steps["step$_actualStep"]["direction"]);
       } else {
-        _actualWidget = MLEndWidget(widget.steps["step${_actualStep-1}"]["destination"], widget.continueRoute);
+        _actualWidget = MLEndWidget(
+            widget.steps["step${_actualStep - 1}"]["destination"],
+            widget.continueRoute);
       }
     });
   }

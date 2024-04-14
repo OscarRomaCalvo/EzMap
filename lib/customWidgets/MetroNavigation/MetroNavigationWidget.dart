@@ -18,7 +18,9 @@ class MetroNavigationWidget extends StatefulWidget {
 }
 
 class _MetroNavigationWidgetState extends State<MetroNavigationWidget> {
-  Widget _actualWidget = const CircularProgressIndicator();
+  Widget _actualWidget = const CircularProgressIndicator(
+    valueColor: AlwaysStoppedAnimation(Color(0xFF4791DB)),
+  );
   int _actualStep = 1;
 
   @override
@@ -29,25 +31,36 @@ class _MetroNavigationWidgetState extends State<MetroNavigationWidget> {
     });
   }
 
-  void _setInitStep(){
+  void _setInitStep() {
     setState(() {
-      _actualWidget = InitStepWidget(widget.steps["step$_actualStep"], _setOnMetroStep);
+      _actualWidget =
+          InitStepWidget(widget.steps["step$_actualStep"], _setOnMetroStep);
     });
   }
 
-  void _setOnMetroStep(){
+  void _setOnMetroStep() {
     setState(() {
-      _actualWidget = OnMetroWidget(widget.steps["step$_actualStep"]["stops"], widget.steps["step$_actualStep"]["destination"], _doTransferOrEndMetro);
+      _actualWidget = OnMetroWidget(
+          widget.steps["step$_actualStep"]["stops"],
+          widget.steps["step$_actualStep"]["destination"],
+          _doTransferOrEndMetro);
     });
   }
 
-  void _doTransferOrEndMetro(){
+  void _doTransferOrEndMetro() {
     setState(() {
       _actualStep++;
-      if(widget.steps["step$_actualStep"]!=null){
-        _actualWidget = MetroTransferWidget(_setInitStep, widget.steps["step${_actualStep-1}"]["line"],widget.steps["step${_actualStep-1}"]["destination"], widget.steps["step$_actualStep"]["line"], widget.steps["step$_actualStep"]["direction"]);
+      if (widget.steps["step$_actualStep"] != null) {
+        _actualWidget = MetroTransferWidget(
+            _setInitStep,
+            widget.steps["step${_actualStep - 1}"]["line"],
+            widget.steps["step${_actualStep - 1}"]["destination"],
+            widget.steps["step$_actualStep"]["line"],
+            widget.steps["step$_actualStep"]["direction"]);
       } else {
-        _actualWidget = MetroEndWidget(widget.steps["step${_actualStep-1}"]["destination"], widget.continueRoute);
+        _actualWidget = MetroEndWidget(
+            widget.steps["step${_actualStep - 1}"]["destination"],
+            widget.continueRoute);
       }
     });
   }

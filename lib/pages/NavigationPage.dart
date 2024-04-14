@@ -178,7 +178,9 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget build(BuildContext context) {
     if (!_completedLoad) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(Color(0xFF4791DB)),
+        )),
       );
     } else {
       if (_index < _routeWaypoints.length) {

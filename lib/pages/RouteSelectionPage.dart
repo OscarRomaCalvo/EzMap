@@ -118,7 +118,9 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   Widget _getPage() {
     if (_hasLocationPermission == null) {
       return const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(Color(0xFF4791DB)),
+        ),
       );
     } else if (_hasLocationPermission == false) {
       return (Column(
@@ -134,7 +136,9 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
         padding: const EdgeInsets.all(25.0),
         child: (_getLocationCompleted && _loadRoutesCompleted)
             ? _renderNearRoutes()
-            : const Center(child: CircularProgressIndicator()),
+            : const Center(child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(Color(0xFF4791DB)),
+        )),
       );
     }
   }
