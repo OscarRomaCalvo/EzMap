@@ -20,7 +20,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final locationService = Location();
 
-  bool? _hasLocationPermission = null;
+  bool? _hasLocationPermission;
 
   bool _getLocationCompleted = false;
   bool _loadRoutesCompleted = false;
@@ -117,43 +117,142 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
 
   Widget _getPage() {
     if (_hasLocationPermission == null) {
-      return const Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation(Color(0xFF4791DB)),
-        ),
+      return const CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation(Color(0xFF4791DB)),
       );
     } else if (_hasLocationPermission == false) {
       return (Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          const Text("No hay permisos para acceder a la ubicación"),
-          CustomButton("ACTIVAR PERMISOS", () async {
-            _reloadPermissions();
-          }, true),
+          const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                color: Color(0xFF4791DB),
+                size: 100,
+              ),
+              Text(
+                "No hay permisos de ubicación",
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Color(0xFF4791DB),
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Pulsa el botón para activar los permisos de ubicación",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              CustomButton("ACTIVAR PERMISOS", () async {
+                _reloadPermissions();
+              }, true),
+            ],
+          ),
         ],
       ));
     } else {
-      return Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: (_getLocationCompleted && _loadRoutesCompleted)
-            ? _renderNearRoutes()
-            : const Center(child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation(Color(0xFF4791DB)),
-        )),
-      );
+      return (_getLocationCompleted && _loadRoutesCompleted)
+          ? _renderNearRoutes()
+          : const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(Color(0xFF4791DB)),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                  "Paciencia...\nEstamos cargando tus rutas",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xFF4791DB),
+                      fontWeight: FontWeight.bold),
+                )
+              ],
+            );
     }
   }
 
   Widget _renderNearRoutes() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _nearRoutes.map((shortRoute) {
-        return Container(
-          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
-          child: ShortRouteWidget(
-              shortRoute: shortRoute, iniLocation: _iniLocation),
-        );
-      }).toList(),
-    );
+    if (_nearRoutes.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                color: Color(0xFF4791DB),
+                size: 100,
+              ),
+              Text(
+                "No tienes ninguna ruta cerca de ti",
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Color(0xFF4791DB),
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Puedes volver a cargar las rutas pulsando el botón",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              CustomButton("RECARGAR RUTAS", () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RouteSelectionPage(),
+                    ));
+              }, true),
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _nearRoutes.map((shortRoute) {
+          return Container(
+            padding:
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
+            child: ShortRouteWidget(
+                shortRoute: shortRoute, iniLocation: _iniLocation),
+          );
+        }).toList(),
+      );
+    }
   }
 
   @override
@@ -161,14 +260,25 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text(
-            'RUTAS',
+            'TUS RUTAS',
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
           centerTitle: true,
+          backgroundColor: const Color(0xFF4791DB),
+          elevation: 0,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(30.0),
+            ),
+          ),
         ),
-        body: _getPage());
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Center(child: _getPage()),
+        ));
   }
 }

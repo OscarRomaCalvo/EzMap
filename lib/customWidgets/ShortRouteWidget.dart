@@ -48,6 +48,8 @@ class ShortRouteWidget extends StatelessWidget {
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
                     )
                   ]),
                 ),
@@ -64,6 +66,8 @@ class ShortRouteWidget extends StatelessWidget {
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
                     )
                   ]),
                 ),
