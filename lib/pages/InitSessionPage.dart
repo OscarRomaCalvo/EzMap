@@ -1,6 +1,5 @@
+import 'package:ez_maps/customWidgets/CustomSignInGoogleButton.dart';
 import 'package:flutter/material.dart';
-
-import '../services/AuthService.dart';
 
 class InitSessionPage extends StatefulWidget {
   @override
@@ -8,29 +7,34 @@ class InitSessionPage extends StatefulWidget {
 }
 
 class _InitSessionPageState extends State<InitSessionPage> {
-  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('User Email: ${_authService.user != null ? _authService.user?.email : 'NONE'}'),
-          ElevatedButton(
-            onPressed: () async {
-              await _authService.signInWithGoogle();
-            },
-            child: Text('Sign In with Google'),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/fondo-loginPage.png"),
+            fit: BoxFit.cover,
+
           ),
-          ElevatedButton(
-            onPressed: () async {
-              await _authService.signOut();
-            },
-            child: Text('Sign Out'),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 140.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Image(
+                  image: AssetImage("assets/images/EZMaps-logo.png"),
+                  height: 150.0,
+                ),
+                CustomSignInGoogleButton(),
+              ],
+            ),
           ),
-        ],
-      )
+        ),
+      ),
     );
   }
 }
