@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
               create: (context) => AuthService()),
         ],
         builder: (context, child) {
-          print("ACUTAL USER");
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             home: context.watch<AuthService>().user == null ?

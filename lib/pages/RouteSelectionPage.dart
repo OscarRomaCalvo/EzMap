@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart';
 import 'package:latlong2/latlong.dart';
-
+import 'package:permission_handler/permission_handler.dart' as perm;
+import '../customWidgets/CustomButton.dart';
 import '../models/RoutePoint.dart';
 import '../models/ShortRoute.dart';
 
@@ -19,6 +20,8 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final locationService = Location();
 
+  bool? _hasLocationPermission = null;
+
   bool _getLocationCompleted = false;
   bool _loadRoutesCompleted = false;
   List<ShortRoute> _nearRoutes = [];
@@ -31,8 +34,39 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   }
 
   Future<void> _initialLoad() async {
-    await _getLocation();
-    _getNearbyRoutes();
+    _initialCheckPermissions().then((value) async {
+      if (_hasLocationPermission == true) {
+        await _getLocation();
+        _getNearbyRoutes();
+      }
+    });
+  }
+
+  Future<void> _initialCheckPermissions() async {
+    var status = await perm.Permission.location.request();
+    setState(() {
+      _hasLocationPermission = status == perm.PermissionStatus.granted;
+    });
+  }
+
+  Future<void> _reloadPermissions() async {
+    _checkPermissions().then((value) async {
+      if (_hasLocationPermission == true) {
+        await _getLocation();
+        _getNearbyRoutes();
+      }
+    });
+  }
+
+  Future<void> _checkPermissions() async {
+    var status = await perm.Permission.location.request();
+    if (status == perm.PermissionStatus.permanentlyDenied) {
+      perm.openAppSettings();
+      status = await perm.Permission.location.status;
+    }
+    setState(() {
+      _hasLocationPermission = status == perm.PermissionStatus.granted;
+    });
   }
 
   Future<void> _getLocation() async {
@@ -43,8 +77,9 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
     });
   }
 
-  bool _isNearOrigin(var routeOriginPoint) {
-    LatLng currentLatLng = LatLng(_iniLocation.latitude!, _iniLocation.longitude!);
+  bool _isNearRouteOrigin(var routeOriginPoint) {
+    LatLng currentLatLng =
+        LatLng(_iniLocation.latitude!, _iniLocation.longitude!);
     double distance =
         const Distance().as(LengthUnit.Meter, currentLatLng, routeOriginPoint);
     return distance < 50;
@@ -67,7 +102,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
         LatLng routeOriginLatLng =
             LatLng(origin.location.latitude, origin.location.longitude);
 
-        if (_isNearOrigin(routeOriginLatLng)) {
+        if (_isNearRouteOrigin(routeOriginLatLng)) {
           nearRoutes.add(ShortRoute(
               routeName: routeName, origin: origin, destination: destination));
         }
@@ -80,13 +115,38 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
     });
   }
 
+  Widget _getPage() {
+    if (_hasLocationPermission == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (_hasLocationPermission == false) {
+      return (Column(
+        children: [
+          const Text("No hay permisos para acceder a la ubicación"),
+          CustomButton("ACTIVAR PERMISOS", () async {
+            _reloadPermissions();
+          }, true),
+        ],
+      ));
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(25.0),
+        child: (_getLocationCompleted && _loadRoutesCompleted)
+            ? _renderNearRoutes()
+            : const Center(child: CircularProgressIndicator()),
+      );
+    }
+  }
+
   Widget _renderNearRoutes() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: _nearRoutes.map((shortRoute) {
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
-          child: ShortRouteWidget(shortRoute: shortRoute, iniLocation: _iniLocation ),
+          child: ShortRouteWidget(
+              shortRoute: shortRoute, iniLocation: _iniLocation),
         );
       }).toList(),
     );
@@ -95,22 +155,16 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'RUTAS',
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
+        appBar: AppBar(
+          title: const Text(
+            'RUTAS',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child:(_getLocationCompleted && _loadRoutesCompleted)
-          ? _renderNearRoutes()
-          : const Center(child: CircularProgressIndicator()),
-    )
-    );
+        body: _getPage());
   }
 }

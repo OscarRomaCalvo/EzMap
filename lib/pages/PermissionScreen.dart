@@ -54,7 +54,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => InitSessionPage()),
                 );

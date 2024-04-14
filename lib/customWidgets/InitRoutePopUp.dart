@@ -77,7 +77,7 @@ class InitRoutePopUp extends StatelessWidget {
                   a.signOut();
                 }, false),
                 CustomButton("EMPEZAR", () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => NavigationPage(
