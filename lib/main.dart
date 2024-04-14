@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:ez_maps/pages/InitSessionPage.dart';
-import 'package:ez_maps/pages/RouteSelectionPage.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_maps/pages/PermissionScreen.dart';
 
@@ -29,9 +28,9 @@ class MyApp extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return MaterialApp(
-            title: 'Flutter Demo',
+            title: 'EZ maps',
             theme: ThemeData(),
-            home: Scaffold(
+            home: const Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
               ),

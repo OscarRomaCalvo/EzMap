@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
+import 'InitSessionPage.dart';
+
 class PermissionScreen extends StatefulWidget {
   @override
   _PermissionScreenState createState() => _PermissionScreenState();
@@ -55,7 +57,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
               onPressed: () async {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RouteSelectionPage()),
+                  MaterialPageRoute(builder: (context) => InitSessionPage()),
                 );
               },
               child: Text('Ir a la Segunda Pantalla'),

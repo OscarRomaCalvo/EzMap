@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "825947133679-afknnsiruricm1vb0cmduf1243r97u6a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ez_maps",
+            "certificate_hash": "39e5424a78434fc6ecef1c413e2c2865e081ce24"
+          }
+        },
+        {
           "client_id": "825947133679-fe2if3bb6oah1pfv9esv38f9jptlh2ru.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

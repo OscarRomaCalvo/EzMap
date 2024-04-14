@@ -1,59 +1,73 @@
+import 'package:ez_maps/pages/RouteSelectionPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+import '../services/AuthService.dart';
 
-  Future<User?> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
-      final GoogleSignInAuthentication googleSignInAuthentication =
-      await googleSignInAccount!.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
-
-      final UserCredential authResult = await _auth.signInWithCredential(credential);
-      final User? user = authResult.user;
-
-      return user;
-    } catch (error) {
-      print(error);
-      return null;
-    }
-  }
-
-  Future<void> signOut() async {
-    await _auth.signOut();
-    await googleSignIn.signOut();
-  }
+class InitSessionPage extends StatefulWidget {
+  @override
+  _InitSessionPageState createState() => _InitSessionPageState();
 }
 
-class InitSessionPage extends StatelessWidget {
+class _InitSessionPageState extends State<InitSessionPage> {
   final AuthService _authService = AuthService();
+
+  @override
+  void initState(){
+    super.initState();
+    _startUserListener();
+  }
+
+  void _startUserListener() {
+    AuthService.userStream.listen((User? user) {
+      if (user == null) {
+        print("USER IS NULL");
+      } else {
+        print("USUARIO");
+        print(user);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const RouteSelectionPage()),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Persistent User Authentication'),
+          title: const Text('Persistent User Authentication'),
         ),
         body: Center(
-          child: ElevatedButton(
-            onPressed: () async {
-              User? user = await _authService.signInWithGoogle();
-              if (user != null) {
-                print('User signed in');
+          child: StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
               } else {
-                print('Sign in failed');
+                final user = snapshot.data;
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('User Email: ${user != null ? user.email : 'NONE'}'),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _authService.signInWithGoogle();
+                      },
+                      child: Text('Sign In with Google'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _authService.signOut();
+                      },
+                      child: Text('Sign Out'),
+                    ),
+                  ],
+                );
               }
             },
-            child: Text('Sign In with Google'),
           ),
         ),
       ),
