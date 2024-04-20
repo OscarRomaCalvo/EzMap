@@ -1,10 +1,13 @@
 import 'package:ez_maps/customWidgets/ShortRouteWidget.dart';
+import 'package:ez_maps/services/AuthService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart' as perm;
+import 'package:provider/provider.dart';
 import '../customWidgets/CustomButton.dart';
 import '../models/RoutePoint.dart';
 import '../models/ShortRoute.dart';
@@ -18,7 +21,7 @@ class RouteSelectionPage extends StatefulWidget {
 
 class _RouteSelectionPageState extends State<RouteSelectionPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final locationService = Location();
+  final _locationService = Location();
 
   bool? _hasLocationPermission;
 
@@ -70,7 +73,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   }
 
   Future<void> _getLocation() async {
-    var iniLocation = await locationService.getLocation();
+    var iniLocation = await _locationService.getLocation();
     setState(() {
       _iniLocation = iniLocation;
       _getLocationCompleted = true;
@@ -86,33 +89,40 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   }
 
   void _getNearbyRoutes() {
-    List<ShortRoute> nearRoutes = [];
-    _firestore.collection("shortRoutes").doc("idUsuario1").get().then((event) {
-      event.data()?.forEach((routeName, routeInformation) {
-        RoutePoint origin = RoutePoint(
-            name: routeInformation["origin"]["name"],
-            type: "origin",
-            pointImage: routeInformation["origin"]["image"],
-            location: routeInformation["origin"]["location"]);
-        RoutePoint destination = RoutePoint(
-            name: routeInformation["destination"]["name"],
-            type: "destination",
-            pointImage: routeInformation["destination"]["image"],
-            location: routeInformation["destination"]["location"]);
-        LatLng routeOriginLatLng =
-            LatLng(origin.location.latitude, origin.location.longitude);
+    final AuthService authService = Provider.of<AuthService>(context, listen: false);
+    User? user = authService.user;
 
-        if (_isNearRouteOrigin(routeOriginLatLng)) {
-          nearRoutes.add(ShortRoute(
-              routeName: routeName, origin: origin, destination: destination));
-        }
-      });
+    if (user != null) {
+      List<ShortRoute> nearRoutes = [];
+      _firestore.collection("shortRoutes").doc(user.email).get().then((event) {
+        event.data()?.forEach((routeName, routeInformation) {
+          RoutePoint origin = RoutePoint(
+              name: routeInformation["origin"]["name"],
+              type: "origin",
+              pointImage: routeInformation["origin"]["image"],
+              location: routeInformation["origin"]["location"]);
+          RoutePoint destination = RoutePoint(
+              name: routeInformation["destination"]["name"],
+              type: "destination",
+              pointImage: routeInformation["destination"]["image"],
+              location: routeInformation["destination"]["location"]);
+          LatLng routeOriginLatLng =
+              LatLng(origin.location.latitude, origin.location.longitude);
 
-      setState(() {
-        _nearRoutes = nearRoutes;
-        _loadRoutesCompleted = true;
+          if (_isNearRouteOrigin(routeOriginLatLng)) {
+            nearRoutes.add(ShortRoute(
+                routeName: routeName,
+                origin: origin,
+                destination: destination));
+          }
+        });
+
+        setState(() {
+          _nearRoutes = nearRoutes;
+          _loadRoutesCompleted = true;
+        });
       });
-    });
+    }
   }
 
   Widget _getPage() {

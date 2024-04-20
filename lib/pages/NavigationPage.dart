@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:location/location.dart';
@@ -13,8 +14,10 @@ import 'package:ez_maps/customWidgets/EndRouteWidget.dart';
 import 'package:ez_maps/customWidgets/MLNavigation/MLNavigationWidget.dart';
 import 'package:ez_maps/customWidgets/MetroNavigation/MetroNavigationWidget.dart';
 import 'package:ez_maps/customWidgets/NavigationWidget.dart';
+import 'package:provider/provider.dart';
 
 import '../models/RoutePoint.dart';
+import '../services/AuthService.dart';
 
 class NavigationPage extends StatefulWidget {
   NavigationPage({Key? key, required this.routeName, required this.iniLocation})
@@ -70,33 +73,39 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   void _getRouteInformation() {
-    List<RoutePoint> routeWaypoints = [];
-    _firestore
-        .collection("routes")
-        .doc("idUsuario1")
-        .collection(widget.routeName)
-        .doc("infoRoute")
-        .get()
-        .then((event) {
-      _routeSteps = event.data()?["steps"];
-      event.data()?["waypoints"].forEach((waypoint) {
-        RoutePoint routePoint = RoutePoint(
-            name: waypoint["name"],
-            type: waypoint["type"],
-            pointImage: waypoint["pointImage"],
-            location: waypoint["location"]);
+    final AuthService authService =
+        Provider.of<AuthService>(context, listen: false);
+    User? user = authService.user;
 
-        routeWaypoints.add(routePoint);
+    if (user != null) {
+      List<RoutePoint> routeWaypoints = [];
+      _firestore
+          .collection("routes")
+          .doc(user.email)
+          .collection(widget.routeName)
+          .doc("infoRoute")
+          .get()
+          .then((event) {
+        _routeSteps = event.data()?["steps"];
+        event.data()?["waypoints"].forEach((waypoint) {
+          RoutePoint routePoint = RoutePoint(
+              name: waypoint["name"],
+              type: waypoint["type"],
+              pointImage: waypoint["pointImage"],
+              location: waypoint["location"]);
+
+          routeWaypoints.add(routePoint);
+        });
+
+        setState(() {
+          _routeSteps = _routeSteps;
+          _routeWaypoints = routeWaypoints;
+          _completedLoad = true;
+        });
+
+        _getRoute();
       });
-
-      setState(() {
-        _routeSteps = _routeSteps;
-        _routeWaypoints = routeWaypoints;
-        _completedLoad = true;
-      });
-
-      _getRoute();
-    });
+    }
   }
 
   void _subscribeToLocationChanges() {
@@ -178,7 +187,8 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget build(BuildContext context) {
     if (!_completedLoad) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator(
+        body: Center(
+            child: CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation(Color(0xFF4791DB)),
         )),
       );

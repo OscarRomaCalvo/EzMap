@@ -43,7 +43,9 @@ class InitRoutePopUp extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            PopUpImage(shortRoute.origin.pointImage),
+            Flexible(
+              child: PopUpImage(shortRoute.origin.pointImage),
+            ),
             const SizedBox(
               height: 15,
             ),
@@ -64,9 +66,11 @@ class InitRoutePopUp extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            PopUpImage(shortRoute.destination.pointImage),
+            Flexible(
+              child: PopUpImage(shortRoute.destination.pointImage),
+            ),
             const SizedBox(
-              height: 15,
+              height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
