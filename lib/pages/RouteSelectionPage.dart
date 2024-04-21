@@ -28,6 +28,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   bool _getLocationCompleted = false;
   bool _loadRoutesCompleted = false;
   List<ShortRoute> _nearRoutes = [];
+  List<ShortRoute> _shortRoute = [];
   late LocationData _iniLocation;
 
   @override
@@ -40,6 +41,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
     _initialCheckPermissions().then((value) async {
       if (_hasLocationPermission == true) {
         await _getLocation();
+        await _getRoutes();
         _getNearbyRoutes();
       }
     });
@@ -56,6 +58,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
     _checkPermissions().then((value) async {
       if (_hasLocationPermission == true) {
         await _getLocation();
+        await _getRoutes();
         _getNearbyRoutes();
       }
     });
@@ -88,13 +91,17 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
     return distance < 50;
   }
 
-  void _getNearbyRoutes() {
-    final AuthService authService = Provider.of<AuthService>(context, listen: false);
+  Future<void> _getRoutes() async {
+    final AuthService authService =
+        Provider.of<AuthService>(context, listen: false);
     User? user = authService.user;
-
+    List<ShortRoute> shortRoutes = [];
     if (user != null) {
-      List<ShortRoute> nearRoutes = [];
-      _firestore.collection("shortRoutes").doc(user.email).get().then((event) {
+      await _firestore
+          .collection("shortRoutes")
+          .doc(user.email)
+          .get()
+          .then((event) {
         event.data()?.forEach((routeName, routeInformation) {
           RoutePoint origin = RoutePoint(
               name: routeInformation["origin"]["name"],
@@ -106,23 +113,29 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
               type: "destination",
               pointImage: routeInformation["destination"]["image"],
               location: routeInformation["destination"]["location"]);
-          LatLng routeOriginLatLng =
-              LatLng(origin.location.latitude, origin.location.longitude);
-
-          if (_isNearRouteOrigin(routeOriginLatLng)) {
-            nearRoutes.add(ShortRoute(
-                routeName: routeName,
-                origin: origin,
-                destination: destination));
-          }
+          shortRoutes.add(ShortRoute(
+              routeName: routeName, origin: origin, destination: destination));
         });
-
         setState(() {
-          _nearRoutes = nearRoutes;
-          _loadRoutesCompleted = true;
+          _shortRoute = shortRoutes;
         });
       });
     }
+  }
+
+  void _getNearbyRoutes() {
+    List<ShortRoute> nearRoutes = [];
+    _shortRoute.forEach((route) {
+      LatLng routeOriginLatLng = LatLng(
+          route.origin.location.latitude, route.origin.location.longitude);
+      if (_isNearRouteOrigin(routeOriginLatLng)) {
+        nearRoutes.add(route);
+      }
+    });
+    setState(() {
+      _nearRoutes = nearRoutes;
+      _loadRoutesCompleted = true;
+    });
   }
 
   Widget _getPage() {
@@ -239,12 +252,13 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
               const SizedBox(
                 height: 20.0,
               ),
-              CustomButton("RECARGAR RUTAS", () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const RouteSelectionPage(),
-                    ));
+              CustomButton("RECARGAR RUTAS", () async {
+                setState(() {
+                  _getLocationCompleted = false;
+                  _loadRoutesCompleted = false;
+                });
+                await _getLocation();
+                _getNearbyRoutes();
               }, true),
             ],
           ),
