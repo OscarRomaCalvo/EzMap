@@ -38,20 +38,6 @@ class _NavigationPageState extends State<NavigationPage> {
   late MapController _mapController;
   late Timer _locationTimer;
 
-  final _routeOrigin = {
-    'pointName': 'Casa',
-    'latitude': 40.642825,
-    'longitude': -3.159397
-  };
-
-  final _routeDestination = {
-    "pointName": "Instituto Aguas Vivas",
-    "latitude": 40.640210,
-    "longitude": -3.159549,
-    "image":
-        "https://st.depositphotos.com/1001311/3411/i/450/depositphotos_34119767-stock-photo-3d-golden-number-collection-1.jpg"
-  };
-
   bool _completedLoad = false;
   int _index = 0;
   List<RoutePoint> _routeWaypoints = [];
@@ -70,6 +56,14 @@ class _NavigationPageState extends State<NavigationPage> {
     setState(() {
       _currentLocation = widget.iniLocation;
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _locationSubscription!.cancel();
+    _compassSubscription!.cancel();
+    _locationTimer.cancel();
   }
 
   void _getRouteInformation() {
@@ -221,7 +215,7 @@ class _NavigationPageState extends State<NavigationPage> {
                 polylineCoordinates: _polylineCoordinates,
                 currentLocation: _currentLocation,
                 mapRotation: _mapRotation,
-                destination: _routeDestination);
+                destination: _routeWaypoints[_routeWaypoints.length-1]);
           case 'metro':
             if (_isOnWalkNavigation) {
               _locationSubscription!.pause();
@@ -244,7 +238,7 @@ class _NavigationPageState extends State<NavigationPage> {
             return const Text("Allgo ha fallado");
         }
       } else {
-        return EndRouteWidget(_routeDestination);
+        return EndRouteWidget(_routeWaypoints[_routeWaypoints.length-1]);
       }
     }
   }

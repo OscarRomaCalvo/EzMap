@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/CustomButton.dart';
 
+import '../models/RoutePoint.dart';
+import '../pages/RouteSelectionPage.dart';
 import 'PopUpImage.dart';
 
 class ExistRoutePopUp extends StatelessWidget {
-  final destination;
+  final RoutePoint destination;
 
   ExistRoutePopUp(this.destination);
 
@@ -39,7 +41,7 @@ class ExistRoutePopUp extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        destination["pointName"],
+                        destination.name,
                         style: const TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -48,12 +50,19 @@ class ExistRoutePopUp extends StatelessWidget {
                         softWrap: true,
                       ),
                       const SizedBox(height: 20),
-                      PopUpImage(destination["image"]),
+                      PopUpImage(destination.pointImage),
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CustomButton("SI", () {}, false),
+                          CustomButton("SI", () {
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const RouteSelectionPage()),
+                            );
+                          }, false),
                           CustomButton("NO", () {
                             Navigator.of(context).pop();
                           }, true),

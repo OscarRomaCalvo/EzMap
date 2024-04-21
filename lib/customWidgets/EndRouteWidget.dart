@@ -1,9 +1,12 @@
+import 'package:ez_maps/pages/RouteSelectionPage.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/CustomButton.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
 
+import '../models/RoutePoint.dart';
+
 class EndRouteWidget extends StatelessWidget {
-  final destination;
+  final RoutePoint destination;
 
   EndRouteWidget(this.destination);
 
@@ -35,10 +38,10 @@ class EndRouteWidget extends StatelessWidget {
                       softWrap: true,
                     ),
                     const SizedBox(height: 20),
-                    PopUpImage(destination["image"]),
+                    PopUpImage(destination.pointImage),
                     const SizedBox(height: 20),
                     Text(
-                      destination["pointName"],
+                      destination.name,
                       style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -47,7 +50,13 @@ class EndRouteWidget extends StatelessWidget {
                       softWrap: true,
                     ),
                     const SizedBox(height: 20),
-                    CustomButton("TERMINAR", () {}, true)
+                    CustomButton("TERMINAR", () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RouteSelectionPage()),
+                      );
+                    }, true)
                   ],
                 ),
               ),
@@ -56,6 +65,5 @@ class EndRouteWidget extends StatelessWidget {
         ),
       ),
     );
-
   }
 }

@@ -1,5 +1,4 @@
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
-import 'package:ez_maps/services/AuthService.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
@@ -77,10 +76,9 @@ class InitRoutePopUp extends StatelessWidget {
               children: [
                 CustomButton("SALIR", () {
                   Navigator.of(context).pop();
-                  var a = AuthService();
-                  a.signOut();
                 }, false),
                 CustomButton("EMPEZAR", () {
+                  Navigator.of(context).pop();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

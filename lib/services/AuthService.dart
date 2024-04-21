@@ -14,8 +14,6 @@ class AuthService with ChangeNotifier {
    AuthService() {
     _auth.authStateChanges().listen((User? currentUser) {
       user = currentUser;
-      print("USER AUTH");
-      print(_user);
     });
   }
 
