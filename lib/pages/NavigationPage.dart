@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -24,7 +24,7 @@ class NavigationPage extends StatefulWidget {
       : super(key: key);
 
   final String routeName;
-  final LocationData iniLocation;
+  final Position iniLocation;
 
   @override
   State<NavigationPage> createState() => _NavigationPageState();
@@ -33,7 +33,7 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  late LocationData _currentLocation;
+  late Position _currentLocation;
   double _mapRotation = 0.0;
   late MapController _mapController;
   late Timer _locationTimer;
@@ -44,7 +44,7 @@ class _NavigationPageState extends State<NavigationPage> {
   var _routeSteps = [];
   PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
-  StreamSubscription<LocationData>? _locationSubscription;
+  StreamSubscription<Position>? _locationSubscription;
   StreamSubscription<CompassEvent>? _compassSubscription;
   bool _isOnWalkNavigation = false;
   bool _isNewStep = true;
@@ -104,10 +104,9 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   void _subscribeToLocationChanges() {
-    var locationService = Location();
     double distance = 0.0;
     _locationSubscription =
-        locationService.onLocationChanged.listen((LocationData newLocation) {
+        Geolocator.getPositionStream().listen((Position newLocation) {
       setState(() {
         _currentLocation = newLocation;
         LatLng newLatLng =

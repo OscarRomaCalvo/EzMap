@@ -1,6 +1,6 @@
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../models/ShortRoute.dart';
 import '../pages/NavigationPage.dart';
@@ -8,7 +8,7 @@ import 'CustomButton.dart';
 
 class InitRoutePopUp extends StatelessWidget {
   final ShortRoute shortRoute;
-  LocationData iniLocation;
+  Position iniLocation;
 
   InitRoutePopUp(
       {super.key, required this.shortRoute, required this.iniLocation});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../models/ShortRoute.dart';
 import 'InitRoutePopUp.dart';
@@ -7,7 +7,7 @@ import 'PopUpMarker.dart';
 
 class ShortRouteWidget extends StatelessWidget {
   final ShortRoute shortRoute;
-  LocationData iniLocation;
+  Position iniLocation;
 
   ShortRouteWidget(
       {super.key, required this.shortRoute, required this.iniLocation});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
 import 'package:ez_maps/customWidgets/ExitRoutePopUp.dart';
 import 'package:ez_maps/customWidgets/InstructionWidget.dart';
 import 'package:ez_maps/customWidgets/NextStepPopUp.dart';
@@ -17,7 +17,7 @@ class NavigationWidget extends StatelessWidget {
   final VoidCallback continueRoute;
   final MapController mapController;
   final List<LatLng> polylineCoordinates;
-  final LocationData currentLocation;
+  final Position currentLocation;
   final double mapRotation;
   final destination;
 

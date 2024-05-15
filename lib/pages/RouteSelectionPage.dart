@@ -4,13 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:location/location.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart' as perm;
 import 'package:provider/provider.dart';
 import '../customWidgets/CustomButton.dart';
 import '../models/RoutePoint.dart';
 import '../models/ShortRoute.dart';
+import 'package:geolocator/geolocator.dart';
 
 class RouteSelectionPage extends StatefulWidget {
   const RouteSelectionPage({super.key});
@@ -21,7 +21,6 @@ class RouteSelectionPage extends StatefulWidget {
 
 class _RouteSelectionPageState extends State<RouteSelectionPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final _locationService = Location();
 
   bool? _hasLocationPermission;
 
@@ -29,7 +28,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   bool _loadRoutesCompleted = false;
   List<ShortRoute> _nearRoutes = [];
   List<ShortRoute> _shortRoute = [];
-  late LocationData _iniLocation;
+  late Position _iniLocation;
 
   @override
   void initState() {
@@ -76,7 +75,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   }
 
   Future<void> _getLocation() async {
-    var iniLocation = await _locationService.getLocation();
+    var iniLocation = await Geolocator.getCurrentPosition();
     setState(() {
       _iniLocation = iniLocation;
       _getLocationCompleted = true;

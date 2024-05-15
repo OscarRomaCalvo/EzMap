@@ -37,7 +37,6 @@ dependencies:
   cupertino_icons: any
   flutter_map: 6.1.0
   flutter_compass: 0.8.0
-  location: 5.0.3
   http: 1.2.1
   flutter_polyline_points: 2.0.0
   permission_handler: ^11.3.0
@@ -48,6 +47,7 @@ dependencies:
   google_sign_in: ^6.2.1
   provider: ^6.1.2
   flutter_tts: ^4.0.2
+  geolocator: ^11.1.0
 
 dev_dependencies:
   flutter_test:
