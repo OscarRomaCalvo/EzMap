@@ -88,7 +88,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
         LatLng(_iniLocation.latitude!, _iniLocation.longitude!);
     double distance =
         const Distance().as(LengthUnit.Meter, currentLatLng, routeOriginPoint);
-    return distance < 50;
+    return distance < 100;
   }
 
   Future<void> _getRoutes() async {

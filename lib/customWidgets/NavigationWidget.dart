@@ -61,7 +61,7 @@ class NavigationWidget extends StatelessWidget {
         routeWaypoints[index].location.longitude);
     double distance =
         const Distance().as(LengthUnit.Meter, currentLatLng, nextStepLatLng);
-    return distance > 10;
+    return distance > 20;
   }
 
   @override
