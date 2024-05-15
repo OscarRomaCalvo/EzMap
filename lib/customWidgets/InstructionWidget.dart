@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
+
+import '../services/TextReader.dart';
 
 class InstructionWidget extends StatelessWidget {
   final step;
@@ -14,36 +18,23 @@ class InstructionWidget extends StatelessWidget {
   }
 }
 
-class OneInstructionWidget extends StatelessWidget {
+class OneInstructionWidget extends StatefulWidget {
   final step;
 
   OneInstructionWidget(this.step);
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          step['step1']['text'],
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-          softWrap: true,
-        ),
-        const SizedBox(height: 20.0),
-        Flexible(child: PopUpImage(step['step1']['image'])),
-      ],
-    );
-  }
+  _OneInstructionWidgetState createState() => _OneInstructionWidgetState();
 }
 
-class TwoInstructionWidget extends StatelessWidget {
-  final step;
-
-  TwoInstructionWidget(this.step);
+class _OneInstructionWidgetState extends State<OneInstructionWidget> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 1), () {
+      TextReader.speak(widget.step['step1']['text']);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +42,45 @@ class TwoInstructionWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          step['step1']['text'],
+          widget.step['step1']['text'],
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+          softWrap: true,
+        ),
+        const SizedBox(height: 20.0),
+        Flexible(child: PopUpImage(widget.step['step1']['image'])),
+      ],
+    );
+  }
+}
+
+class TwoInstructionWidget extends StatefulWidget {
+  final step;
+
+  TwoInstructionWidget(this.step);
+
+  @override
+  _TwoInstructionWidgetState createState() => _TwoInstructionWidgetState();
+}
+
+class _TwoInstructionWidgetState extends State<TwoInstructionWidget> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 1), () {
+      TextReader.speak(widget.step['step1']['text'] + ' ' + widget.step['step2']['text']);
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          widget.step['step1']['text'],
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -61,11 +90,11 @@ class TwoInstructionWidget extends StatelessWidget {
         ),
         const SizedBox(height: 20.0),
         Flexible(
-          child: PopUpImage(step['step1']['image']),
+          child: PopUpImage(widget.step['step1']['image']),
         ),
         const SizedBox(height: 20.0),
         Text(
-          step['step2']['text'],
+          widget.step['step2']['text'],
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -75,9 +104,10 @@ class TwoInstructionWidget extends StatelessWidget {
         ),
         const SizedBox(height: 20.0),
         Flexible(
-          child: PopUpImage(step['step2']['image']),
+          child: PopUpImage(widget.step['step2']['image']),
         ),
       ],
     );
   }
 }
+
