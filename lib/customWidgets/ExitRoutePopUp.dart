@@ -63,6 +63,7 @@ class _ExitRoutePopUpState extends State<ExitRoutePopUp> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CustomButton("SI", () {
+                            TextReader.stop();
                             Navigator.pop(context);
                             Navigator.pushReplacement(
                               context,
