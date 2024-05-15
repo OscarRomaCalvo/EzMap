@@ -47,6 +47,7 @@ class _NavigationPageState extends State<NavigationPage> {
   StreamSubscription<LocationData>? _locationSubscription;
   StreamSubscription<CompassEvent>? _compassSubscription;
   bool _isOnWalkNavigation = false;
+  bool _isNewStep = true;
 
   @override
   void initState() {
@@ -159,7 +160,6 @@ class _NavigationPageState extends State<NavigationPage> {
       double newRotation = 360 - heading;
       double diffRotation = (_mapRotation - newRotation).abs();
       if (diffRotation > 0.1) {
-        print("ENTRA");
         setState(() {
           _mapRotation = newRotation;
           _mapController.rotate(newRotation);
@@ -171,10 +171,8 @@ class _NavigationPageState extends State<NavigationPage> {
   void _continueRoute() {
     setState(() {
       _index++;
+      _isNewStep = true;
     });
-    if (_isOnWalkNavigation && _index < _routeWaypoints.length) {
-      _getRouteInformation();
-    }
   }
 
   @override
@@ -191,11 +189,16 @@ class _NavigationPageState extends State<NavigationPage> {
         RoutePoint actualPoint = _routeWaypoints[_index];
         switch (actualPoint.type) {
           case 'reference' || 'destination':
+            if(_isNewStep == true){
+              _getRoute();
+              setState(() {
+                _isNewStep = false;
+              });
+            }
             if (!_isOnWalkNavigation) {
               setState(() {
                 _isOnWalkNavigation = true;
               });
-              _getRouteInformation();
               _subscribeToLocationChanges();
               _suscribeToCompassChanges();
               _locationTimer =
