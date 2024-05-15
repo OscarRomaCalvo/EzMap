@@ -2,16 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/CustomButton.dart';
 
+import '../pages/EndRoutePage.dart';
 import 'PopUpImage.dart';
 
 class NextStepPopUp extends StatelessWidget {
   final String pointName;
   final String imageURL;
+  final String pointType;
   final bool isFarFromPoint;
   final VoidCallback continueRoute;
 
-  NextStepPopUp(this.pointName, this.imageURL, this.isFarFromPoint,
-      this.continueRoute);
+  NextStepPopUp(this.pointName, this.imageURL, this.pointType,
+      this.isFarFromPoint, this.continueRoute);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,8 @@ class NextStepPopUp extends StatelessWidget {
                 ),
                 child: isFarFromPoint
                     ? FarFromPointWidget(pointName, imageURL)
-                    : NearFromPointWidget(pointName, imageURL, continueRoute),
+                    : NearFromPointWidget(
+                        pointName, imageURL, pointType, continueRoute),
               ),
             );
           },
@@ -93,7 +96,7 @@ class FarFromPointWidget extends StatelessWidget {
             child: PopUpImage(imageURL),
           ),
           const SizedBox(height: 20.0),
-          CustomButton("VOLVER", () {
+          CustomButton("VOLVER A LA RUTA", () {
             Navigator.of(context).pop();
           }, false)
         ],
@@ -105,9 +108,11 @@ class FarFromPointWidget extends StatelessWidget {
 class NearFromPointWidget extends StatelessWidget {
   final String pointName;
   final String imageURL;
+  final String pointType;
   final VoidCallback continueRoute;
 
-  NearFromPointWidget(this.pointName, this.imageURL, this.continueRoute);
+  NearFromPointWidget(
+      this.pointName, this.imageURL, this.pointType, this.continueRoute);
 
   @override
   Widget build(BuildContext context) {
@@ -144,14 +149,13 @@ class NearFromPointWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustomButton("SALIR", () {
+              CustomButton("VOLVER", () {
                 Navigator.of(context).pop();
               }, false),
               CustomButton("CONTINUAR", () {
                 Navigator.of(context).pop();
                 continueRoute();
-              },
-                  true),
+              }, true),
             ],
           ),
         ],
@@ -159,4 +163,3 @@ class NearFromPointWidget extends StatelessWidget {
     );
   }
 }
-

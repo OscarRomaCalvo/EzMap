@@ -6,10 +6,10 @@ import '../models/RoutePoint.dart';
 import '../pages/RouteSelectionPage.dart';
 import 'PopUpImage.dart';
 
-class ExistRoutePopUp extends StatelessWidget {
+class ExitRoutePopUp extends StatelessWidget {
   final RoutePoint destination;
 
-  ExistRoutePopUp(this.destination);
+  ExitRoutePopUp(this.destination);
 
   @override
   Widget build(BuildContext context) {

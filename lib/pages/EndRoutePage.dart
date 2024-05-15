@@ -5,10 +5,11 @@ import 'package:ez_maps/customWidgets/PopUpImage.dart';
 
 import '../models/RoutePoint.dart';
 
-class EndRouteWidget extends StatelessWidget {
-  final RoutePoint destination;
+class EndRoutePage extends StatelessWidget {
+  final String destinationImage;
+  final String destinationName;
 
-  EndRouteWidget(this.destination);
+  EndRoutePage(this.destinationImage, this.destinationName);
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +39,10 @@ class EndRouteWidget extends StatelessWidget {
                       softWrap: true,
                     ),
                     const SizedBox(height: 20),
-                    PopUpImage(destination.pointImage),
+                    PopUpImage(destinationImage),
                     const SizedBox(height: 20),
                     Text(
-                      destination.name,
+                      destinationName,
                       style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,

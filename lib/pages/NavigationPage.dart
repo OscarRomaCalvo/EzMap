@@ -10,7 +10,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
-import 'package:ez_maps/customWidgets/EndRouteWidget.dart';
 import 'package:ez_maps/customWidgets/MLNavigation/MLNavigationWidget.dart';
 import 'package:ez_maps/customWidgets/MetroNavigation/MetroNavigationWidget.dart';
 import 'package:ez_maps/customWidgets/NavigationWidget.dart';
@@ -18,6 +17,7 @@ import 'package:provider/provider.dart';
 
 import '../models/RoutePoint.dart';
 import '../services/AuthService.dart';
+import 'EndRoutePage.dart';
 
 class NavigationPage extends StatefulWidget {
   NavigationPage({Key? key, required this.routeName, required this.iniLocation})
@@ -169,10 +169,20 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   void _continueRoute() {
-    setState(() {
-      _index++;
-      _isNewStep = true;
-    });
+    if (_index == _routeSteps.length - 1) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EndRoutePage(
+                _routeWaypoints[_index].pointImage,
+                _routeWaypoints[_index].name)),
+      );
+    } else {
+      setState(() {
+        _index++;
+        _isNewStep = true;
+      });
+    }
   }
 
   @override
@@ -185,63 +195,59 @@ class _NavigationPageState extends State<NavigationPage> {
         )),
       );
     } else {
-      if (_index < _routeWaypoints.length) {
-        RoutePoint actualPoint = _routeWaypoints[_index];
-        switch (actualPoint.type) {
-          case 'reference' || 'destination':
-            if(_isNewStep == true){
-              _getRoute();
-              setState(() {
-                _isNewStep = false;
-              });
-            }
-            if (!_isOnWalkNavigation) {
-              setState(() {
-                _isOnWalkNavigation = true;
-              });
-              _subscribeToLocationChanges();
-              _suscribeToCompassChanges();
-              _locationTimer =
-                  Timer.periodic(const Duration(seconds: 30), (timer) {
-                //TODO: quitar el comentario, solo está durante el desarrollo.
-                //_getRoute();
-                print("Coger Route");
-              });
-            }
-            return NavigationWidget(
-                completedLoad: _completedLoad,
-                index: _index,
-                routeSteps: _routeSteps,
-                routeWaypoints: _routeWaypoints,
-                continueRoute: _continueRoute,
-                mapController: _mapController,
-                polylineCoordinates: _polylineCoordinates,
-                currentLocation: _currentLocation,
-                mapRotation: _mapRotation,
-                destination: _routeWaypoints[_routeWaypoints.length-1]);
-          case 'metro':
-            if (_isOnWalkNavigation) {
-              _locationSubscription!.pause();
-              _compassSubscription!.pause();
-              _locationTimer.cancel();
-              _isOnWalkNavigation = false;
-            }
-            return MetroNavigationWidget(
-                actualPoint.name, _routeSteps[_index], _continueRoute);
-          case 'ml':
-            if (_isOnWalkNavigation) {
-              _locationSubscription!.pause();
-              _compassSubscription!.pause();
-              _locationTimer.cancel();
-              _isOnWalkNavigation = false;
-            }
-            return MLNavigationWidget(
-                actualPoint.name, _routeSteps[_index], _continueRoute);
-          default:
-            return const Text("Allgo ha fallado");
-        }
-      } else {
-        return EndRouteWidget(_routeWaypoints[_routeWaypoints.length-1]);
+      RoutePoint actualPoint = _routeWaypoints[_index];
+      switch (actualPoint.type) {
+        case 'reference' || 'destination':
+          if (_isNewStep == true) {
+            _getRoute();
+            setState(() {
+              _isNewStep = false;
+            });
+          }
+          if (!_isOnWalkNavigation) {
+            setState(() {
+              _isOnWalkNavigation = true;
+            });
+            _subscribeToLocationChanges();
+            _suscribeToCompassChanges();
+            _locationTimer =
+                Timer.periodic(const Duration(seconds: 30), (timer) {
+              //TODO: quitar el comentario, solo está durante el desarrollo.
+              //_getRoute();
+              print("Coger Route");
+            });
+          }
+          return NavigationWidget(
+              completedLoad: _completedLoad,
+              index: _index,
+              routeSteps: _routeSteps,
+              routeWaypoints: _routeWaypoints,
+              continueRoute: _continueRoute,
+              mapController: _mapController,
+              polylineCoordinates: _polylineCoordinates,
+              currentLocation: _currentLocation,
+              mapRotation: _mapRotation,
+              destination: _routeWaypoints[_routeWaypoints.length - 1]);
+        case 'metro':
+          if (_isOnWalkNavigation) {
+            _locationSubscription!.pause();
+            _compassSubscription!.pause();
+            _locationTimer.cancel();
+            _isOnWalkNavigation = false;
+          }
+          return MetroNavigationWidget(
+              actualPoint.name, _routeSteps[_index], _continueRoute);
+        case 'ml':
+          if (_isOnWalkNavigation) {
+            _locationSubscription!.pause();
+            _compassSubscription!.pause();
+            _locationTimer.cancel();
+            _isOnWalkNavigation = false;
+          }
+          return MLNavigationWidget(
+              actualPoint.name, _routeSteps[_index], _continueRoute);
+        default:
+          return const Text("Allgo ha fallado");
       }
     }
   }
