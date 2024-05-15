@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/CustomButton.dart';
 
 import '../pages/EndRoutePage.dart';
+import '../services/TextReader.dart';
 import 'PopUpImage.dart';
 
 class NextStepPopUp extends StatelessWidget {
@@ -58,12 +59,21 @@ class NextStepPopUp extends StatelessWidget {
   }
 }
 
-class FarFromPointWidget extends StatelessWidget {
+class FarFromPointWidget extends StatefulWidget {
   final String pointName;
   final String imageURL;
 
   FarFromPointWidget(this.pointName, this.imageURL);
 
+  @override
+  _FarFromPointWidgetState createState() => _FarFromPointWidgetState();
+}
+
+class _FarFromPointWidgetState extends State<FarFromPointWidget> {
+  @override
+  initState(){
+    TextReader.speak("Estas lejos de ${widget.pointName}. Pulsa el botón y continua con el guiado");
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -82,7 +92,7 @@ class FarFromPointWidget extends StatelessWidget {
           ),
           const SizedBox(height: 20.0),
           Text(
-            pointName,
+            widget.pointName,
             style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
@@ -93,10 +103,11 @@ class FarFromPointWidget extends StatelessWidget {
           const SizedBox(height: 20.0),
           SizedBox(
             height: 300,
-            child: PopUpImage(imageURL),
+            child: PopUpImage(widget.imageURL),
           ),
           const SizedBox(height: 20.0),
           CustomButton("VOLVER A LA RUTA", () {
+            TextReader.stop();
             Navigator.of(context).pop();
           }, false)
         ],
@@ -105,7 +116,7 @@ class FarFromPointWidget extends StatelessWidget {
   }
 }
 
-class NearFromPointWidget extends StatelessWidget {
+class NearFromPointWidget extends StatefulWidget {
   final String pointName;
   final String imageURL;
   final String pointType;
@@ -114,6 +125,15 @@ class NearFromPointWidget extends StatelessWidget {
   NearFromPointWidget(
       this.pointName, this.imageURL, this.pointType, this.continueRoute);
 
+  @override
+  _NearFromPointWidgetState createState() => _NearFromPointWidgetState();
+}
+
+class _NearFromPointWidgetState extends State<NearFromPointWidget> {
+  @override
+  initState(){
+    TextReader.speak("¿Has llegado a ${widget.pointName}?");
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -132,7 +152,7 @@ class NearFromPointWidget extends StatelessWidget {
           ),
           const SizedBox(height: 20.0),
           Text(
-            pointName,
+            widget.pointName,
             style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
@@ -143,18 +163,20 @@ class NearFromPointWidget extends StatelessWidget {
           const SizedBox(height: 20.0),
           SizedBox(
             height: 300,
-            child: PopUpImage(imageURL),
+            child: PopUpImage(widget.imageURL),
           ),
           const SizedBox(height: 20.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustomButton("VOLVER", () {
+              CustomButton("NO", () {
+                TextReader.stop();
                 Navigator.of(context).pop();
               }, false),
-              CustomButton("CONTINUAR", () {
+              CustomButton("SÍ", () {
+                TextReader.stop();
                 Navigator.of(context).pop();
-                continueRoute();
+                widget.continueRoute();
               }, true),
             ],
           ),

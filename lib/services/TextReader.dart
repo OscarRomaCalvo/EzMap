@@ -10,4 +10,11 @@ class TextReader {
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(text);
   }
+  static Future<void> stop() async {
+    await flutterTts.setLanguage('es-ES');
+    await flutterTts.setSpeechRate(0.4);
+    await flutterTts.setVolume(1.0);
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak("");
+  }
 }

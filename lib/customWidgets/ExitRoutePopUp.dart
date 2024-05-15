@@ -4,13 +4,19 @@ import 'package:ez_maps/customWidgets/CustomButton.dart';
 
 import '../models/RoutePoint.dart';
 import '../pages/RouteSelectionPage.dart';
+import '../services/TextReader.dart';
 import 'PopUpImage.dart';
 
-class ExitRoutePopUp extends StatelessWidget {
+class ExitRoutePopUp extends StatefulWidget {
   final RoutePoint destination;
 
   ExitRoutePopUp(this.destination);
 
+  @override
+  _ExitRoutePopUpState createState() => _ExitRoutePopUpState();
+}
+
+class _ExitRoutePopUpState extends State<ExitRoutePopUp> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -18,6 +24,7 @@ class ExitRoutePopUp extends StatelessWidget {
         showDialog(
           context: context,
           builder: (BuildContext context) {
+            TextReader.speak("¿Quieres terminar la ruta con destino ${widget.destination.name}?");
             return Dialog(
               child: Container(
                 decoration: BoxDecoration(
@@ -41,7 +48,7 @@ class ExitRoutePopUp extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        destination.name,
+                        widget.destination.name,
                         style: const TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -50,7 +57,7 @@ class ExitRoutePopUp extends StatelessWidget {
                         softWrap: true,
                       ),
                       const SizedBox(height: 20),
-                      PopUpImage(destination.pointImage),
+                      PopUpImage(widget.destination.pointImage),
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,10 +67,13 @@ class ExitRoutePopUp extends StatelessWidget {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const RouteSelectionPage()),
+                                builder: (context) =>
+                                    const RouteSelectionPage(),
+                              ),
                             );
                           }, false),
                           CustomButton("NO", () {
+                            TextReader.stop();
                             Navigator.of(context).pop();
                           }, true),
                         ],

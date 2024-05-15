@@ -1,16 +1,27 @@
 import 'package:ez_maps/pages/RouteSelectionPage.dart';
+import 'package:ez_maps/services/TextReader.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/CustomButton.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
 
 import '../models/RoutePoint.dart';
 
-class EndRoutePage extends StatelessWidget {
+class EndRoutePage extends StatefulWidget {
   final String destinationImage;
   final String destinationName;
 
   EndRoutePage(this.destinationImage, this.destinationName);
 
+  @override
+  _EndRoutePageState createState() => _EndRoutePageState();
+}
+
+class _EndRoutePageState extends State<EndRoutePage> {
+  @override
+  void initState() {
+    super.initState();
+    TextReader.speak("Has llegado a tu destino: " + widget.destinationName);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,10 +50,10 @@ class EndRoutePage extends StatelessWidget {
                       softWrap: true,
                     ),
                     const SizedBox(height: 20),
-                    PopUpImage(destinationImage),
+                    PopUpImage(widget.destinationImage),
                     const SizedBox(height: 20),
                     Text(
-                      destinationName,
+                      widget.destinationName,
                       style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
