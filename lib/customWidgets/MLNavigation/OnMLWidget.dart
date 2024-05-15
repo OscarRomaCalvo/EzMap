@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../services/TextReader.dart';
 import '../CustomButton.dart';
 
 class OnMLWidget extends StatefulWidget {
@@ -13,7 +14,15 @@ class OnMLWidget extends StatefulWidget {
 }
 
 class _OnMLWidgetState extends State<OnMLWidget> {
-  _reduceStops() {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.stops > 1) {
+      TextReader.speak("Tu parada es " + widget.stopName + ". Pulsa el botón en cada parada.");
+    }
+  }
+
+  void _reduceStops() {
     if (widget.stops > 1) {
       setState(() {
         widget.stops--;
@@ -51,11 +60,21 @@ class _OnMLWidgetState extends State<OnMLWidget> {
   }
 }
 
-class LastStop extends StatelessWidget {
+class LastStop extends StatefulWidget {
   final VoidCallback continueMetroNavigation;
 
   LastStop(this.continueMetroNavigation);
 
+  @override
+  _LastStopState createState() => _LastStopState();
+}
+
+class _LastStopState extends State<LastStop> {
+  @override
+  void initState() {
+    super.initState();
+    TextReader.speak("Baja en la siguiente parada.");
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -96,7 +115,7 @@ class LastStop extends StatelessWidget {
                 softWrap: true,
               ),
               SizedBox(height: 20),
-              CustomButton("SIGUIENTE", continueMetroNavigation, true),
+              CustomButton("SIGUIENTE", widget.continueMetroNavigation, true),
             ],
           ),
         )

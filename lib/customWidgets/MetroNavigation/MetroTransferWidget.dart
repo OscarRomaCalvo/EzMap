@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
+import '../../services/TextReader.dart';
 import '../CustomButton.dart';
 
-class MetroTransferWidget extends StatelessWidget {
+class MetroTransferWidget extends StatefulWidget {
   final VoidCallback doTransfer;
   final String previousLine;
   final String previousDestination;
@@ -11,6 +11,17 @@ class MetroTransferWidget extends StatelessWidget {
 
   const MetroTransferWidget(this.doTransfer, this.previousLine,
       this.previousDestination, this.nextLine, this.nextDirection);
+
+  @override
+  _MetroTransferWidgetState createState() => _MetroTransferWidgetState();
+}
+
+class _MetroTransferWidgetState extends State<MetroTransferWidget> {
+  @override
+  void initState() {
+    super.initState();
+    TextReader.speak("Has llegado a tu parada. Pulsa el botón para iniciar el transbordo");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +39,7 @@ class MetroTransferWidget extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         Text(
-          previousDestination,
+          widget.previousDestination,
           style: const TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
@@ -51,14 +62,14 @@ class MetroTransferWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(
-              image: AssetImage("assets/images/line$nextLine-metro.png"),
+              image: AssetImage("assets/images/line${widget.nextLine}-metro.png"),
               height: 50,
             ),
             const SizedBox(
               width: 20,
             ),
             Text(
-              "Línea $nextLine",
+              "Línea ${widget.nextLine}",
               style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
@@ -80,7 +91,7 @@ class MetroTransferWidget extends StatelessWidget {
                 text: "dirección: ",
               ),
               TextSpan(
-                text: nextDirection,
+                text: widget.nextDirection,
                 style: const TextStyle(
                   fontSize: 30,
                 ),
@@ -107,7 +118,7 @@ class MetroTransferWidget extends StatelessWidget {
                 softWrap: true,
               ),
               const SizedBox(height: 20),
-              CustomButton("SIGUIENTE", doTransfer, true),
+              CustomButton("SIGUIENTE", widget.doTransfer, true),
             ],
           ),
         ),

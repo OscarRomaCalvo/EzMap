@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
-
+import '../../services/TextReader.dart';
 import '../CustomButton.dart';
 
-class InitStepWidget extends StatelessWidget {
+class InitStepWidget extends StatefulWidget {
   final step;
   final VoidCallback startOnMLNavigation;
 
   InitStepWidget(this.step, this.startOnMLNavigation);
 
+  @override
+  _InitStepWidgetState createState() => _InitStepWidgetState();
+}
 
-
+class _InitStepWidgetState extends State<InitStepWidget> {
+  void initState() {
+    super.initState();
+    TextReader.speak("Utiliza la línea " +
+        widget.step["line"] +
+        "en dirección " +
+        widget.step["direction"] +
+        ". Pulsa el botón cuando estés en el metro ligero.");
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -29,21 +40,22 @@ class InitStepWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(
-              image: AssetImage("assets/images/line${step["line"]}-ml.png"),
+              image: AssetImage("assets/images/line${widget.step["line"]}-ml.png"),
               height: 50,
             ),
             const SizedBox(
               width: 20,
             ),
             Text(
-              "Línea ${step["line"]}",
+              "Línea ${widget.step["line"]}",
               style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
-        ),RichText(
+        ),
+        RichText(
           textAlign: TextAlign.center,
           softWrap: true,
           text: TextSpan(
@@ -57,7 +69,7 @@ class InitStepWidget extends StatelessWidget {
                 text: "dirección: ",
               ),
               TextSpan(
-                text: step["direction"],
+                text: widget.step["direction"],
                 style: const TextStyle(
                   fontSize: 30,
                 ),
@@ -84,13 +96,11 @@ class InitStepWidget extends StatelessWidget {
                 softWrap: true,
               ),
               const SizedBox(height: 20),
-              CustomButton("SIGUIENTE", startOnMLNavigation, true),
+              CustomButton("SIGUIENTE", widget.startOnMLNavigation, true),
             ],
-          )
+          ),
         )
       ],
     );
   }
 }
-
-

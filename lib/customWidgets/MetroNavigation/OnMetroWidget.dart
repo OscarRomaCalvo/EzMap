@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../services/TextReader.dart';
 import '../CustomButton.dart';
 
 class OnMetroWidget extends StatefulWidget {
   int stops;
   final String stopName;
   final VoidCallback continueMetroNavigation;
+
   OnMetroWidget(this.stops, this.stopName, this.continueMetroNavigation);
 
   @override
@@ -13,7 +15,15 @@ class OnMetroWidget extends StatefulWidget {
 }
 
 class _OnMetroWidgetState extends State<OnMetroWidget> {
-  _reduceStops() {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.stops > 1) {
+      TextReader.speak("Tu parada es " + widget.stopName + ". Pulsa el botón en cada parada.");
+    }
+  }
+
+  void _reduceStops() {
     if (widget.stops > 1) {
       setState(() {
         widget.stops--;
@@ -45,17 +55,29 @@ class _OnMetroWidgetState extends State<OnMetroWidget> {
           textAlign: TextAlign.center,
           softWrap: true,
         ),
-        (widget.stops > 1) ? MultipleStops(widget.stops, _reduceStops) : LastStop(widget.continueMetroNavigation),
+        (widget.stops > 1)
+            ? MultipleStops(widget.stops, _reduceStops)
+            : LastStop(widget.continueMetroNavigation),
       ],
     );
   }
 }
 
-class LastStop extends StatelessWidget {
+class LastStop extends StatefulWidget {
   final VoidCallback continueMetroNavigation;
 
   LastStop(this.continueMetroNavigation);
 
+  @override
+  _LastStopState createState() => _LastStopState();
+}
+
+class _LastStopState extends State<LastStop> {
+  @override
+  void initState() {
+    super.initState();
+    TextReader.speak("Baja en la siguiente parada.");
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -96,7 +118,7 @@ class LastStop extends StatelessWidget {
                 softWrap: true,
               ),
               SizedBox(height: 20),
-              CustomButton("SIGUIENTE", continueMetroNavigation, true),
+              CustomButton("SIGUIENTE", widget.continueMetroNavigation, true),
             ],
           ),
         )

@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
-
+import '../../services/TextReader.dart';
 import '../CustomButton.dart';
 
-class MLEndWidget extends StatelessWidget {
+class MLEndWidget extends StatefulWidget {
   final String previousDestination;
   final VoidCallback continueRoute;
 
   MLEndWidget(this.previousDestination, this.continueRoute);
+
+  @override
+  _MLEndWidgetState createState() => _MLEndWidgetState();
+}
+
+class _MLEndWidgetState extends State<MLEndWidget> {
+  @override
+  void initState() {
+    super.initState();
+    TextReader.speak("Sal de la estación. Pulsa el botón cuando estés fuera de la estación.");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +35,7 @@ class MLEndWidget extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         Text(
-          previousDestination,
+          widget.previousDestination,
           style: const TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
@@ -61,7 +72,7 @@ class MLEndWidget extends StatelessWidget {
                 softWrap: true,
               ),
               const SizedBox(height: 20),
-              CustomButton("SIGUIENTE", continueRoute, true),
+              CustomButton("SIGUIENTE", widget.continueRoute, true),
             ],
           ),
         ),

@@ -5,7 +5,7 @@ class TextReader {
 
   static Future<void> speak(String text) async {
     await flutterTts.setLanguage('es-ES');
-    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.setSpeechRate(0.4);
     await flutterTts.setVolume(1.0);
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(text);

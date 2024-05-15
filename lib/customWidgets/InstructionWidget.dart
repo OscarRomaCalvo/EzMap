@@ -31,9 +31,7 @@ class _OneInstructionWidgetState extends State<OneInstructionWidget> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1), () {
-      TextReader.speak(widget.step['step1']['text']);
-    });
+    TextReader.speak(widget.step['step1']['text']);
   }
 
   @override
@@ -70,9 +68,7 @@ class _TwoInstructionWidgetState extends State<TwoInstructionWidget> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1), () {
-      TextReader.speak(widget.step['step1']['text'] + ' ' + widget.step['step2']['text']);
-    });
+    TextReader.speak(widget.step['step1']['text'] + ' ' + widget.step['step2']['text']);
   }
   @override
   Widget build(BuildContext context) {

@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
-
+import '../../services/TextReader.dart';
 import '../CustomButton.dart';
 
-class InitStepWidget extends StatelessWidget {
-  final step;
+class InitStepWidget extends StatefulWidget {
+  final Map<String, dynamic> step;
   final VoidCallback startOnMetroNavigation;
 
   InitStepWidget(this.step, this.startOnMetroNavigation);
 
+  @override
+  _InitStepWidgetState createState() => _InitStepWidgetState();
+}
 
+class _InitStepWidgetState extends State<InitStepWidget> {
+  void initState() {
+    super.initState();
+    TextReader.speak("Utiliza la línea " +
+        widget.step["line"] +
+        "en dirección " +
+        widget.step["direction"] +
+        ". Pulsa el botón cuando estés en el metro.");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,21 +41,23 @@ class InitStepWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(
-              image: AssetImage("assets/images/line${step["line"]}-metro.png"),
+              image: AssetImage(
+                  "assets/images/line${widget.step["line"]}-metro.png"),
               height: 50,
             ),
             SizedBox(
               width: 20,
             ),
             Text(
-              "Línea ${step["line"]}",
+              "Línea ${widget.step["line"]}",
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
-        ),RichText(
+        ),
+        RichText(
           textAlign: TextAlign.center,
           softWrap: true,
           text: TextSpan(
@@ -57,7 +71,7 @@ class InitStepWidget extends StatelessWidget {
                 text: "dirección: ",
               ),
               TextSpan(
-                text: step["direction"],
+                text: widget.step["direction"],
                 style: const TextStyle(
                   fontSize: 30,
                 ),
@@ -84,13 +98,11 @@ class InitStepWidget extends StatelessWidget {
                 softWrap: true,
               ),
               const SizedBox(height: 20),
-              CustomButton("SIGUIENTE", startOnMetroNavigation, true),
+              CustomButton("SIGUIENTE", widget.startOnMetroNavigation, true),
             ],
-          )
-        )
+          ),
+        ),
       ],
     );
   }
 }
-
-

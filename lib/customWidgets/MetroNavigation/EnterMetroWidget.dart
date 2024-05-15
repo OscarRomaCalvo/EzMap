@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 
+import '../../services/TextReader.dart';
 import '../CustomButton.dart';
 
-class EnterMetroWidget extends StatelessWidget {
+class EnterMetroWidget extends StatefulWidget {
   final String originStation;
   final VoidCallback startMetroNavigation;
 
   EnterMetroWidget(this.originStation, this.startMetroNavigation);
+
+  @override
+  _EnterMetroWidgetState createState() => _EnterMetroWidgetState();
+}
+
+class _EnterMetroWidgetState extends State<EnterMetroWidget> {
+  @override
+  void initState() {
+    super.initState();
+    TextReader.speak("Entra a la estación de metro " + widget.originStation + ". Pulsa el botón cuando estés dentro.");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +41,7 @@ class EnterMetroWidget extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         Text(
-          originStation,
+          widget.originStation,
           style: const TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
@@ -38,7 +50,7 @@ class EnterMetroWidget extends StatelessWidget {
           softWrap: true,
         ),
         const SizedBox(height: 20),
-        CustomButton("SIGUIENTE", startMetroNavigation, true),
+        CustomButton("SIGUIENTE", widget.startMetroNavigation, true),
       ],
     );
   }
