@@ -103,12 +103,12 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
           .get()
           .then((event) {
         event.data()?.forEach((routeName, routeInformation) {
-          RoutePoint origin = RoutePoint(
+          RouteWaypoint origin = RouteWaypoint(
               name: routeInformation["origin"]["name"],
               type: "origin",
               pointImage: routeInformation["origin"]["image"],
               location: routeInformation["origin"]["location"]);
-          RoutePoint destination = RoutePoint(
+          RouteWaypoint destination = RouteWaypoint(
               name: routeInformation["destination"]["name"],
               type: "destination",
               pointImage: routeInformation["destination"]["image"],

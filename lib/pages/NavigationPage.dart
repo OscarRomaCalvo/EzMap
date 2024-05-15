@@ -40,7 +40,7 @@ class _NavigationPageState extends State<NavigationPage> {
 
   bool _completedLoad = false;
   int _index = 0;
-  List<RoutePoint> _routeWaypoints = [];
+  List<RouteWaypoint> _routeWaypoints = [];
   var _routeSteps = [];
   PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
@@ -73,7 +73,7 @@ class _NavigationPageState extends State<NavigationPage> {
     User? user = authService.user;
 
     if (user != null) {
-      List<RoutePoint> routeWaypoints = [];
+      List<RouteWaypoint> routeWaypoints = [];
       _firestore
           .collection("routes")
           .doc(user.email)
@@ -83,7 +83,7 @@ class _NavigationPageState extends State<NavigationPage> {
           .then((event) {
         _routeSteps = event.data()?["steps"];
         event.data()?["waypoints"].forEach((waypoint) {
-          RoutePoint routePoint = RoutePoint(
+          RouteWaypoint routePoint = RouteWaypoint(
               name: waypoint["name"],
               type: waypoint["type"],
               pointImage: waypoint["pointImage"],
@@ -195,7 +195,7 @@ class _NavigationPageState extends State<NavigationPage> {
         )),
       );
     } else {
-      RoutePoint actualPoint = _routeWaypoints[_index];
+      RouteWaypoint actualPoint = _routeWaypoints[_index];
       switch (actualPoint.type) {
         case 'reference' || 'destination':
           if (_isNewStep == true) {

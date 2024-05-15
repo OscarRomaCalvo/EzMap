@@ -13,7 +13,7 @@ class NavigationWidget extends StatelessWidget {
   final bool completedLoad;
   final int index;
   final routeSteps;
-  final List<RoutePoint> routeWaypoints;
+  final List<RouteWaypoint> routeWaypoints;
   final VoidCallback continueRoute;
   final MapController mapController;
   final List<LatLng> polylineCoordinates;
@@ -40,7 +40,7 @@ class NavigationWidget extends StatelessWidget {
     for (var i = 0; i < routeWaypoints.length; i++) {
       if (routeWaypoints[i].type == 'reference' ||
           routeWaypoints[i].type == 'destination') {
-        RoutePoint routePoint = routeWaypoints[i];
+        RouteWaypoint routePoint = routeWaypoints[i];
         var marker = Marker(
           point:
               LatLng(routePoint.location.latitude, routePoint.location.longitude),

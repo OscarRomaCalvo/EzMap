@@ -8,7 +8,7 @@ import '../services/TextReader.dart';
 import 'PopUpImage.dart';
 
 class ExitRoutePopUp extends StatefulWidget {
-  final RoutePoint destination;
+  final RouteWaypoint destination;
 
   ExitRoutePopUp(this.destination);
 
