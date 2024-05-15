@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/CustomButton.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
 
-import '../models/RoutePoint.dart';
 
 class EndRoutePage extends StatefulWidget {
   final String destinationImage;
