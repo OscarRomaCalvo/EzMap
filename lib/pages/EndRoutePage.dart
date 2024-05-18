@@ -1,9 +1,9 @@
+import 'package:ez_maps/customWidgets/ImageButton.dart';
 import 'package:ez_maps/pages/RouteSelectionPage.dart';
 import 'package:ez_maps/services/TextReader.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/CustomButton.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
-
 
 class EndRoutePage extends StatefulWidget {
   final String destinationImage;
@@ -21,6 +21,7 @@ class _EndRoutePageState extends State<EndRoutePage> {
     super.initState();
     TextReader.speak("Has llegado a tu destino: " + widget.destinationName);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +41,7 @@ class _EndRoutePageState extends State<EndRoutePage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
-                      "Has llegado",
+                      "HAS LLEGADO",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -61,13 +62,18 @@ class _EndRoutePageState extends State<EndRoutePage> {
                       softWrap: true,
                     ),
                     const SizedBox(height: 20),
-                    CustomButton("TERMINAR", () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RouteSelectionPage()),
-                      );
-                    }, true)
+                    ImageButton(
+                      imagePath:
+                          "assets/images/ARASAACPictograms/nextButton.png",
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RouteSelectionPage()),
+                        );
+                      },
+                      size: 100,
+                    ),
                   ],
                 ),
               ),
