@@ -34,7 +34,7 @@ class _EnterMLWidgetState extends State<EnterMLWidget> {
         ),
         const SizedBox(height: 20),
         const Image(
-          image: AssetImage("assets/images/ml-logo.png"),
+          image: AssetImage("assets/images/metroLigero/ml-logo.png"),
           width: double.infinity,
         ),
         const SizedBox(height: 20),

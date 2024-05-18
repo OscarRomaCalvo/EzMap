@@ -62,7 +62,7 @@ class _MetroTransferWidgetState extends State<MetroTransferWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(
-              image: AssetImage("assets/images/line${widget.nextLine}-metro.png"),
+              image: AssetImage("assets/images/metro/line${widget.nextLine}-metro.png"),
               height: 50,
             ),
             const SizedBox(

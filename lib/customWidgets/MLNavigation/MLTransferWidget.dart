@@ -62,7 +62,7 @@ class _MLTransferWidgetState extends State<MLTransferWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(
-              image: AssetImage("assets/images/line${widget.nextLine}-ml.png"),
+              image: AssetImage("assets/images/metroLigero/line${widget.nextLine}-ml.png"),
               height: 50,
             ),
             const SizedBox(

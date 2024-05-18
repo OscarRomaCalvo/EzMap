@@ -40,7 +40,7 @@ class _InitStepWidgetState extends State<InitStepWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(
-              image: AssetImage("assets/images/line${widget.step["line"]}-ml.png"),
+              image: AssetImage("assets/images/metroLigero/line${widget.step["line"]}-ml.png"),
               height: 50,
             ),
             const SizedBox(

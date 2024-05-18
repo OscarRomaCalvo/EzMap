@@ -36,7 +36,7 @@ class _EnterMetroWidgetState extends State<EnterMetroWidget> {
         ),
         const SizedBox(height: 20),
         const Image(
-          image: AssetImage("assets/images/metro-logo.png"),
+          image: AssetImage("assets/images/metro/metro-logo.png"),
           width: double.infinity,
         ),
         const SizedBox(height: 20),
