@@ -156,7 +156,6 @@ class NavigationWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ExitRoutePopUp(destination),
             NextStepPopUp(
               routeWaypoints[index].name,
               routeWaypoints[index].pointImage,
