@@ -1,3 +1,4 @@
+import 'package:ez_maps/customWidgets/ImageButton.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,9 +25,10 @@ class InitRoutePopUp extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
-              "Ir de",
+              "IR DE",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -49,7 +51,7 @@ class InitRoutePopUp extends StatelessWidget {
               height: 15,
             ),
             const Text(
-              "a",
+              "A",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -72,21 +74,31 @@ class InitRoutePopUp extends StatelessWidget {
               height: 20,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                CustomButton("SALIR", () {
-                  Navigator.of(context).pop();
-                }, false),
-                CustomButton("EMPEZAR", () {
-                  Navigator.of(context).pop();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NavigationPage(
-                            routeName: shortRoute.routeName,
-                            iniLocation: iniLocation)),
-                  );
-                }, true),
+                ImageButton(
+                  imagePath: "assets/images/ARASAACPictograms/no.png",
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  showBorder: true,
+                  size: 60,
+                ),
+                ImageButton(
+                  imagePath: "assets/images/ARASAACPictograms/yes.png",
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NavigationPage(
+                              routeName: shortRoute.routeName,
+                              iniLocation: iniLocation)),
+                    );
+                  },
+                  showBorder: true,
+                  size: 60,
+                ),
               ],
             ),
           ],
