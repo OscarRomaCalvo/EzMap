@@ -154,7 +154,7 @@ class NavigationWidget extends StatelessWidget {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(25),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             NextStepPopUp(
               routeWaypoints[index].name,

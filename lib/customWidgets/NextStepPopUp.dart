@@ -4,6 +4,7 @@ import 'package:ez_maps/customWidgets/CustomButton.dart';
 
 import '../pages/EndRoutePage.dart';
 import '../services/TextReader.dart';
+import 'ImageButton.dart';
 import 'PopUpImage.dart';
 
 class NextStepPopUp extends StatelessWidget {
@@ -39,20 +40,17 @@ class NextStepPopUp extends StatelessWidget {
         );
       },
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: const Color(0xFF4791DB),
+        width: 60,
+        height: 60,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
         ),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text(
-            'CONTINUAR',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+        child: const CircleAvatar(
+          backgroundColor: Colors.transparent,
+          radius: 60,
+          backgroundImage:
+              AssetImage("assets/images/ARASAACPictograms/nextButton.png"),
         ),
       ),
     );
@@ -71,9 +69,11 @@ class FarFromPointWidget extends StatefulWidget {
 
 class _FarFromPointWidgetState extends State<FarFromPointWidget> {
   @override
-  initState(){
-    TextReader.speak("Estas lejos de ${widget.pointName}. Pulsa el botón y continua con el guiado");
+  initState() {
+    TextReader.speak(
+        "Estas lejos de ${widget.pointName}. Pulsa el botón y continua con el guiado");
   }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -82,7 +82,7 @@ class _FarFromPointWidgetState extends State<FarFromPointWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            "Estás lejos de ",
+            "ESTÁS LEJOS DE ",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -106,10 +106,14 @@ class _FarFromPointWidgetState extends State<FarFromPointWidget> {
             child: PopUpImage(widget.imageURL),
           ),
           const SizedBox(height: 20.0),
-          CustomButton("VOLVER A LA RUTA", () {
-            TextReader.stop();
-            Navigator.of(context).pop();
-          }, false)
+          ImageButton(
+              imagePath: "assets/images/ARASAACPictograms/backButton.png",
+              size: 60,
+              onPressed: () {
+                TextReader.stop();
+                Navigator.of(context).pop();
+              },
+          ),
         ],
       ),
     );
@@ -131,9 +135,10 @@ class NearFromPointWidget extends StatefulWidget {
 
 class _NearFromPointWidgetState extends State<NearFromPointWidget> {
   @override
-  initState(){
+  initState() {
     TextReader.speak("¿Has llegado a ${widget.pointName}?");
   }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -142,7 +147,7 @@ class _NearFromPointWidgetState extends State<NearFromPointWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            "¿Has llegado?",
+            "¿HAS LLEGADO?",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -167,17 +172,27 @@ class _NearFromPointWidgetState extends State<NearFromPointWidget> {
           ),
           const SizedBox(height: 20.0),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              CustomButton("NO", () {
-                TextReader.stop();
-                Navigator.of(context).pop();
-              }, false),
-              CustomButton("SÍ", () {
-                TextReader.stop();
-                Navigator.of(context).pop();
-                widget.continueRoute();
-              }, true),
+              ImageButton(
+                imagePath: "assets/images/ARASAACPictograms/no.png",
+                onPressed: () {
+                  TextReader.stop();
+                  Navigator.of(context).pop();
+                },
+                showBorder: true,
+                size: 60,
+              ),
+              ImageButton(
+                imagePath: "assets/images/ARASAACPictograms/yes.png",
+                onPressed: () {
+                  TextReader.stop();
+                  Navigator.of(context).pop();
+                  widget.continueRoute();
+                },
+                showBorder: true,
+                size: 60,
+              ),
             ],
           ),
         ],
