@@ -254,8 +254,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
               ),
               ImageButton(
                 imagePath: "assets/images/ARASAACPictograms/refreshButton.png",
-                size: 70,
-                backgroundColor: const Color(0xFF4791DB),
+                size: 100,
                 onPressed: () async {
                   setState(() {
                     _getLocationCompleted = false;
