@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart' as perm;
 import 'package:provider/provider.dart';
 import '../customWidgets/CustomButton.dart';
+import '../customWidgets/ImageButton.dart';
 import '../models/RoutePoint.dart';
 import '../models/ShortRoute.dart';
 import 'package:geolocator/geolocator.dart';
@@ -155,7 +156,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
                 size: 100,
               ),
               Text(
-                "No hay permisos de ubicación",
+                "NO HAY PERMISOS DE UBICACIÓN",
                 style: TextStyle(
                   fontSize: 30,
                   color: Color(0xFF4791DB),
@@ -170,7 +171,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Pulsa el botón para activar los permisos de ubicación",
+                "PULSA EL BOTÓN PARA ACTIVAR LOS PERMISOS DE UBICACIÓN",
                 style: TextStyle(
                   fontSize: 20,
                 ),
@@ -200,7 +201,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
                   height: 20.0,
                 ),
                 Text(
-                  "Paciencia...\nEstamos cargando tus rutas",
+                  "PACIENCIA...\nESTAMOS CARGANDO TUS RUTAS",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 20,
@@ -226,7 +227,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
                 size: 100,
               ),
               Text(
-                "No tienes ninguna ruta cerca de ti",
+                "NO TIENES NINGUNA RUTA CERCA DE TI",
                 style: TextStyle(
                   fontSize: 30,
                   color: Color(0xFF4791DB),
@@ -241,7 +242,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Puedes volver a cargar las rutas pulsando el botón",
+                "PULSA EL BOTÓN PARA RECARGAR RUTAS",
                 style: TextStyle(
                   fontSize: 20,
                 ),
@@ -251,14 +252,19 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
               const SizedBox(
                 height: 20.0,
               ),
-              CustomButton("RECARGAR RUTAS", () async {
-                setState(() {
-                  _getLocationCompleted = false;
-                  _loadRoutesCompleted = false;
-                });
-                await _getLocation();
-                _getNearbyRoutes();
-              }, true),
+              ImageButton(
+                imagePath: "assets/images/ARASAACPictograms/refreshButton.png",
+                size: 70,
+                backgroundColor: const Color(0xFF4791DB),
+                onPressed: () async {
+                  setState(() {
+                    _getLocationCompleted = false;
+                    _loadRoutesCompleted = false;
+                  });
+                  await _getLocation();
+                  _getNearbyRoutes();
+                },
+              ),
             ],
           ),
         ],
