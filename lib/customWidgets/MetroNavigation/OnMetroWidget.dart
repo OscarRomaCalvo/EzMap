@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../services/TextReader.dart';
 import '../CustomButton.dart';
+import '../ImageButton.dart';
 
 class OnMetroWidget extends StatefulWidget {
   int stops;
@@ -19,7 +20,9 @@ class _OnMetroWidgetState extends State<OnMetroWidget> {
   void initState() {
     super.initState();
     if (widget.stops > 1) {
-      TextReader.speak("Tu parada es " + widget.stopName + ". Pulsa el botón en cada parada.");
+      TextReader.speak("Tu parada es " +
+          widget.stopName +
+          ". Pulsa el botón en cada parada.");
     }
   }
 
@@ -34,30 +37,63 @@ class _OnMetroWidgetState extends State<OnMetroWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          "Tu parada",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFF5F5F5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "TU PARADA:",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    widget.stopName,
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                ],
+              ),
+            ),
           ),
-          textAlign: TextAlign.center,
-          softWrap: true,
         ),
-        const SizedBox(height: 20),
-        Text(
-          widget.stopName,
-          style: const TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-          softWrap: true,
+        const SizedBox(
+          height: 25.0,
         ),
         (widget.stops > 1)
             ? MultipleStops(widget.stops, _reduceStops)
             : LastStop(widget.continueMetroNavigation),
+        const SizedBox(height: 25),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ImageButton(
+                imagePath: "assets/images/ARASAACPictograms/nextButton.png",
+                onPressed: () {
+                  print("placeHolder");
+                },
+                size: 60)
+          ],
+        ),
       ],
     );
   }
@@ -78,16 +114,22 @@ class _LastStopState extends State<LastStop> {
     super.initState();
     TextReader.speak("Baja en la siguiente parada.");
   }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 200,
-          child: const Column(
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFF5F5F5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        width: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "BAJA EN LA SIGUIENTE PARADA",
                 style: TextStyle(
                   fontSize: 30,
@@ -97,19 +139,9 @@ class _LastStopState extends State<LastStop> {
                 textAlign: TextAlign.center,
                 softWrap: true,
               ),
-            ],
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            children: [
+              const SizedBox(height: 20),
               const Text(
-                "Pulsa cuando haya una parada",
+                "PULSA AL BAJAR:",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -117,12 +149,15 @@ class _LastStopState extends State<LastStop> {
                 textAlign: TextAlign.center,
                 softWrap: true,
               ),
-              SizedBox(height: 20),
-              CustomButton("SIGUIENTE", widget.continueMetroNavigation, true),
+              ImageButton(
+                imagePath: "assets/images/ARASAACPictograms/nextButton.png",
+                onPressed: widget.continueMetroNavigation,
+                size: 60,
+              ),
             ],
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 }
@@ -135,15 +170,20 @@ class MultipleStops extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 200,
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFF5F5F5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        width: double.infinity,
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Quedan",
+                "QUEDAN",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -151,7 +191,7 @@ class MultipleStops extends StatelessWidget {
                 textAlign: TextAlign.center,
                 softWrap: true,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 10),
               RichText(
                 textAlign: TextAlign.center,
                 softWrap: true,
@@ -163,7 +203,7 @@ class MultipleStops extends StatelessWidget {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: "${stops}",
+                      text: "$stops",
                       style: const TextStyle(color: Colors.red),
                     ),
                     const TextSpan(
@@ -172,19 +212,9 @@ class MultipleStops extends StatelessWidget {
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            children: [
+              const SizedBox(height: 20),
               const Text(
-                "Pulsa cuando estés en el metro",
+                "PULSA EN CADA PARADA:",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -192,12 +222,15 @@ class MultipleStops extends StatelessWidget {
                 textAlign: TextAlign.center,
                 softWrap: true,
               ),
-              SizedBox(height: 20),
-              CustomButton("PARADA", reduceStops, true),
+              ImageButton(
+                imagePath: "assets/images/ARASAACPictograms/stopButton.png",
+                onPressed: reduceStops,
+                size: 60,
+              ),
             ],
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 }

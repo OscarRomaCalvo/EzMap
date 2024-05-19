@@ -98,9 +98,9 @@ class _OnMLWidgetState extends State<OnMLWidget> {
 }
 
 class LastStop extends StatefulWidget {
-  final VoidCallback continueMetroNavigation;
+  final VoidCallback continueMLNavigation;
 
-  LastStop(this.continueMetroNavigation);
+  LastStop(this.continueMLNavigation);
 
   @override
   _LastStopState createState() => _LastStopState();
@@ -149,7 +149,7 @@ class _LastStopState extends State<LastStop> {
               ),
               ImageButton(
                 imagePath: "assets/images/ARASAACPictograms/nextButton.png",
-                onPressed: widget.continueMetroNavigation,
+                onPressed: widget.continueMLNavigation,
                 size: 60,
               ),
             ],
