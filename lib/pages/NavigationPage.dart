@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ez_maps/customWidgets/WarningTimer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
@@ -38,6 +39,7 @@ class _NavigationPageState extends State<NavigationPage> {
 
   late Position _currentLocation;
   double _mapRotation = 0.0;
+  double _lastTakenHeading = 0.0;
   late MapController _mapController;
   late Timer _locationTimer;
 
@@ -158,10 +160,21 @@ class _NavigationPageState extends State<NavigationPage> {
 
   void _suscribeToCompassChanges() {
     _compassSubscription = FlutterCompass.events?.listen((CompassEvent event) {
+      if (event.heading == null){
+        return;
+      }
       var heading = event.heading ?? 0.0;
+      if ((_lastTakenHeading - heading).abs() > 5.0){
+        setState(() {
+          _lastTakenHeading = heading;
+        });
+        return;
+      }
+      print(heading);
       double newRotation = 360 - heading;
       double diffRotation = (_mapRotation - newRotation).abs();
       if (diffRotation > 0.1) {
+
         setState(() {
           _mapRotation = newRotation;
           _mapController.rotate(newRotation);
@@ -255,8 +268,9 @@ class _NavigationPageState extends State<NavigationPage> {
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(25),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                const WarningTimer(duration: 30, padding: EdgeInsets.only(left: 25.0),),
                 NextStepPopUp(
                   _routeWaypoints[_index].name,
                   _routeWaypoints[_index].pointImage,
