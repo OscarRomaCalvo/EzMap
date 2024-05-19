@@ -50,7 +50,7 @@ class _EndRoutePageState extends State<EndRoutePage> {
                       softWrap: true,
                     ),
                     const SizedBox(height: 20),
-                    PopUpImage(widget.destinationImage),
+                    PopUpImage(imageURL:widget.destinationImage),
                     const SizedBox(height: 20),
                     Text(
                       widget.destinationName,

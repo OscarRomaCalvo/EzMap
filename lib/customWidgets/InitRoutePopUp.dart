@@ -45,7 +45,7 @@ class InitRoutePopUp extends StatelessWidget {
               ),
             ),
             Flexible(
-              child: PopUpImage(shortRoute.origin.pointImage),
+              child: PopUpImage(imageURL:shortRoute.origin.pointImage),
             ),
             const SizedBox(
               height: 15,
@@ -68,7 +68,7 @@ class InitRoutePopUp extends StatelessWidget {
               ),
             ),
             Flexible(
-              child: PopUpImage(shortRoute.destination.pointImage),
+              child: PopUpImage(imageURL:shortRoute.destination.pointImage),
             ),
             const SizedBox(
               height: 20,

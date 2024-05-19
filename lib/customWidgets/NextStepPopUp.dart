@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ez_maps/customWidgets/CustomButton.dart';
 
-import '../pages/EndRoutePage.dart';
 import '../services/TextReader.dart';
 import 'ImageButton.dart';
 import 'PopUpImage.dart';
@@ -103,7 +101,7 @@ class _FarFromPointWidgetState extends State<FarFromPointWidget> {
           const SizedBox(height: 20.0),
           SizedBox(
             height: 300,
-            child: PopUpImage(widget.imageURL),
+            child: PopUpImage(imageURL:widget.imageURL),
           ),
           const SizedBox(height: 20.0),
           ImageButton(
@@ -168,7 +166,7 @@ class _NearFromPointWidgetState extends State<NearFromPointWidget> {
           const SizedBox(height: 20.0),
           SizedBox(
             height: 300,
-            child: PopUpImage(widget.imageURL),
+            child: PopUpImage(imageURL:widget.imageURL),
           ),
           const SizedBox(height: 20.0),
           Row(

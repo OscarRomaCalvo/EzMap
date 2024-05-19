@@ -49,7 +49,7 @@ class _OneInstructionWidgetState extends State<OneInstructionWidget> {
           softWrap: true,
         ),
         const SizedBox(height: 20.0),
-        Flexible(child: PopUpImage(widget.step['step1']['image'])),
+        Flexible(child: PopUpImage(imageURL:widget.step['step1']['image'])),
       ],
     );
   }
@@ -86,7 +86,7 @@ class _TwoInstructionWidgetState extends State<TwoInstructionWidget> {
         ),
         const SizedBox(height: 20.0),
         Flexible(
-          child: PopUpImage(widget.step['step1']['image']),
+          child: PopUpImage(imageURL:widget.step['step1']['image']),
         ),
         const SizedBox(height: 20.0),
         Text(
@@ -100,7 +100,7 @@ class _TwoInstructionWidgetState extends State<TwoInstructionWidget> {
         ),
         const SizedBox(height: 20.0),
         Flexible(
-          child: PopUpImage(widget.step['step2']['image']),
+          child: PopUpImage(imageURL:widget.step['step2']['image']),
         ),
       ],
     );

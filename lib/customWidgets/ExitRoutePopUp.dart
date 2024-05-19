@@ -57,7 +57,7 @@ class _ExitRoutePopUpState extends State<ExitRoutePopUp> {
                         softWrap: true,
                       ),
                       const SizedBox(height: 20),
-                      PopUpImage(widget.destination.pointImage),
+                      PopUpImage(imageURL:widget.destination.pointImage),
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

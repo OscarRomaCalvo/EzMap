@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class PopUpImage extends StatelessWidget {
   final String imageURL;
-
-  PopUpImage(this.imageURL);
+  final BoxFit imageFit;
+  PopUpImage({required this.imageURL, this.imageFit = BoxFit.cover});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class PopUpImage extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: Image(
           image: NetworkImage(imageURL),
-          fit: BoxFit.cover,
+          fit: imageFit,
           width: double.infinity,
         ),
       ),
