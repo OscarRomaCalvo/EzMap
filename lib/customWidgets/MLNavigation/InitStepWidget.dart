@@ -2,7 +2,6 @@ import 'package:ez_maps/customWidgets/ImageButton.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
 import 'package:flutter/material.dart';
 import '../../services/TextReader.dart';
-import '../CustomButton.dart';
 
 class InitStepWidget extends StatefulWidget {
   final step;

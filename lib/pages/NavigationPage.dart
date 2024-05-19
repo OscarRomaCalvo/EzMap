@@ -113,7 +113,7 @@ class _NavigationPageState extends State<NavigationPage> {
       setState(() {
         _currentLocation = newLocation;
         LatLng newLatLng =
-            LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
+            LatLng(_currentLocation.latitude, _currentLocation.longitude);
         _currentLocation = newLocation;
         _mapController.move(newLatLng, 18);
         if (_polylineCoordinates.length > 1) {
@@ -130,7 +130,7 @@ class _NavigationPageState extends State<NavigationPage> {
 
   void _getRoute() {
     String currentLocationStr =
-        "${_currentLocation.longitude!}%2C${_currentLocation.latitude!}%3B";
+        "${_currentLocation.longitude}%2C${_currentLocation.latitude}%3B";
     String nextStepStr =
         "${_routeWaypoints[_index].location.longitude}%2C${_routeWaypoints[_index].location.latitude}";
     http
@@ -189,7 +189,7 @@ class _NavigationPageState extends State<NavigationPage> {
 
   bool _isFarFromPoint() {
     LatLng currentLatLng =
-        LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
+        LatLng(_currentLocation.latitude, _currentLocation.longitude);
     LatLng nextStepLatLng = LatLng(_routeWaypoints[_index].location.latitude,
         _routeWaypoints[_index].location.longitude);
     double distance =

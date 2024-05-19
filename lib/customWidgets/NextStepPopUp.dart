@@ -68,6 +68,7 @@ class FarFromPointWidget extends StatefulWidget {
 class _FarFromPointWidgetState extends State<FarFromPointWidget> {
   @override
   initState() {
+    super.initState();
     TextReader.speak(
         "Estas lejos de ${widget.pointName}. Pulsa el botón y continua con el guiado");
   }
@@ -134,6 +135,7 @@ class NearFromPointWidget extends StatefulWidget {
 class _NearFromPointWidgetState extends State<NearFromPointWidget> {
   @override
   initState() {
+    super.initState();
     TextReader.speak("¿Has llegado a ${widget.pointName}?");
   }
 

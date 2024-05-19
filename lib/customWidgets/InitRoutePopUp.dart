@@ -5,7 +5,6 @@ import 'package:geolocator/geolocator.dart';
 
 import '../models/ShortRoute.dart';
 import '../pages/NavigationPage.dart';
-import 'CustomButton.dart';
 
 class InitRoutePopUp extends StatelessWidget {
   final ShortRoute shortRoute;

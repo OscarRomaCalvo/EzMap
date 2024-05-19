@@ -85,7 +85,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
 
   bool _isNearRouteOrigin(var routeOriginPoint) {
     LatLng currentLatLng =
-        LatLng(_iniLocation.latitude!, _iniLocation.longitude!);
+        LatLng(_iniLocation.latitude, _iniLocation.longitude);
     double distance =
         const Distance().as(LengthUnit.Meter, currentLatLng, routeOriginPoint);
     return distance < 100;

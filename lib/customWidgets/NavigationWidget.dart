@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:ez_maps/customWidgets/ExitRoutePopUp.dart';
 import 'package:ez_maps/customWidgets/InstructionWidget.dart';
-import 'package:ez_maps/customWidgets/NextStepPopUp.dart';
 
 import '../models/RoutePoint.dart';
 import 'PopUpMarker.dart';
@@ -82,7 +80,7 @@ class NavigationWidget extends StatelessWidget {
                 mapController: mapController,
                 options: MapOptions(
                     initialCenter: LatLng(
-                        currentLocation.latitude!, currentLocation.longitude!),
+                        currentLocation.latitude, currentLocation.longitude),
                     initialZoom: 18,
                     initialRotation: mapRotation,
                     interactionOptions:
@@ -106,8 +104,8 @@ class NavigationWidget extends StatelessWidget {
                     markers: _renderRouteMarkers() +
                         [
                           Marker(
-                            point: LatLng(currentLocation.latitude!,
-                                currentLocation.longitude!),
+                            point: LatLng(currentLocation.latitude,
+                                currentLocation.longitude),
                             width: 60,
                             height: 60,
                             child: const Stack(

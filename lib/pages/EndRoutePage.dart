@@ -2,7 +2,6 @@ import 'package:ez_maps/customWidgets/ImageButton.dart';
 import 'package:ez_maps/pages/RouteSelectionPage.dart';
 import 'package:ez_maps/services/TextReader.dart';
 import 'package:flutter/material.dart';
-import 'package:ez_maps/customWidgets/CustomButton.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
 
 class EndRoutePage extends StatefulWidget {
