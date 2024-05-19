@@ -289,8 +289,10 @@ class _NavigationPageState extends State<NavigationPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  MetroNavigationWidget(
-                      actualPoint.name, _routeSteps[_index], _continueRoute),
+                  Expanded(
+                    child: MetroNavigationWidget(
+                        actualPoint.name, _routeSteps[_index], _continueRoute),
+                  ),
                 ],
               ),
             ),
@@ -317,8 +319,10 @@ class _NavigationPageState extends State<NavigationPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  MLNavigationWidget(
-                      actualPoint.name, _routeSteps[_index], _continueRoute),
+                  Expanded(
+                    child: MLNavigationWidget(
+                        actualPoint.name, _routeSteps[_index], _continueRoute),
+                  ),
                 ],
               ),
             ),
