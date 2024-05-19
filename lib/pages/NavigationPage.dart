@@ -39,7 +39,6 @@ class _NavigationPageState extends State<NavigationPage> {
 
   late Position _currentLocation;
   double _mapRotation = 0.0;
-  double _lastTakenHeading = 0.0;
   late MapController _mapController;
   late Timer _locationTimer;
 
@@ -53,6 +52,11 @@ class _NavigationPageState extends State<NavigationPage> {
   StreamSubscription<CompassEvent>? _compassSubscription;
   bool _isOnWalkNavigation = false;
   bool _isNewStep = true;
+
+  final WarningTimer _warningTimer = const WarningTimer(
+    duration: 180,
+    padding: EdgeInsets.only(left: 25.0,),
+  );
 
   @override
   void initState() {
@@ -159,25 +163,28 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   void _suscribeToCompassChanges() {
-    _compassSubscription = FlutterCompass.events?.listen((CompassEvent event) {
-      if (event.heading == null){
-        return;
-      }
-      var heading = event.heading ?? 0.0;
-      if ((_lastTakenHeading - heading).abs() > 5.0){
-        setState(() {
-          _lastTakenHeading = heading;
-        });
-        return;
-      }
-      print(heading);
-      double newRotation = 360 - heading;
-      double diffRotation = (_mapRotation - newRotation).abs();
-      if (diffRotation > 0.1) {
+    List<double> lastHeadings = [];
 
+    _compassSubscription = FlutterCompass.events?.listen((CompassEvent event) {
+      if (event.heading == null) {
+        return;
+      }
+
+      var heading = event.heading ?? 0.0;
+
+      lastHeadings.add(heading);
+
+      if (lastHeadings.length > 3) {
+        lastHeadings.removeAt(0);
+      }
+
+      double averageHeading =
+          lastHeadings.reduce((a, b) => a + b) / lastHeadings.length;
+
+      if ((averageHeading - heading).abs() < 5.0) {
         setState(() {
-          _mapRotation = newRotation;
-          _mapController.rotate(newRotation);
+          _mapRotation = 360 - heading;
+          _mapController.rotate(_mapRotation);
         });
       }
     });
@@ -270,7 +277,7 @@ class _NavigationPageState extends State<NavigationPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const WarningTimer(duration: 30, padding: EdgeInsets.only(left: 25.0),),
+                _warningTimer,
                 NextStepPopUp(
                   _routeWaypoints[_index].name,
                   _routeWaypoints[_index].pointImage,
@@ -292,7 +299,7 @@ class _NavigationPageState extends State<NavigationPage> {
         return Scaffold(
           body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(25.0),
+              padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -304,13 +311,14 @@ class _NavigationPageState extends State<NavigationPage> {
                     height: 10,
                   ),
                   Expanded(
-                    child: MetroNavigationWidget(
-                        actualPoint.name, _routeSteps[_index], _continueRoute),
+                    child: MetroNavigationWidget(actualPoint.name,
+                        _routeSteps[_index], _continueRoute),
                   ),
                 ],
               ),
             ),
           ),
+
         );
       case 'ml':
         if (_isOnWalkNavigation) {
@@ -334,8 +342,8 @@ class _NavigationPageState extends State<NavigationPage> {
                     height: 10,
                   ),
                   Expanded(
-                    child: MLNavigationWidget(
-                        actualPoint.name, _routeSteps[_index], _continueRoute),
+                    child: MLNavigationWidget(actualPoint.name,
+                        _routeSteps[_index], _continueRoute),
                   ),
                 ],
               ),
