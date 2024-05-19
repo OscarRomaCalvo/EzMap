@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../services/TextReader.dart';
 import '../CustomButton.dart';
+import '../ImageButton.dart';
 
 class MLEndWidget extends StatefulWidget {
-  final String previousDestination;
+  final String destination;
   final VoidCallback continueRoute;
 
-  MLEndWidget(this.previousDestination, this.continueRoute);
+  MLEndWidget(this.destination, this.continueRoute);
 
   @override
   _MLEndWidgetState createState() => _MLEndWidgetState();
@@ -21,49 +22,20 @@ class _MLEndWidgetState extends State<MLEndWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          "Has llegado a",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-          softWrap: true,
-        ),
-        const SizedBox(height: 20),
-        Text(
-          widget.previousDestination,
-          style: const TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-          softWrap: true,
-        ),
-        const SizedBox(height: 50),
-        const Text(
-          "Sal de la estación",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-          softWrap: true,
-        ),
-        const SizedBox(height: 20),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      width: double.infinity,
+      height: double.infinity,
+      child: Padding(
+          padding: EdgeInsets.all(20.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Pulsa al salir de la estación",
+                "HAS LLEGADO A:",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -72,11 +44,30 @@ class _MLEndWidgetState extends State<MLEndWidget> {
                 softWrap: true,
               ),
               const SizedBox(height: 20),
-              CustomButton("SIGUIENTE", widget.continueRoute, true),
+              Text(
+                widget.destination,
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+              ),
+              const SizedBox(height: 50),
+              const Text(
+                "SAL DE LA ESTACIÓN",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+              ),
+              const SizedBox(height: 20,),
+              ImageButton(imagePath: "assets/images/ARASAACPictograms/nextButton.png", onPressed: widget.continueRoute, size: 100),
             ],
-          ),
-        ),
-      ],
+          )
+      ),
     );
   }
 }
