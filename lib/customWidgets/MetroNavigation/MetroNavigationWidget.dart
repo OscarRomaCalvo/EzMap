@@ -53,10 +53,7 @@ class _MetroNavigationWidgetState extends State<MetroNavigationWidget> {
       if (widget.steps["step$_actualStep"] != null) {
         _actualWidget = MetroTransferWidget(
             _setInitStep,
-            widget.steps["step${_actualStep - 1}"]["line"],
-            widget.steps["step${_actualStep - 1}"]["destination"],
-            widget.steps["step$_actualStep"]["line"],
-            widget.steps["step$_actualStep"]["direction"]);
+            widget.steps["step${_actualStep - 1}"]["destination"]);
       } else {
         _actualWidget = MetroEndWidget(
             widget.steps["step${_actualStep - 1}"]["destination"],
