@@ -275,8 +275,27 @@ class _NavigationPageState extends State<NavigationPage> {
           _locationTimer.cancel();
           _isOnWalkNavigation = false;
         }
-        return MetroNavigationWidget(
-            actualPoint.name, _routeSteps[_index], _continueRoute);
+        return Scaffold(
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ProgressBar(
+                    totalSteps: _routeWaypoints.length,
+                    currentStep: _index,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  MetroNavigationWidget(
+                      actualPoint.name, _routeSteps[_index], _continueRoute),
+                ],
+              ),
+            ),
+          ),
+        );
       case 'ml':
         if (_isOnWalkNavigation) {
           _locationSubscription!.pause();
@@ -284,8 +303,27 @@ class _NavigationPageState extends State<NavigationPage> {
           _locationTimer.cancel();
           _isOnWalkNavigation = false;
         }
-        return MLNavigationWidget(
-            actualPoint.name, _routeSteps[_index], _continueRoute);
+        return Scaffold(
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ProgressBar(
+                    totalSteps: _routeWaypoints.length,
+                    currentStep: _index,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  MLNavigationWidget(
+                      actualPoint.name, _routeSteps[_index], _continueRoute),
+                ],
+              ),
+            ),
+          ),
+        );
       default:
         return const Text("Allgo ha fallado");
     }
