@@ -51,7 +51,7 @@ class _InitStepWidgetState extends State<InitStepWidget> {
                     textAlign: TextAlign.center,
                     softWrap: true,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 25,
                   ),
                   Row(
@@ -125,18 +125,6 @@ class _InitStepWidgetState extends State<InitStepWidget> {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              "PULSA EN EL VAGÓN:",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-              softWrap: true,
-            ),
-            SizedBox(
-              width: 15,
-            ),
             ImageButton(
                 imagePath: "assets/images/ARASAACPictograms/nextButton.png",
                 onPressed: widget.startOnMLNavigation,

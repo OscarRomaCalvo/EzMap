@@ -34,7 +34,7 @@ class _EnterMetroWidgetState extends State<EnterMetroWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Entra a la estación de metro",
+              "ENTRA EN LA ESTACIÓN DE METRO",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
