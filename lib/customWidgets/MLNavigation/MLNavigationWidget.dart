@@ -65,10 +65,7 @@ class _MLNavigationWidgetState extends State<MLNavigationWidget> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: _actualWidget,
-      ),
+      child: _actualWidget,
     );
   }
 }

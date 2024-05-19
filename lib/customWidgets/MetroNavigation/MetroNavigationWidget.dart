@@ -68,10 +68,7 @@ class _MetroNavigationWidgetState extends State<MetroNavigationWidget> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: _actualWidget,
-      ),
+      child: _actualWidget,
     );
   }
 }
