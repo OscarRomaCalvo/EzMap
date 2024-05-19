@@ -29,6 +29,7 @@ class _InitStepWidgetState extends State<InitStepWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
+          flex: 2,
           child: Container(
             decoration: BoxDecoration(
               color: const Color(0xFFF5F5F5),
@@ -102,7 +103,7 @@ class _InitStepWidgetState extends State<InitStepWidget> {
         ),
         const SizedBox(height: 25),
         Expanded(
-          flex:2,
+          flex:3,
           child: Container(
               decoration: BoxDecoration(
                 color: const Color(0xFFF5F5F5),
