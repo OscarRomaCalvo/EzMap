@@ -32,7 +32,7 @@ class _EnterMLWidgetState extends State<EnterMLWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Entra a la estación de metro ligero",
+              "ENTRA A LA ESTACIÓN DE METRO LIGERO",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

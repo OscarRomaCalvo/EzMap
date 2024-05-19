@@ -1,17 +1,14 @@
 import 'package:ez_maps/customWidgets/ImageButton.dart';
 import 'package:flutter/material.dart';
 import '../../services/TextReader.dart';
-import '../CustomButton.dart';
 
 class MLTransferWidget extends StatefulWidget {
   final VoidCallback doTransfer;
-  final String previousLine;
-  final String previousDestination;
-  final String nextLine;
-  final String nextDirection;
+  final String destination;
 
-  const MLTransferWidget(this.doTransfer, this.previousLine,
-      this.previousDestination, this.nextLine, this.nextDirection);
+
+  const MLTransferWidget(this.doTransfer,
+      this.destination);
 
   @override
   _MLTransferWidgetState createState() => _MLTransferWidgetState();
@@ -49,7 +46,7 @@ class _MLTransferWidgetState extends State<MLTransferWidget> {
             ),
             const SizedBox(height: 20),
             Text(
-              widget.previousDestination,
+              widget.destination,
               style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
