@@ -60,7 +60,7 @@ class _InitStepWidgetState extends State<InitStepWidget> {
                     children: [
                       Image(
                         image: AssetImage(
-                            "assets/images/metroLigero/line${widget.step["line"]}-ml.png"),
+                            "assets/images/metro/line${widget.step["line"]}-metro.png"),
                         height: 50,
                       ),
                       const SizedBox(
