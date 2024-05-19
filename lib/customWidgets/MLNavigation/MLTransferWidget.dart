@@ -1,3 +1,4 @@
+import 'package:ez_maps/customWidgets/ImageButton.dart';
 import 'package:flutter/material.dart';
 import '../../services/TextReader.dart';
 import '../CustomButton.dart';
@@ -25,104 +26,52 @@ class _MLTransferWidgetState extends State<MLTransferWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          "Has llegado a",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-          softWrap: true,
-        ),
-        const SizedBox(height: 20),
-        Text(
-          widget.previousDestination,
-          style: const TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-          softWrap: true,
-        ),
-        const SizedBox(height: 50),
-        const Text(
-          "Tienes que hacer transbordo a",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-          softWrap: true,
-        ),
-        const SizedBox(height: 20),
-        Row(
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      width: double.infinity,
+      height: double.infinity,
+      child: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(
-              image: AssetImage("assets/images/metroLigero/line${widget.nextLine}-ml.png"),
-              height: 50,
+            const Text(
+              "HAS LLEGADO A:",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+              softWrap: true,
             ),
-            const SizedBox(
-              width: 20,
-            ),
+            const SizedBox(height: 20),
             Text(
-              "Línea ${widget.nextLine}",
+              widget.previousDestination,
               style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
+              softWrap: true,
             ),
+            const SizedBox(height: 50),
+            const Text(
+              "PULSA EL BOTÓN PARA INICIAR EL TRANSBORDO",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ),
+            const SizedBox(height: 20,),
+            ImageButton(imagePath: "assets/images/ARASAACPictograms/nextButton.png", onPressed: widget.doTransfer, size: 100),
           ],
-        ),
-        RichText(
-          textAlign: TextAlign.center,
-          softWrap: true,
-          text: TextSpan(
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-            children: <TextSpan>[
-              const TextSpan(
-                text: "dirección: ",
-              ),
-              TextSpan(
-                text: widget.nextDirection,
-                style: const TextStyle(
-                  fontSize: 30,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 50),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            children: [
-              const Text(
-                "Pulsa para iniciar el transbordo",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-                softWrap: true,
-              ),
-              const SizedBox(height: 20),
-              CustomButton("SIGUIENTE", widget.doTransfer, true),
-            ],
-          ),
-        ),
-      ],
+        )
+      ),
     );
   }
 }
