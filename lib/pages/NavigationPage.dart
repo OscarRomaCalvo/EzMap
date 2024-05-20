@@ -53,10 +53,7 @@ class _NavigationPageState extends State<NavigationPage> {
   bool _isOnWalkNavigation = false;
   bool _isNewStep = true;
 
-  final WarningTimer _warningTimer = const WarningTimer(
-    duration: 180,
-    padding: EdgeInsets.only(left: 25.0,),
-  );
+  Widget _rightBottomWidget = const SizedBox();
 
   @override
   void initState() {
@@ -214,7 +211,14 @@ class _NavigationPageState extends State<NavigationPage> {
         _routeWaypoints[_index].location.longitude);
     double distance =
         const Distance().as(LengthUnit.Meter, currentLatLng, nextStepLatLng);
+    print(distance>20);
     return distance > 20;
+  }
+
+  void _changeRightBottomWidget(Widget newWidget){
+    setState(() {
+      _rightBottomWidget=newWidget;
+    });
   }
 
   Widget _renderPage() {
@@ -225,6 +229,13 @@ class _NavigationPageState extends State<NavigationPage> {
           _getRoute();
           setState(() {
             _isNewStep = false;
+            _rightBottomWidget = NextStepPopUp(
+              _routeWaypoints[_index].name,
+              _routeWaypoints[_index].pointImage,
+              _routeWaypoints[_index].type,
+              _isFarFromPoint,
+              _continueRoute,
+            );
           });
         }
         if (!_isOnWalkNavigation) {
@@ -239,86 +250,30 @@ class _NavigationPageState extends State<NavigationPage> {
             print("Coger Route");
           });
         }
-        return Scaffold(
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 25, left: 25, right: 25, bottom: 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ProgressBar(
-                    totalSteps: _routeWaypoints.length,
-                    currentStep: _index,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: NavigationWidget(
-                        completedLoad: _completedLoad,
-                        index: _index,
-                        routeSteps: _routeSteps,
-                        routeWaypoints: _routeWaypoints,
-                        continueRoute: _continueRoute,
-                        mapController: _mapController,
-                        polylineCoordinates: _polylineCoordinates,
-                        currentLocation: _currentLocation,
-                        mapRotation: _mapRotation,
-                        destination:
-                            _routeWaypoints[_routeWaypoints.length - 1]),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.all(25),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _warningTimer,
-                NextStepPopUp(
-                  _routeWaypoints[_index].name,
-                  _routeWaypoints[_index].pointImage,
-                  _routeWaypoints[_index].type,
-                  _isFarFromPoint(),
-                  _continueRoute,
-                ),
-              ],
-            ),
-          ),
+        return Expanded(
+          child: NavigationWidget(
+              completedLoad: _completedLoad,
+              index: _index,
+              routeSteps: _routeSteps,
+              routeWaypoints: _routeWaypoints,
+              continueRoute: _continueRoute,
+              mapController: _mapController,
+              polylineCoordinates: _polylineCoordinates,
+              currentLocation: _currentLocation,
+              mapRotation: _mapRotation,
+              destination: _routeWaypoints[_routeWaypoints.length - 1]),
         );
       case 'metro':
         if (_isOnWalkNavigation) {
           _locationSubscription!.pause();
           _compassSubscription!.pause();
           _locationTimer.cancel();
+          _rightBottomWidget=const SizedBox();
           _isOnWalkNavigation = false;
         }
-        return Scaffold(
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ProgressBar(
-                    totalSteps: _routeWaypoints.length,
-                    currentStep: _index,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: MetroNavigationWidget(actualPoint.name,
-                        _routeSteps[_index], _continueRoute),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
+        return Expanded(
+          child: MetroNavigationWidget(
+              actualPoint.name, _routeSteps[_index], _continueRoute, _changeRightBottomWidget),
         );
       case 'ml':
         if (_isOnWalkNavigation) {
@@ -327,28 +282,9 @@ class _NavigationPageState extends State<NavigationPage> {
           _locationTimer.cancel();
           _isOnWalkNavigation = false;
         }
-        return Scaffold(
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(25.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ProgressBar(
-                    totalSteps: _routeWaypoints.length,
-                    currentStep: _index,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: MLNavigationWidget(actualPoint.name,
-                        _routeSteps[_index], _continueRoute),
-                  ),
-                ],
-              ),
-            ),
-          ),
+        return Expanded(
+          child: MLNavigationWidget(
+              actualPoint.name, _routeSteps[_index], _continueRoute, _changeRightBottomWidget),
         );
       default:
         return const Text("Allgo ha fallado");
@@ -365,7 +301,45 @@ class _NavigationPageState extends State<NavigationPage> {
         )),
       );
     } else {
-      return _renderPage();
+      return Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 25, left: 25, right: 25, bottom: 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ProgressBar(
+                  totalSteps: _routeWaypoints.length,
+                  currentStep: _index,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                _renderPage()
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(25),
+          child: SizedBox(
+            height: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const WarningTimer(
+                  duration: 180,
+                  padding: EdgeInsets.only(
+                    left: 25.0,
+                  ),
+                ),
+                _rightBottomWidget
+              ],
+            ),
+          ),
+        ),
+      );
     }
   }
 }

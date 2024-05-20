@@ -4,17 +4,19 @@ import '../CustomButton.dart';
 import '../ImageButton.dart';
 import '../PopUpImage.dart';
 
-class InitStepWidget extends StatefulWidget {
+class InitMetroStepWidget extends StatefulWidget {
   final Map<String, dynamic> step;
   final VoidCallback startOnMetroNavigation;
+  final Function(Widget) changeRightBottomWidget;
 
-  InitStepWidget(this.step, this.startOnMetroNavigation);
+  InitMetroStepWidget(
+      this.step, this.startOnMetroNavigation, this.changeRightBottomWidget);
 
   @override
-  _InitStepWidgetState createState() => _InitStepWidgetState();
+  _InitMetroStepWidgetState createState() => _InitMetroStepWidgetState();
 }
 
-class _InitStepWidgetState extends State<InitStepWidget> {
+class _InitMetroStepWidgetState extends State<InitMetroStepWidget> {
   void initState() {
     super.initState();
     TextReader.speak("Utiliza la línea " +
@@ -22,6 +24,12 @@ class _InitStepWidgetState extends State<InitStepWidget> {
         "en dirección " +
         widget.step["direction"] +
         ". Pulsa el botón cuando estés en el metro.");
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.changeRightBottomWidget(const SizedBox());
   }
 
   @override
@@ -104,7 +112,7 @@ class _InitStepWidgetState extends State<InitStepWidget> {
         ),
         const SizedBox(height: 25),
         Expanded(
-          flex:3,
+          flex: 3,
           child: Container(
               decoration: BoxDecoration(
                 color: const Color(0xFFF5F5F5),
@@ -116,21 +124,10 @@ class _InitStepWidgetState extends State<InitStepWidget> {
                 padding: const EdgeInsets.all(20.0),
                 child: PopUpImage(
                   imageURL:
-                  "https://static.eldiario.es/clip/9e7db40a-bc86-4b51-afa8-09ce8fef4168_source-aspect-ratio_default_0.jpg",
+                      "https://static.eldiario.es/clip/9e7db40a-bc86-4b51-afa8-09ce8fef4168_source-aspect-ratio_default_0.jpg",
                   imageFit: BoxFit.fitHeight,
                 ),
               )),
-        ),
-        const SizedBox(height: 25),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ImageButton(
-                imagePath: "assets/images/ARASAACPictograms/nextButton.png",
-                onPressed: widget.startOnMetroNavigation,
-                size: 60)
-          ],
         ),
       ],
     );

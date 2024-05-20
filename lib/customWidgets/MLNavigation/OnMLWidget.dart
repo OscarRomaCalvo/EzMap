@@ -79,19 +79,6 @@ class _OnMLWidgetState extends State<OnMLWidget> {
         (widget.stops > 1)
             ? MultipleStops(widget.stops, _reduceStops)
             : LastStop(widget.continueMLNavigation),
-        const SizedBox(height: 25),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ImageButton(
-                imagePath: "assets/images/ARASAACPictograms/nextButton.png",
-                onPressed: () {
-                  print("placeHolder");
-                },
-                size: 60)
-          ],
-        ),
       ],
     );
   }

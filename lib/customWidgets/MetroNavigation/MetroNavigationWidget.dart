@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ez_maps/customWidgets/MetroNavigation/InitStepWidget.dart';
+import 'package:ez_maps/customWidgets/MetroNavigation/InitMetroStepWidget.dart';
 import 'package:ez_maps/customWidgets/MetroNavigation/MetroEndWidget.dart';
 import 'package:ez_maps/customWidgets/MetroNavigation/MetroTransferWidget.dart';
 
+import '../ImageButton.dart';
 import 'EnterMetroWidget.dart';
 import 'OnMetroWidget.dart';
 
@@ -10,8 +11,10 @@ class MetroNavigationWidget extends StatefulWidget {
   final String originStation;
   final steps;
   final VoidCallback continueRoute;
+  final Function(Widget) changeRightBottomWidget;
 
-  MetroNavigationWidget(this.originStation, this.steps, this.continueRoute);
+  MetroNavigationWidget(this.originStation, this.steps, this.continueRoute,
+      this.changeRightBottomWidget);
 
   @override
   State<MetroNavigationWidget> createState() => _MetroNavigationWidgetState();
@@ -32,13 +35,22 @@ class _MetroNavigationWidgetState extends State<MetroNavigationWidget> {
   }
 
   void _setInitStep() {
+    widget.changeRightBottomWidget(
+      ImageButton(
+          imagePath: "assets/images/ARASAACPictograms/nextButton.png",
+          onPressed: _setOnMetroStep,
+          size: 60),
+    );
     setState(() {
-      _actualWidget =
-          InitStepWidget(widget.steps["step$_actualStep"], _setOnMetroStep);
+      _actualWidget = InitMetroStepWidget(widget.steps["step$_actualStep"],
+          _setOnMetroStep, widget.changeRightBottomWidget);
     });
   }
 
   void _setOnMetroStep() {
+    widget.changeRightBottomWidget(
+        SizedBox(),
+    );
     setState(() {
       _actualWidget = OnMetroWidget(
           widget.steps["step$_actualStep"]["stops"],
@@ -48,11 +60,13 @@ class _MetroNavigationWidgetState extends State<MetroNavigationWidget> {
   }
 
   void _doTransferOrEndMetro() {
+    widget.changeRightBottomWidget(
+        SizedBox(),
+    );
     setState(() {
       _actualStep++;
       if (widget.steps["step$_actualStep"] != null) {
-        _actualWidget = MetroTransferWidget(
-            _setInitStep,
+        _actualWidget = MetroTransferWidget(_setInitStep,
             widget.steps["step${_actualStep - 1}"]["destination"]);
       } else {
         _actualWidget = MetroEndWidget(

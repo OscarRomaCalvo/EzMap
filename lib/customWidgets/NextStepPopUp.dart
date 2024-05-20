@@ -9,7 +9,7 @@ class NextStepPopUp extends StatelessWidget {
   final String pointName;
   final String imageURL;
   final String pointType;
-  final bool isFarFromPoint;
+  final Function isFarFromPoint;
   final VoidCallback continueRoute;
 
   NextStepPopUp(this.pointName, this.imageURL, this.pointType,
@@ -28,7 +28,7 @@ class NextStepPopUp extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: isFarFromPoint
+                child: isFarFromPoint()
                     ? FarFromPointWidget(pointName, imageURL)
                     : NearFromPointWidget(
                         pointName, imageURL, pointType, continueRoute),

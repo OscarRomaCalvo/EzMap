@@ -3,17 +3,19 @@ import 'package:ez_maps/customWidgets/PopUpImage.dart';
 import 'package:flutter/material.dart';
 import '../../services/TextReader.dart';
 
-class InitStepWidget extends StatefulWidget {
+class InitMLStepWidget extends StatefulWidget {
   final step;
   final VoidCallback startOnMLNavigation;
+  final Function(Widget) changeRightBottomWidget;
 
-  InitStepWidget(this.step, this.startOnMLNavigation);
+  InitMLStepWidget(
+      this.step, this.startOnMLNavigation, this.changeRightBottomWidget);
 
   @override
-  _InitStepWidgetState createState() => _InitStepWidgetState();
+  _InitMLStepWidgetState createState() => _InitMLStepWidgetState();
 }
 
-class _InitStepWidgetState extends State<InitStepWidget> {
+class _InitMLStepWidgetState extends State<InitMLStepWidget> {
   void initState() {
     super.initState();
     TextReader.speak("Utiliza la línea " +
@@ -103,7 +105,7 @@ class _InitStepWidgetState extends State<InitStepWidget> {
         ),
         const SizedBox(height: 25),
         Expanded(
-          flex:3,
+          flex: 3,
           child: Container(
               decoration: BoxDecoration(
                 color: const Color(0xFFF5F5F5),
@@ -119,17 +121,6 @@ class _InitStepWidgetState extends State<InitStepWidget> {
                   imageFit: BoxFit.fitHeight,
                 ),
               )),
-        ),
-        const SizedBox(height: 25),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ImageButton(
-                imagePath: "assets/images/ARASAACPictograms/nextButton.png",
-                onPressed: widget.startOnMLNavigation,
-                size: 60)
-          ],
         ),
       ],
     );

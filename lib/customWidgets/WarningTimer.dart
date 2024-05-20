@@ -14,7 +14,7 @@ class WarningTimer extends StatefulWidget {
   const WarningTimer(
       {super.key,
       this.duration = 180,
-      this.radius = 30,
+      this.radius = 27,
       this.padding = EdgeInsets.zero});
 
   @override
@@ -104,17 +104,7 @@ class _WarningTimerState extends State<WarningTimer> {
   void _launchPhoneApp() async {
     final Uri telUri = Uri(scheme: 'tel', path: '+34665396808');
     try {
-      Navigator.of(context).pop();
-      const snackBar = SnackBar(
-          content: Text(
-            'ERROR: NO SE PUEDE LLAMAR',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),);
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      //launchUrl(telUri);
+      launchUrl(telUri);
     } catch (e) {
       Navigator.of(context).pop();
       const snackBar = SnackBar(
@@ -142,6 +132,9 @@ class _WarningTimerState extends State<WarningTimer> {
               duration: Duration(seconds: widget.duration),
               radius: widget.radius,
               color: const Color(0xFF4791DB),
+              outline: true,
+              outlinedPadding: 0,
+
             ),
           )
         : ImageButton(

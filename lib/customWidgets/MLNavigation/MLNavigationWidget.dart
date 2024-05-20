@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/MLNavigation/EnterMLWidget.dart';
 import 'package:ez_maps/customWidgets/MLNavigation/MLTransferWidget.dart';
 import 'package:ez_maps/customWidgets/MLNavigation/OnMLWidget.dart';
-import 'package:ez_maps/customWidgets/MLNavigation/InitStepWidget.dart';
+import 'package:ez_maps/customWidgets/MLNavigation/InitMLStepWidget.dart';
 import 'package:ez_maps/customWidgets/MLNavigation/MLEndWidget.dart';
+
+import '../ImageButton.dart';
 
 class MLNavigationWidget extends StatefulWidget {
   final String originStation;
   final steps;
   final VoidCallback continueRoute;
+  final Function(Widget) changeRightBottomWidget;
 
-  MLNavigationWidget(this.originStation, this.steps, this.continueRoute);
+  MLNavigationWidget(this.originStation, this.steps, this.continueRoute, this.changeRightBottomWidget);
 
   @override
   State<MLNavigationWidget> createState() => _MLNavigationWidgetState();
@@ -31,13 +34,22 @@ class _MLNavigationWidgetState extends State<MLNavigationWidget> {
   }
 
   void _setInitStep() {
+    widget.changeRightBottomWidget(
+      ImageButton(
+          imagePath: "assets/images/ARASAACPictograms/nextButton.png",
+          onPressed: _setOnMLStep,
+          size: 60),
+    );
     setState(() {
       _actualWidget =
-          InitStepWidget(widget.steps["step$_actualStep"], _setOnMLStep);
+          InitMLStepWidget(widget.steps["step$_actualStep"], _setOnMLStep, widget.changeRightBottomWidget);
     });
   }
 
   void _setOnMLStep() {
+    widget.changeRightBottomWidget(
+      SizedBox(),
+    );
     setState(() {
       _actualWidget = OnMLWidget(widget.steps["step$_actualStep"]["stops"],
           widget.steps["step$_actualStep"]["destination"], _doTransferOrEndML);
@@ -45,6 +57,9 @@ class _MLNavigationWidgetState extends State<MLNavigationWidget> {
   }
 
   void _doTransferOrEndML() {
+    widget.changeRightBottomWidget(
+        SizedBox(),
+    );
     setState(() {
       _actualStep++;
       if (widget.steps["step$_actualStep"] != null) {
