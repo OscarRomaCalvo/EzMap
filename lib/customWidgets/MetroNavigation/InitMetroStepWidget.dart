@@ -27,12 +27,6 @@ class _InitMetroStepWidgetState extends State<InitMetroStepWidget> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    widget.changeRightBottomWidget(const SizedBox());
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

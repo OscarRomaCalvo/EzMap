@@ -36,8 +36,8 @@ class _EndRoutePageState extends State<EndRoutePage> {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
                       "HAS LLEGADO",
