@@ -161,24 +161,18 @@ class _NavigationPageState extends State<NavigationPage> {
 
   void _suscribeToCompassChanges() {
     List<double> lastHeadings = [];
-
     _compassSubscription = FlutterCompass.events?.listen((CompassEvent event) {
       if (event.heading == null) {
         return;
       }
-
       var heading = event.heading ?? 0.0;
-
-      lastHeadings.add(heading);
-
-      if (lastHeadings.length > 3) {
+      lastHeadings.add((heading+180)%360);
+      if (lastHeadings.length > 5) {
         lastHeadings.removeAt(0);
       }
-
       double averageHeading =
           lastHeadings.reduce((a, b) => a + b) / lastHeadings.length;
-
-      if ((averageHeading - heading).abs() < 5.0) {
+      if ((averageHeading - ((heading+180)%360)).abs() < 5.0) {
         setState(() {
           _mapRotation = 360 - heading;
           _mapController.rotate(_mapRotation);
