@@ -167,7 +167,7 @@ class _NavigationPageState extends State<NavigationPage> {
       }
       var heading = event.heading ?? 0.0;
       lastHeadings.add((heading+180)%360);
-      if (lastHeadings.length > 5) {
+      if (lastHeadings.length > 3) {
         lastHeadings.removeAt(0);
       }
       double averageHeading =
