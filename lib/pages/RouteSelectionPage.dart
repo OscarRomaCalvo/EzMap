@@ -146,49 +146,41 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
             if (destinationData == null) {
               throw Exception("$routeName no tiene destino");
             }
-
-            String? originName = originData['name'];
-            String? originImage = originData['image'];
-            GeoPoint? originLocation = originData['location'];
-
-            if (originName == null ||
-                originImage == null ||
-                originLocation == null) {
+            if (originData['name'] is! String ||
+                originData['image'] is! String ||
+                originData['location'] is!  GeoPoint) {
               throw Exception(
-                  "Datos incompletos en el origen de la ruta $routeName");
+                  "Datos incorrectos en el origen del resumen de ruta $routeName");
             }
 
             RouteWaypoint origin = RouteWaypoint(
-                name: originName,
+                name: originData['name'],
                 type: "origin",
-                pointImage: originImage,
-                location: originLocation);
+                pointImage: originData['image'],
+                location: originData['location']);
 
-            String? destinationName = destinationData['name'];
-            String? destinationImage = destinationData['image'];
-            GeoPoint destinationLocation = destinationData['location'];
-
-            if (destinationName == null ||
-                destinationImage == null ||
-                destinationLocation == null) {
+            if (destinationData['name'] is! String ||
+                destinationData['image'] is! String ||
+                destinationData['location'] is! GeoPoint) {
               throw Exception(
-                  "Datos incompletos en el destino del Resumen de Ruta $routeName");
+                  "Datos incorrectos en el destino del resumen de ruta $routeName");
             }
 
             RouteWaypoint destination = RouteWaypoint(
-                name: destinationName,
+                name: destinationData['name'],
                 type: "destination",
-                pointImage: destinationImage,
-                location: destinationLocation);
+                pointImage: destinationData['image'],
+                location: destinationData['location']);
 
             shortRoutes.add(
               ShortRoute(
-                  routeName: routeName, origin: origin, destination: destination),
+                  routeName: routeName,
+                  origin: origin,
+                  destination: destination),
             );
           } on Exception catch (e) {
             print(e);
           }
-
         });
         setState(() {
           _shortRoute = shortRoutes;

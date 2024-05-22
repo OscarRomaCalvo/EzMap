@@ -112,6 +112,6 @@ class _CallForInterruptedRouteDialogState
             )),
       ),
     );
-    ;
+
   }
 }
