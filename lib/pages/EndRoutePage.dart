@@ -3,6 +3,7 @@ import 'package:ez_maps/pages/RouteSelectionPage.dart';
 import 'package:ez_maps/services/TextReader.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EndRoutePage extends StatefulWidget {
   final String destinationImage;
@@ -19,6 +20,12 @@ class _EndRoutePageState extends State<EndRoutePage> {
   void initState() {
     super.initState();
     TextReader.speak("Has llegado a tu destino: " + widget.destinationName);
+    _removeStartedRoute();
+  }
+
+  void _removeStartedRoute() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('startedRoute');
   }
 
   @override

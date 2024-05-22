@@ -1,12 +1,15 @@
+import 'package:ez_maps/customWidgets/CallForInterruptedRouteDialog.dart';
 import 'package:ez_maps/customWidgets/ShortRouteWidget.dart';
 import 'package:ez_maps/services/AuthService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart' as perm;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../customWidgets/CustomButton.dart';
 import '../customWidgets/ImageButton.dart';
 import '../models/RoutePoint.dart';
@@ -23,6 +26,7 @@ class RouteSelectionPage extends StatefulWidget {
 class _RouteSelectionPageState extends State<RouteSelectionPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  String? _startedRoute = null;
   bool? _hasLocationPermission;
 
   bool _getLocationCompleted = false;
@@ -40,10 +44,35 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   Future<void> _initialLoad() async {
     _initialCheckPermissions().then((value) async {
       if (_hasLocationPermission == true) {
+        await _checkStartedRoute();
         await _getLocation();
         await _getRoutes();
         _getNearbyRoutes();
       }
+    });
+  }
+
+  Future<void> _checkStartedRoute() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? startedRoute = prefs.getString('startedRoute');
+    if (startedRoute != null) {
+      setState(() {
+        _startedRoute = startedRoute;
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CallForInterruptedRouteDialog(route_name: startedRoute);
+          },
+        );
+      });
+    }
+  }
+
+  void _removeStartedRoute() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('startedRoute');
+    setState(() {
+      _startedRoute = null;
     });
   }
 
@@ -269,14 +298,15 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
         ],
       );
     } else {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      return ListView(
         children: _nearRoutes.map((shortRoute) {
           return Container(
             padding:
                 const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
             child: ShortRouteWidget(
-                shortRoute: shortRoute, iniLocation: _iniLocation),
+              shortRoute: shortRoute,
+              iniLocation: _iniLocation,
+            ),
           );
         }).toList(),
       );
@@ -286,27 +316,71 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'TUS RUTAS',
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          centerTitle: true,
-          backgroundColor: const Color(0xFF4791DB),
-          elevation: 0,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(30.0),
-            ),
+      appBar: AppBar(
+        title: const Text(
+          'TUS RUTAS',
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Center(child: _getPage()),
-        ));
+        centerTitle: true,
+        backgroundColor: const Color(0xFF4791DB),
+        elevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(30.0),
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+        child: Center(child: _getPage()),
+      ),
+      bottomNavigationBar: _startedRoute != null
+          ? Container(
+              color: const Color(0xFF4791DB),
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ImageButton(
+                        imagePath: "assets/images/ARASAACPictograms/yes.png",
+                        size: 60,
+                        showBorder: true,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CallForInterruptedRouteDialog(
+                                  route_name: _startedRoute ?? "");
+                            },
+                          );
+                        }),
+                    const Expanded(
+                      child: Text(
+                        '¿NECESITAS AYUDA?',
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    ImageButton(
+                        imagePath: "assets/images/ARASAACPictograms/no.png",
+                        size: 60,
+                        showBorder: true,
+                        onPressed: _removeStartedRoute),
+                  ],
+                ),
+              ),
+            )
+          : const SizedBox(),
+    );
   }
 }

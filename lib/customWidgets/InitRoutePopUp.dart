@@ -2,6 +2,7 @@ import 'package:ez_maps/customWidgets/ImageButton.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/ShortRoute.dart';
 import '../pages/NavigationPage.dart';
@@ -12,6 +13,11 @@ class InitRoutePopUp extends StatelessWidget {
 
   InitRoutePopUp(
       {super.key, required this.shortRoute, required this.iniLocation});
+
+  Future<void> _saveStartRouteStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('startedRoute', this.shortRoute.routeName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +50,7 @@ class InitRoutePopUp extends StatelessWidget {
               ),
             ),
             Flexible(
-              child: PopUpImage(imageURL:shortRoute.origin.pointImage),
+              child: PopUpImage(imageURL: shortRoute.origin.pointImage),
             ),
             const SizedBox(
               height: 15,
@@ -67,7 +73,7 @@ class InitRoutePopUp extends StatelessWidget {
               ),
             ),
             Flexible(
-              child: PopUpImage(imageURL:shortRoute.destination.pointImage),
+              child: PopUpImage(imageURL: shortRoute.destination.pointImage),
             ),
             const SizedBox(
               height: 20,
@@ -85,15 +91,19 @@ class InitRoutePopUp extends StatelessWidget {
                 ),
                 ImageButton(
                   imagePath: "assets/images/ARASAACPictograms/yes.png",
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NavigationPage(
-                              routeName: shortRoute.routeName,
-                              iniLocation: iniLocation)),
-                    );
+                  onPressed: () async {
+                    try {
+                      await _saveStartRouteStatus();
+                    } finally {
+                      Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NavigationPage(
+                                routeName: shortRoute.routeName,
+                                iniLocation: iniLocation)),
+                      );
+                    }
                   },
                   showBorder: true,
                   size: 60,
