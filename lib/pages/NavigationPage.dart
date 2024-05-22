@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_maps/customWidgets/WarningTimer.dart';
+import 'package:ez_maps/models/MetroInstruction.dart';
+import 'package:ez_maps/models/WalkInstruction.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
@@ -19,6 +21,8 @@ import 'package:provider/provider.dart';
 
 import '../customWidgets/NextStepPopUp.dart';
 import '../customWidgets/ProgressBar.dart';
+import '../models/Instruction.dart';
+import '../models/MLInstruction.dart';
 import '../models/RoutePoint.dart';
 import '../services/AuthService.dart';
 import 'EndRoutePage.dart';
@@ -46,6 +50,7 @@ class _NavigationPageState extends State<NavigationPage> {
   int _index = 0;
   List<RouteWaypoint> _routeWaypoints = [];
   var _routeSteps = [];
+  List<Instruction> _routeInstructions = [];
   PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
   StreamSubscription<Position>? _locationSubscription;
@@ -80,6 +85,7 @@ class _NavigationPageState extends State<NavigationPage> {
 
     if (user != null) {
       List<RouteWaypoint> routeWaypoints = [];
+      List<Instruction> routeInstructions = [];
       _firestore
           .collection("routes")
           .doc(user.email)
@@ -88,19 +94,137 @@ class _NavigationPageState extends State<NavigationPage> {
           .get()
           .then((event) {
         _routeSteps = event.data()?["steps"];
-        event.data()?["waypoints"].forEach((waypoint) {
-          RouteWaypoint routePoint = RouteWaypoint(
-              name: waypoint["name"],
-              type: waypoint["type"],
-              pointImage: waypoint["pointImage"],
-              location: waypoint["location"]);
 
-          routeWaypoints.add(routePoint);
-        });
+        try {
+          int waypointIndex = 0;
+          event.data()?["waypoints"].forEach((waypoint) {
+            if (waypoint["name"] is! String ||
+                waypoint["type"] is! String ||
+                waypoint["pointImage"] is! String ||
+                waypoint["location"] is! GeoPoint) {
+              throw Exception("Datos incorrectos en la ruta ${widget.routeName}");
+            }
+            if (waypoint["type"] != "reference" &&
+                waypoint["type"] != "destination" &&
+                waypoint["type"] != "metro" &&
+                waypoint["type"] != "ml") {
+              throw Exception("Datos incorrectos en la ruta ${widget.routeName}");
+            }
+            RouteWaypoint routePoint = RouteWaypoint(
+                name: waypoint["name"],
+                type: waypoint["type"],
+                pointImage: waypoint["pointImage"],
+                location: waypoint["location"]);
+
+            routeWaypoints.add(routePoint);
+            waypointIndex++;
+          });
+
+          int stepIndex = 0;
+          event.data()?["steps"].forEach((step) {
+            if (routeWaypoints[stepIndex].type == 'reference' ||
+                routeWaypoints[stepIndex].type == 'destination') {
+              if (step["step1"] == null) {
+                throw Exception(
+                    "Datos incorrectos en la ruta ${widget.routeName}");
+              }
+              if (step["step1"]["text"] is! String ||
+                  step["step1"]["image"] is! String) {
+                throw Exception(
+                    "Datos incorrectos en la ruta ${widget.routeName}");
+              }
+
+              WalkStep firstStep =
+                  WalkStep(step["step1"]["image"], step["step1"]["text"]);
+              WalkStep? secondStep = null;
+
+              if (step["step2"] != null) {
+                if (step["step2"]["text"] is! String ||
+                    step["step2"]["image"] is! String) {
+                  throw Exception(
+                      "Datos incorrectos en la ruta ${widget.routeName}");
+                }
+                secondStep = WalkStep(
+                    step["step2"]["image"], step["step2"]["text"]);
+              }
+
+              WalkInstruction walkInstruction =
+                  WalkInstruction(firstStep, secondStep);
+              routeInstructions.add(walkInstruction);
+            } else if (routeWaypoints[stepIndex].type == 'metro') {
+              List<MetroStep> metroStepList = [];
+
+              step.forEach((key, metroStepElement) {
+                if (metroStepElement["destination"] is! String ||
+                    metroStepElement["direction"] is! String ||
+                    metroStepElement["line"] is! String ||
+                    metroStepElement["stops"] is! int) {
+                  throw Exception(
+                      "Datos incorrectos en la ruta ${widget.routeName}");
+                }
+
+                MetroStep metroStep = MetroStep(
+                    metroStepElement["destination"],
+                    metroStepElement["direction"],
+                    metroStepElement["line"],
+                    metroStepElement["stops"]);
+
+                metroStepList.add(metroStep);
+              });
+
+              if (metroStepList.isEmpty) {
+                throw Exception(
+                    "Datos incorrectos en la ruta ${widget.routeName}");
+              }
+
+              MetroInstruction metroInstruction = MetroInstruction(metroStepList);
+              routeInstructions.add(metroInstruction);
+            } else if (routeWaypoints[stepIndex].type == 'ml') {
+              List<MLStep> mlStepList = [];
+
+              step.forEach((key, mlStepElement) {
+                if (mlStepElement["destination"] is! String ||
+                    mlStepElement["direction"] is! String ||
+                    mlStepElement["line"] is! String ||
+                    mlStepElement["stops"] is! int) {
+                  throw Exception(
+                      "Datos incorrectos en la ruta ${widget.routeName}");
+                }
+
+                MLStep mlStep = MLStep(
+                    mlStepElement["destination"],
+                    mlStepElement["direction"],
+                    mlStepElement["line"],
+                    mlStepElement["stops"]);
+
+                mlStepList.add(mlStep);
+              });
+
+              if (mlStepList.isEmpty) {
+                throw Exception(
+                    "Datos incorrectos en la ruta ${widget.routeName}");
+              }
+
+              MLInstruction mlInstruction = MLInstruction(mlStepList);
+              routeInstructions.add(mlInstruction);
+            }
+
+            stepIndex++;
+          });
+
+          if (waypointIndex != stepIndex){
+            throw Exception(
+                "Datos incorrectos en la ruta ${widget.routeName}");
+          }
+        } on Exception catch (e) {
+          print(e);
+          print("EEEEEEEEERRRROOOOOOOORRRRRR");
+        }
 
         setState(() {
           _routeSteps = _routeSteps;
           _routeWaypoints = routeWaypoints;
+          _routeInstructions = routeInstructions;
           _completedLoad = true;
         });
 
@@ -166,13 +290,13 @@ class _NavigationPageState extends State<NavigationPage> {
         return;
       }
       var heading = event.heading ?? 0.0;
-      lastHeadings.add((heading+180)%360);
+      lastHeadings.add((heading + 180) % 360);
       if (lastHeadings.length > 3) {
         lastHeadings.removeAt(0);
       }
       double averageHeading =
           lastHeadings.reduce((a, b) => a + b) / lastHeadings.length;
-      if ((averageHeading - ((heading+180)%360)).abs() < 5.0) {
+      if ((averageHeading - ((heading + 180) % 360)).abs() < 5.0) {
         setState(() {
           _mapRotation = 360 - heading;
           _mapController.rotate(_mapRotation);
@@ -205,13 +329,13 @@ class _NavigationPageState extends State<NavigationPage> {
         _routeWaypoints[_index].location.longitude);
     double distance =
         const Distance().as(LengthUnit.Meter, currentLatLng, nextStepLatLng);
-    print(distance>20);
+    print(distance > 20);
     return distance > 20;
   }
 
-  void _changeRightBottomWidget(Widget newWidget){
+  void _changeRightBottomWidget(Widget newWidget) {
     setState(() {
-      _rightBottomWidget=newWidget;
+      _rightBottomWidget = newWidget;
     });
   }
 
@@ -262,12 +386,12 @@ class _NavigationPageState extends State<NavigationPage> {
           _locationSubscription!.pause();
           _compassSubscription!.pause();
           _locationTimer.cancel();
-          _rightBottomWidget=const SizedBox();
+          _rightBottomWidget = const SizedBox();
           _isOnWalkNavigation = false;
         }
         return Expanded(
-          child: MetroNavigationWidget(
-              actualPoint.name, _routeSteps[_index], _continueRoute, _changeRightBottomWidget),
+          child: MetroNavigationWidget(actualPoint.name, _routeSteps[_index],
+              _continueRoute, _changeRightBottomWidget),
         );
       case 'ml':
         if (_isOnWalkNavigation) {
@@ -277,8 +401,8 @@ class _NavigationPageState extends State<NavigationPage> {
           _isOnWalkNavigation = false;
         }
         return Expanded(
-          child: MLNavigationWidget(
-              actualPoint.name, _routeSteps[_index], _continueRoute, _changeRightBottomWidget),
+          child: MLNavigationWidget(actualPoint.name, _routeSteps[_index],
+              _continueRoute, _changeRightBottomWidget),
         );
       default:
         return const Text("Allgo ha fallado");
