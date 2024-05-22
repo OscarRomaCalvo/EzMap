@@ -132,18 +132,63 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
           .get()
           .then((event) {
         event.data()?.forEach((routeName, routeInformation) {
-          RouteWaypoint origin = RouteWaypoint(
-              name: routeInformation["origin"]["name"],
-              type: "origin",
-              pointImage: routeInformation["origin"]["image"],
-              location: routeInformation["origin"]["location"]);
-          RouteWaypoint destination = RouteWaypoint(
-              name: routeInformation["destination"]["name"],
-              type: "destination",
-              pointImage: routeInformation["destination"]["image"],
-              location: routeInformation["destination"]["location"]);
-          shortRoutes.add(ShortRoute(
-              routeName: routeName, origin: origin, destination: destination));
+          try {
+            if (routeName == null) {
+              throw Exception("Nombre de ruta incorrecto");
+            }
+
+            var originData = routeInformation["origin"];
+            if (originData == null) {
+              throw Exception("$routeName no tiene origen");
+            }
+
+            var destinationData = routeInformation["destination"];
+            if (destinationData == null) {
+              throw Exception("$routeName no tiene destino");
+            }
+
+            String? originName = originData['name'];
+            String? originImage = originData['image'];
+            GeoPoint? originLocation = originData['location'];
+
+            if (originName == null ||
+                originImage == null ||
+                originLocation == null) {
+              throw Exception(
+                  "Datos incompletos en el origen de la ruta $routeName");
+            }
+
+            RouteWaypoint origin = RouteWaypoint(
+                name: originName,
+                type: "origin",
+                pointImage: originImage,
+                location: originLocation);
+
+            String? destinationName = destinationData['name'];
+            String? destinationImage = destinationData['image'];
+            GeoPoint destinationLocation = destinationData['location'];
+
+            if (destinationName == null ||
+                destinationImage == null ||
+                destinationLocation == null) {
+              throw Exception(
+                  "Datos incompletos en el destino del Resumen de Ruta $routeName");
+            }
+
+            RouteWaypoint destination = RouteWaypoint(
+                name: destinationName,
+                type: "destination",
+                pointImage: destinationImage,
+                location: destinationLocation);
+
+            shortRoutes.add(
+              ShortRoute(
+                  routeName: routeName, origin: origin, destination: destination),
+            );
+          } on Exception catch (e) {
+            print(e);
+          }
+
         });
         setState(() {
           _shortRoute = shortRoutes;
