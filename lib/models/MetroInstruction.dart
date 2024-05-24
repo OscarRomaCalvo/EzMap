@@ -10,7 +10,7 @@ class MetroStep{
   String destination;
   String direction;
   String line;
-  int stops;
+  int stopNumber;
 
-  MetroStep(this.destination, this.direction, this.line, this.stops);
+  MetroStep(this.destination, this.direction, this.line, this.stopNumber);
 }

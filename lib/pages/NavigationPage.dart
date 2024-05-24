@@ -403,7 +403,7 @@ class _NavigationPageState extends State<NavigationPage> {
           _isOnWalkNavigation = false;
         }
         return Expanded(
-          child: MetroNavigationWidget(actualPoint.name, _routeSteps[_index],
+          child: MetroNavigationWidget(actualPoint.name, _routeInstructions[_index] as MetroInstruction,
               _continueRoute, _changeRightBottomWidget),
         );
       case 'ml':

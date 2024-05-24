@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../models/MetroInstruction.dart';
 import '../../services/TextReader.dart';
 import '../PopUpImage.dart';
 
 class InitMetroStepWidget extends StatefulWidget {
-  final Map<String, dynamic> step;
+  final MetroStep step;
   final VoidCallback startOnMetroNavigation;
   final Function(Widget) changeRightBottomWidget;
 
@@ -17,11 +18,8 @@ class InitMetroStepWidget extends StatefulWidget {
 class _InitMetroStepWidgetState extends State<InitMetroStepWidget> {
   void initState() {
     super.initState();
-    TextReader.speak("Utiliza la línea " +
-        widget.step["line"] +
-        "en dirección " +
-        widget.step["direction"] +
-        ". Pulsa el botón cuando estés en el metro.");
+    TextReader.speak(
+        "Utiliza la línea ${widget.step.line}en dirección ${widget.step.direction}. Pulsa el botón cuando estés en el metro.");
   }
 
   @override
@@ -60,14 +58,14 @@ class _InitMetroStepWidgetState extends State<InitMetroStepWidget> {
                     children: [
                       Image(
                         image: AssetImage(
-                            "assets/images/metro/line${widget.step["line"]}-metro.png"),
+                            "assets/images/metro/line${widget.step.line}-metro.png"),
                         height: 50,
                       ),
                       const SizedBox(
                         width: 20,
                       ),
                       Text(
-                        "Línea ${widget.step["line"]}",
+                        "Línea ${widget.step.line}",
                         style: const TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -89,7 +87,7 @@ class _InitMetroStepWidgetState extends State<InitMetroStepWidget> {
                           text: "DIRECCIÓN: ",
                         ),
                         TextSpan(
-                          text: widget.step["direction"],
+                          text: widget.step.direction,
                           style: const TextStyle(
                             fontSize: 30,
                           ),

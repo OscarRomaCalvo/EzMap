@@ -1,3 +1,4 @@
+import 'package:ez_maps/models/MetroInstruction.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/MetroNavigation/InitMetroStepWidget.dart';
 import 'package:ez_maps/customWidgets/MetroNavigation/MetroEndWidget.dart';
@@ -9,11 +10,11 @@ import 'OnMetroWidget.dart';
 
 class MetroNavigationWidget extends StatefulWidget {
   final String originStation;
-  final steps;
+  final MetroInstruction instruction;
   final VoidCallback continueRoute;
   final Function(Widget) changeRightBottomWidget;
 
-  MetroNavigationWidget(this.originStation, this.steps, this.continueRoute,
+  MetroNavigationWidget(this.originStation, this.instruction, this.continueRoute,
       this.changeRightBottomWidget);
 
   @override
@@ -24,7 +25,7 @@ class _MetroNavigationWidgetState extends State<MetroNavigationWidget> {
   Widget _actualWidget = const CircularProgressIndicator(
     valueColor: AlwaysStoppedAnimation(Color(0xFF4791DB)),
   );
-  int _actualStep = 1;
+  int _actualStep = 0;
 
   @override
   initState() {
@@ -42,7 +43,7 @@ class _MetroNavigationWidgetState extends State<MetroNavigationWidget> {
           size: 60),
     );
     setState(() {
-      _actualWidget = InitMetroStepWidget(widget.steps["step$_actualStep"],
+      _actualWidget = InitMetroStepWidget(widget.instruction.metroSteps[_actualStep],
           _setOnMetroStep, widget.changeRightBottomWidget);
     });
   }
@@ -53,8 +54,8 @@ class _MetroNavigationWidgetState extends State<MetroNavigationWidget> {
     );
     setState(() {
       _actualWidget = OnMetroWidget(
-          widget.steps["step$_actualStep"]["stops"],
-          widget.steps["step$_actualStep"]["destination"],
+          widget.instruction.metroSteps[_actualStep].stopNumber,
+          widget.instruction.metroSteps[_actualStep].destination,
           _doTransferOrEndMetro);
     });
   }
@@ -65,12 +66,12 @@ class _MetroNavigationWidgetState extends State<MetroNavigationWidget> {
     );
     setState(() {
       _actualStep++;
-      if (widget.steps["step$_actualStep"] != null) {
+      if (widget.instruction.metroSteps.length > _actualStep) {
         _actualWidget = MetroTransferWidget(_setInitStep,
-            widget.steps["step${_actualStep - 1}"]["destination"]);
+            widget.instruction.metroSteps[_actualStep-1].destination);
       } else {
         _actualWidget = MetroEndWidget(
-            widget.steps["step${_actualStep - 1}"]["destination"],
+            widget.instruction.metroSteps[_actualStep-1].destination,
             widget.continueRoute);
       }
     });

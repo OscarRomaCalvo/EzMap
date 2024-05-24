@@ -4,11 +4,11 @@ import '../../services/TextReader.dart';
 import '../ImageButton.dart';
 
 class OnMetroWidget extends StatefulWidget {
-  int stops;
+  int stopNumber;
   final String stopName;
   final VoidCallback continueMetroNavigation;
 
-  OnMetroWidget(this.stops, this.stopName, this.continueMetroNavigation);
+  OnMetroWidget(this.stopNumber, this.stopName, this.continueMetroNavigation);
 
   @override
   State<OnMetroWidget> createState() => _OnMetroWidgetState();
@@ -18,17 +18,15 @@ class _OnMetroWidgetState extends State<OnMetroWidget> {
   @override
   void initState() {
     super.initState();
-    if (widget.stops > 1) {
-      TextReader.speak("Tu parada es " +
-          widget.stopName +
-          ". Pulsa el botón en cada parada.");
+    if (widget.stopNumber > 1) {
+      TextReader.speak("Tu parada es ${widget.stopName}. Pulsa el botón en cada parada.");
     }
   }
 
   void _reduceStops() {
-    if (widget.stops > 1) {
+    if (widget.stopNumber > 1) {
       setState(() {
-        widget.stops--;
+        widget.stopNumber--;
       });
     }
   }
@@ -77,8 +75,8 @@ class _OnMetroWidgetState extends State<OnMetroWidget> {
         const SizedBox(
           height: 25.0,
         ),
-        (widget.stops > 1)
-            ? MultipleStops(widget.stops, _reduceStops)
+        (widget.stopNumber > 1)
+            ? MultipleStops(widget.stopNumber, _reduceStops)
             : LastStop(widget.continueMetroNavigation),
       ],
     );
