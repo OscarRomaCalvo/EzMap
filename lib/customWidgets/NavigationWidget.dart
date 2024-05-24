@@ -1,16 +1,18 @@
+import 'package:ez_maps/models/WalkInstruction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:ez_maps/customWidgets/InstructionWidget.dart';
 
+import '../models/Instruction.dart';
 import '../models/RoutePoint.dart';
 import 'PopUpMarker.dart';
 
 class NavigationWidget extends StatelessWidget {
   final bool completedLoad;
   final int index;
-  final routeSteps;
+  final List<Instruction> routeInstructions;
   final List<RouteWaypoint> routeWaypoints;
   final VoidCallback continueRoute;
   final MapController mapController;
@@ -23,7 +25,7 @@ class NavigationWidget extends StatelessWidget {
     Key? key,
     required this.completedLoad,
     required this.index,
-    required this.routeSteps,
+    required this.routeInstructions,
     required this.routeWaypoints,
     required this.continueRoute,
     required this.mapController,
@@ -67,7 +69,7 @@ class NavigationWidget extends StatelessWidget {
             height: double.infinity,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: InstructionWidget(routeSteps[index]),
+              child: InstructionWidget(routeInstructions[index] as WalkInstruction),
             ),
           ),
         ),

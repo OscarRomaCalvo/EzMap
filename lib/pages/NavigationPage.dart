@@ -102,13 +102,15 @@ class _NavigationPageState extends State<NavigationPage> {
                 waypoint["type"] is! String ||
                 waypoint["pointImage"] is! String ||
                 waypoint["location"] is! GeoPoint) {
-              throw Exception("Datos incorrectos en la ruta ${widget.routeName}");
+              throw Exception(
+                  "Datos incorrectos en la ruta ${widget.routeName}");
             }
             if (waypoint["type"] != "reference" &&
                 waypoint["type"] != "destination" &&
                 waypoint["type"] != "metro" &&
                 waypoint["type"] != "ml") {
-              throw Exception("Datos incorrectos en la ruta ${widget.routeName}");
+              throw Exception(
+                  "Datos incorrectos en la ruta ${widget.routeName}");
             }
             RouteWaypoint routePoint = RouteWaypoint(
                 name: waypoint["name"],
@@ -144,8 +146,8 @@ class _NavigationPageState extends State<NavigationPage> {
                   throw Exception(
                       "Datos incorrectos en la ruta ${widget.routeName}");
                 }
-                secondStep = WalkStep(
-                    step["step2"]["image"], step["step2"]["text"]);
+                secondStep =
+                    WalkStep(step["step2"]["image"], step["step2"]["text"]);
               }
 
               WalkInstruction walkInstruction =
@@ -154,7 +156,10 @@ class _NavigationPageState extends State<NavigationPage> {
             } else if (routeWaypoints[stepIndex].type == 'metro') {
               List<MetroStep> metroStepList = [];
 
-              step.forEach((key, metroStepElement) {
+              int metroStepIndex = 1;
+              while (step["step${metroStepIndex}"] != null) {
+                var metroStepElement = step["step${metroStepIndex}"];
+
                 if (metroStepElement["destination"] is! String ||
                     metroStepElement["direction"] is! String ||
                     metroStepElement["line"] is! String ||
@@ -170,19 +175,26 @@ class _NavigationPageState extends State<NavigationPage> {
                     metroStepElement["stops"]);
 
                 metroStepList.add(metroStep);
-              });
+
+                metroStepIndex++;
+              }
 
               if (metroStepList.isEmpty) {
                 throw Exception(
                     "Datos incorrectos en la ruta ${widget.routeName}");
               }
 
-              MetroInstruction metroInstruction = MetroInstruction(metroStepList);
+              MetroInstruction metroInstruction =
+                  MetroInstruction(metroStepList);
               routeInstructions.add(metroInstruction);
             } else if (routeWaypoints[stepIndex].type == 'ml') {
               List<MLStep> mlStepList = [];
 
-              step.forEach((key, mlStepElement) {
+              int mlStepIndex = 1;
+
+              while (step["step${mlStepIndex}"] != null) {
+                var mlStepElement = step["step${mlStepIndex}"];
+
                 if (mlStepElement["destination"] is! String ||
                     mlStepElement["direction"] is! String ||
                     mlStepElement["line"] is! String ||
@@ -198,7 +210,9 @@ class _NavigationPageState extends State<NavigationPage> {
                     mlStepElement["stops"]);
 
                 mlStepList.add(mlStep);
-              });
+
+                mlStepIndex++;
+              }
 
               if (mlStepList.isEmpty) {
                 throw Exception(
@@ -212,9 +226,8 @@ class _NavigationPageState extends State<NavigationPage> {
             stepIndex++;
           });
 
-          if (waypointIndex != stepIndex){
-            throw Exception(
-                "Datos incorrectos en la ruta ${widget.routeName}");
+          if (waypointIndex != stepIndex || waypointIndex == 0) {
+            throw Exception("Datos incorrectos en la ruta ${widget.routeName}");
           }
         } on Exception catch (e) {
           print(e);
@@ -306,7 +319,7 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   void _continueRoute() {
-    if (_index == _routeSteps.length - 1) {
+    if (_index == _routeInstructions.length - 1) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -372,7 +385,7 @@ class _NavigationPageState extends State<NavigationPage> {
           child: NavigationWidget(
               completedLoad: _completedLoad,
               index: _index,
-              routeSteps: _routeSteps,
+              routeInstructions: _routeInstructions,
               routeWaypoints: _routeWaypoints,
               continueRoute: _continueRoute,
               mapController: _mapController,
