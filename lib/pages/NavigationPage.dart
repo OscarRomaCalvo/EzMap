@@ -414,7 +414,7 @@ class _NavigationPageState extends State<NavigationPage> {
           _isOnWalkNavigation = false;
         }
         return Expanded(
-          child: MLNavigationWidget(actualPoint.name, _routeSteps[_index],
+          child: MLNavigationWidget(actualPoint.name, _routeInstructions[_index] as MLInstruction,
               _continueRoute, _changeRightBottomWidget),
         );
       default:

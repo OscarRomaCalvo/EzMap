@@ -133,10 +133,6 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
           .then((event) {
         event.data()?.forEach((routeName, routeInformation) {
           try {
-            if (routeName == null) {
-              throw Exception("Nombre de ruta incorrecto");
-            }
-
             var originData = routeInformation["origin"];
             if (originData == null) {
               throw Exception("$routeName no tiene origen");
