@@ -49,7 +49,6 @@ class _NavigationPageState extends State<NavigationPage> {
   bool _completedLoad = false;
   int _index = 0;
   List<RouteWaypoint> _routeWaypoints = [];
-  var _routeSteps = [];
   List<Instruction> _routeInstructions = [];
   PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
@@ -93,8 +92,6 @@ class _NavigationPageState extends State<NavigationPage> {
           .doc("infoRoute")
           .get()
           .then((event) {
-        _routeSteps = event.data()?["steps"];
-
         try {
           int waypointIndex = 0;
           event.data()?["waypoints"].forEach((waypoint) {
@@ -235,7 +232,6 @@ class _NavigationPageState extends State<NavigationPage> {
         }
 
         setState(() {
-          _routeSteps = _routeSteps;
           _routeWaypoints = routeWaypoints;
           _routeInstructions = routeInstructions;
           _completedLoad = true;
