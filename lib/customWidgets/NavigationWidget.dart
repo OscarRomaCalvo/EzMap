@@ -9,7 +9,7 @@ import '../models/Instruction.dart';
 import '../models/RoutePoint.dart';
 import 'PopUpMarker.dart';
 
-class NavigationWidget extends StatelessWidget {
+class WalkingNavigationWidget extends StatelessWidget {
   final bool completedLoad;
   final int index;
   final List<Instruction> routeInstructions;
@@ -21,7 +21,7 @@ class NavigationWidget extends StatelessWidget {
   final double mapRotation;
   final destination;
 
-  const NavigationWidget({
+  const WalkingNavigationWidget({
     Key? key,
     required this.completedLoad,
     required this.index,

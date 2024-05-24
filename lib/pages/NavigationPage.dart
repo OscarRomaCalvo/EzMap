@@ -382,7 +382,7 @@ class _NavigationPageState extends State<NavigationPage> {
           });
         }
         return Expanded(
-          child: NavigationWidget(
+          child: WalkingNavigationWidget(
               completedLoad: _completedLoad,
               index: _index,
               routeInstructions: _routeInstructions,
