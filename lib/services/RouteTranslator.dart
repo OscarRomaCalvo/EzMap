@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ez_maps/exceptions/WrongWalkingInstructionException.dart';
 
+import '../exceptions/WrongMLInstructionException.dart';
+import '../exceptions/WrongMetroInstructionException.dart';
+import '../exceptions/WrongWaypointException.dart';
 import '../models/Instruction.dart';
 import '../models/MLInstruction.dart';
 import '../models/MetroInstruction.dart';
@@ -18,15 +22,13 @@ class RouteTranslator {
           waypoint["type"] is! String ||
           waypoint["pointImage"] is! String ||
           waypoint["location"] is! GeoPoint) {
-        throw Exception(
-            "Datos incorrectos en la ruta ${routeName}");
+        WrongWaypointException(routeName, waypointIndex);
       }
       if (waypoint["type"] != "reference" &&
           waypoint["type"] != "destination" &&
           waypoint["type"] != "metro" &&
           waypoint["type"] != "ml") {
-        throw Exception(
-            "Datos incorrectos en la ruta ${routeName}");
+        WrongWaypointException(routeName, waypointIndex);
       }
       RouteWaypoint routePoint = RouteWaypoint(
           name: waypoint["name"],
@@ -43,13 +45,11 @@ class RouteTranslator {
       if (routeWaypoints[stepIndex].type == 'reference' ||
           routeWaypoints[stepIndex].type == 'destination') {
         if (step["step1"] == null) {
-          throw Exception(
-              "Datos incorrectos en la ruta ${routeName}");
+          throw WrongWalkingInstructionException(routeName, stepIndex);
         }
         if (step["step1"]["text"] is! String ||
             step["step1"]["image"] is! String) {
-          throw Exception(
-              "Datos incorrectos en la ruta ${routeName}");
+          throw WrongWalkingInstructionException(routeName, stepIndex);
         }
 
         WalkStep firstStep =
@@ -59,8 +59,7 @@ class RouteTranslator {
         if (step["step2"] != null) {
           if (step["step2"]["text"] is! String ||
               step["step2"]["image"] is! String) {
-            throw Exception(
-                "Datos incorrectos en la ruta ${routeName}");
+            throw WrongWalkingInstructionException(routeName, stepIndex);
           }
           secondStep =
               WalkStep(step["step2"]["image"], step["step2"]["text"]);
@@ -80,8 +79,8 @@ class RouteTranslator {
               metroStepElement["direction"] is! String ||
               metroStepElement["line"] is! String ||
               metroStepElement["stops"] is! int) {
-            throw Exception(
-                "Datos incorrectos en la ruta ${routeName}");
+            throw WrongMetroInstructionException(routeName, stepIndex);
+
           }
 
           MetroStep metroStep = MetroStep(
@@ -96,8 +95,7 @@ class RouteTranslator {
         }
 
         if (metroStepList.isEmpty) {
-          throw Exception(
-              "Datos incorrectos en la ruta ${routeName}");
+          throw WrongMetroInstructionException(routeName, stepIndex);
         }
 
         MetroInstruction metroInstruction =
@@ -115,8 +113,7 @@ class RouteTranslator {
               mlStepElement["direction"] is! String ||
               mlStepElement["line"] is! String ||
               mlStepElement["stops"] is! int) {
-            throw Exception(
-                "Datos incorrectos en la ruta ${routeName}");
+            throw WrongMLInstructionException(routeName, stepIndex);
           }
 
           MLStep mlStep = MLStep(
@@ -131,8 +128,7 @@ class RouteTranslator {
         }
 
         if (mlStepList.isEmpty) {
-          throw Exception(
-              "Datos incorrectos en la ruta ${routeName}");
+          throw WrongMLInstructionException(routeName, stepIndex);
         }
 
         MLInstruction mlInstruction = MLInstruction(mlStepList);
@@ -143,7 +139,7 @@ class RouteTranslator {
     });
 
     if (waypointIndex != stepIndex || waypointIndex == 0) {
-      throw Exception("Datos incorrectos en la ruta ${routeName}");
+      throw Exception("No concuerda el número de waypoints y de instrucciones en la ruta $routeName");
     }
 
     return {
