@@ -154,7 +154,7 @@ class _NavigationPageState extends State<NavigationPage> {
     LocationSettings locationSettings = const LocationSettings(
         accuracy: LocationAccuracy.bestForNavigation,
         distanceFilter: 0,
-        timeLimit: Duration(seconds: 30));
+        timeLimit: Duration(seconds: 60));
     _locationSubscription =
         Geolocator.getPositionStream(locationSettings: locationSettings).listen(
       (Position newLocation) {
