@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:ez_maps/customWidgets/ImageButton.dart';
 import 'package:ez_maps/customWidgets/WarningTimer.dart';
 import 'package:ez_maps/exceptions/NoInternetException.dart';
 import 'package:ez_maps/models/MetroInstruction.dart';
@@ -94,7 +95,7 @@ class _NavigationPageState extends State<NavigationPage> {
 
   Future<void> _getRouteInformation() async {
     var checkInternet = await _connectivity.checkConnectivity();
-    if(checkInternet.contains(ConnectivityResult.none)){
+    if (checkInternet.contains(ConnectivityResult.none)) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -139,8 +140,9 @@ class _NavigationPageState extends State<NavigationPage> {
     }
   }
 
-  void _suscribeToConnectivityChanges(){
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> result) {
+  void _suscribeToConnectivityChanges() {
+    _connectivitySubscription = _connectivity.onConnectivityChanged
+        .listen((List<ConnectivityResult> result) {
       setState(() {
         _isConnected = !result.contains(ConnectivityResult.none);
       });
@@ -149,24 +151,37 @@ class _NavigationPageState extends State<NavigationPage> {
 
   void _subscribeToLocationChanges() {
     double distance = 0.0;
+    LocationSettings locationSettings = const LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 0,
+        timeLimit: Duration(seconds: 3000));
     _locationSubscription =
-        Geolocator.getPositionStream().listen((Position newLocation) {
-      setState(() {
-        _currentLocation = newLocation;
-        LatLng newLatLng =
-            LatLng(_currentLocation.latitude, _currentLocation.longitude);
-        _currentLocation = newLocation;
-        _mapController.move(newLatLng, 18);
-        if (_polylineCoordinates.length > 1) {
-          distance = const Distance()
-              .as(LengthUnit.Meter, _polylineCoordinates[1], newLatLng);
-          _polylineCoordinates[0] = newLatLng;
-          if (distance < 10) {
-            _polylineCoordinates.removeAt(1);
-          }
+        Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+      (Position newLocation) {
+        setState(
+          () {
+            _currentLocation = newLocation;
+            LatLng newLatLng =
+                LatLng(_currentLocation.latitude, _currentLocation.longitude);
+            _currentLocation = newLocation;
+            _mapController.move(newLatLng, 18);
+            if (_polylineCoordinates.length > 1) {
+              distance = const Distance()
+                  .as(LengthUnit.Meter, _polylineCoordinates[1], newLatLng);
+              _polylineCoordinates[0] = newLatLng;
+              if (distance < 10) {
+                _polylineCoordinates.removeAt(1);
+              }
+            }
+          },
+        );
+      },
+      onError: (e) {
+        if (e.runtimeType == LocationServiceDisabledException) {
+          _showTurnOnLocationDialog(context);
         }
-      });
-    });
+      },
+    );
   }
 
   void _getRoute() {
@@ -251,6 +266,59 @@ class _NavigationPageState extends State<NavigationPage> {
     setState(() {
       _rightBottomWidget = newWidget;
     });
+  }
+
+  void _showTurnOnLocationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFF5F5F5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.location_off, color: Color(0xFF4791DB), size: 100),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    "ACTIVA LA UBICACIÓN EN EL DISPOSITIVO",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ImageButton(
+                      imagePath:
+                          "assets/images/ARASAACPictograms/refreshButton.png",
+                      size: 100,
+                      onPressed: () async {
+                        bool serviceEnabled =
+                            await Geolocator.isLocationServiceEnabled();
+                        if (serviceEnabled) {
+                          Navigator.of(context).pop();
+                        }
+                      }),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Widget _renderPage() {
