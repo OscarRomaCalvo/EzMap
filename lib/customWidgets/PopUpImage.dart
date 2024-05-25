@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 class PopUpImage extends StatelessWidget {
   final String imageURL;
   final BoxFit imageFit;
-  PopUpImage({required this.imageURL, this.imageFit = BoxFit.cover});
+  final String placeholderAsset;
+
+  PopUpImage({
+    required this.imageURL,
+    this.imageFit = BoxFit.cover,
+    this.placeholderAsset = 'assets/loading_placeholder.png',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +19,10 @@ class PopUpImage extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return Dialog(
-              child: Image.network(
-                imageURL,
+              child: FadeInImage(
+                placeholder: AssetImage("assets/images/placehoderImage.png"),
+                image: NetworkImage(imageURL),
+                fit: BoxFit.contain,
               ),
             );
           },
@@ -22,7 +30,8 @@ class PopUpImage extends StatelessWidget {
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: Image(
+        child: FadeInImage(
+          placeholder: AssetImage("assets/images/placehoderImage.png"),
           image: NetworkImage(imageURL),
           fit: imageFit,
           width: double.infinity,
