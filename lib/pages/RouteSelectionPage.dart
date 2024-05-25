@@ -54,7 +54,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
 
   Future<void> _checkStartedRoute() async {
     final prefs = await SharedPreferences.getInstance();
-    String? startedRoute = prefs.getString('startedRoute');
+    String? startedRoute = await prefs.getString('startedRoute');
     if (startedRoute != null) {
       setState(() {
         _startedRoute = startedRoute;

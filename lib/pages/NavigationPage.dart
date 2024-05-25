@@ -27,6 +27,7 @@ import '../models/RoutePoint.dart';
 import '../services/AuthService.dart';
 import '../services/RouteTranslator.dart';
 import 'EndRoutePage.dart';
+import 'WrongRouteDefinitionPage.dart';
 
 class NavigationPage extends StatefulWidget {
   NavigationPage({Key? key, required this.routeName, required this.iniLocation})
@@ -46,7 +47,7 @@ class _NavigationPageState extends State<NavigationPage> {
   double _mapRotation = 0.0;
   late MapController _mapController;
   late Timer _locationTimer;
-
+  bool _skipDispose = false;
   bool _completedLoad = false;
   int _index = 0;
   List<RouteWaypoint> _routeWaypoints = [];
@@ -73,9 +74,11 @@ class _NavigationPageState extends State<NavigationPage> {
   @override
   void dispose() {
     super.dispose();
-    _locationSubscription!.cancel();
-    _compassSubscription!.cancel();
-    _locationTimer.cancel();
+    if (_skipDispose == false) {
+      _locationSubscription!.cancel();
+      _compassSubscription!.cancel();
+      _locationTimer.cancel();
+    }
   }
 
   void _getRouteInformation() {
@@ -93,21 +96,27 @@ class _NavigationPageState extends State<NavigationPage> {
           .get()
           .then((event) {
         try {
-          Map<String,dynamic> translatedRoute = RouteTranslator.translateRoute(event, widget.routeName);
+          Map<String, dynamic> translatedRoute =
+              RouteTranslator.translateRoute(event, widget.routeName);
           routeWaypoints = translatedRoute["routeWaypoints"];
           routeInstructions = translatedRoute["routeInstructions"];
+          setState(() {
+            _routeWaypoints = routeWaypoints;
+            _routeInstructions = routeInstructions;
+            _completedLoad = true;
+          });
+
+          _getRoute();
         } on Exception catch (e) {
-          print(e);
-          print("EEEEEEEEERRRROOOOOOOORRRRRR");
+          setState(() {
+            _skipDispose = true;
+          });
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => WrongRouteDefinitionPage(e)),
+          );
         }
-
-        setState(() {
-          _routeWaypoints = routeWaypoints;
-          _routeInstructions = routeInstructions;
-          _completedLoad = true;
-        });
-
-        _getRoute();
       });
     }
   }
@@ -269,8 +278,11 @@ class _NavigationPageState extends State<NavigationPage> {
           _isOnWalkNavigation = false;
         }
         return Expanded(
-          child: MetroNavigationWidget(actualPoint.name, _routeInstructions[_index] as MetroInstruction,
-              _continueRoute, _changeRightBottomWidget),
+          child: MetroNavigationWidget(
+              actualPoint.name,
+              _routeInstructions[_index] as MetroInstruction,
+              _continueRoute,
+              _changeRightBottomWidget),
         );
       case 'ml':
         if (_isOnWalkNavigation) {
@@ -280,8 +292,11 @@ class _NavigationPageState extends State<NavigationPage> {
           _isOnWalkNavigation = false;
         }
         return Expanded(
-          child: MLNavigationWidget(actualPoint.name, _routeInstructions[_index] as MLInstruction,
-              _continueRoute, _changeRightBottomWidget),
+          child: MLNavigationWidget(
+              actualPoint.name,
+              _routeInstructions[_index] as MLInstruction,
+              _continueRoute,
+              _changeRightBottomWidget),
         );
       default:
         return const Text("Allgo ha fallado");
