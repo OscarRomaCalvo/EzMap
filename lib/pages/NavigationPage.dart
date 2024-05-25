@@ -154,7 +154,7 @@ class _NavigationPageState extends State<NavigationPage> {
     LocationSettings locationSettings = const LocationSettings(
         accuracy: LocationAccuracy.bestForNavigation,
         distanceFilter: 0,
-        timeLimit: Duration(seconds: 3000));
+        timeLimit: Duration(seconds: 30));
     _locationSubscription =
         Geolocator.getPositionStream(locationSettings: locationSettings).listen(
       (Position newLocation) {
@@ -179,6 +179,8 @@ class _NavigationPageState extends State<NavigationPage> {
       onError: (e) {
         if (e.runtimeType == LocationServiceDisabledException) {
           _showTurnOnLocationDialog(context);
+        }else if (e.runtimeType == TimeoutException){
+          _showLocationNoAvailableDialog(context);
         }
       },
     );
@@ -285,7 +287,8 @@ class _NavigationPageState extends State<NavigationPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.location_off, color: Color(0xFF4791DB), size: 100),
+                  const Icon(Icons.location_off,
+                      color: Color(0xFF4791DB), size: 100),
                   const SizedBox(
                     height: 20,
                   ),
@@ -310,6 +313,74 @@ class _NavigationPageState extends State<NavigationPage> {
                             await Geolocator.isLocationServiceEnabled();
                         if (serviceEnabled) {
                           Navigator.of(context).pop();
+                        }
+                      }),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showLocationNoAvailableDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFF5F5F5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.location_off,
+                      color: Color(0xFF4791DB), size: 100),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    "ERROR",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFD32F2F),
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                  const Text(
+                    "SE HA PERDIDO EL ACCESO A LA UBICACIÓN",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ImageButton(
+                      imagePath:
+                          "assets/images/ARASAACPictograms/refreshButton.png",
+                      size: 100,
+                      onPressed: () async {
+                        bool serviceEnabled =
+                            await Geolocator.isLocationServiceEnabled();
+                        if (serviceEnabled) {
+                          try {
+                            await Geolocator.getCurrentPosition();
+                            _subscribeToLocationChanges();
+                            Navigator.of(context).pop();
+                          } catch (e) {}
                         }
                       }),
                 ],
