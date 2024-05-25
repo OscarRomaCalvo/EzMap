@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:ez_maps/customWidgets/WarningTimer.dart';
+import 'package:ez_maps/exceptions/NoInternetException.dart';
 import 'package:ez_maps/models/MetroInstruction.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +16,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
 import 'package:ez_maps/customWidgets/MLNavigation/MLNavigationWidget.dart';
 import 'package:ez_maps/customWidgets/MetroNavigation/MetroNavigationWidget.dart';
-import 'package:ez_maps/customWidgets/NavigationWidget.dart';
+import 'package:ez_maps/customWidgets/WalkingNavigationWidget.dart';
 
 import 'package:provider/provider.dart';
 
@@ -55,6 +57,9 @@ class _NavigationPageState extends State<NavigationPage> {
   List<LatLng> _polylineCoordinates = [];
   StreamSubscription<Position>? _locationSubscription;
   StreamSubscription<CompassEvent>? _compassSubscription;
+  final Connectivity _connectivity = Connectivity();
+  bool _isConnected = false;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   bool _isOnWalkNavigation = false;
   bool _isNewStep = true;
 
@@ -64,7 +69,14 @@ class _NavigationPageState extends State<NavigationPage> {
   void initState() {
     super.initState();
     _mapController = MapController();
-    _getRouteInformation();
+    try {
+      _getRouteInformation();
+    } on Exception catch (e) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ExceptionPage(e)),
+      );
+    }
     setState(() {
       _currentLocation = widget.iniLocation;
     });
@@ -80,7 +92,15 @@ class _NavigationPageState extends State<NavigationPage> {
     }
   }
 
-  void _getRouteInformation() {
+  Future<void> _getRouteInformation() async {
+    var checkInternet = await _connectivity.checkConnectivity();
+    if(checkInternet.contains(ConnectivityResult.none)){
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ExceptionPage(NoInternetException())),
+      );
+    }
     final AuthService authService =
         Provider.of<AuthService>(context, listen: false);
     User? user = authService.user;
@@ -112,12 +132,19 @@ class _NavigationPageState extends State<NavigationPage> {
           });
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-                builder: (context) => ExceptionPage(e)),
+            MaterialPageRoute(builder: (context) => ExceptionPage(e)),
           );
         }
       });
     }
+  }
+
+  void _suscribeToConnectivityChanges(){
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> result) {
+      setState(() {
+        _isConnected = !result.contains(ConnectivityResult.none);
+      });
+    });
   }
 
   void _subscribeToLocationChanges() {

@@ -29,7 +29,7 @@ class RouteSelectionPage extends StatefulWidget {
 class _RouteSelectionPageState extends State<RouteSelectionPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Connectivity _connectivity = Connectivity();
-  late bool _isInternetConnected;
+  bool _isInternetConnected = false;
 
   String? _startedRoute = null;
   bool? _hasLocationPermission;
