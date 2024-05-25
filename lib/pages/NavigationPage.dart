@@ -59,7 +59,7 @@ class _NavigationPageState extends State<NavigationPage> {
   StreamSubscription<Position>? _locationSubscription;
   StreamSubscription<CompassEvent>? _compassSubscription;
   final Connectivity _connectivity = Connectivity();
-  bool _isConnected = false;
+  bool _isConnectedToInternet = false;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   bool _isOnWalkNavigation = false;
   bool _isNewStep = true;
@@ -89,6 +89,7 @@ class _NavigationPageState extends State<NavigationPage> {
     if (_skipDispose == false) {
       _locationSubscription!.cancel();
       _compassSubscription!.cancel();
+      _connectivitySubscription!.cancel();
       _locationTimer.cancel();
     }
   }
@@ -143,9 +144,17 @@ class _NavigationPageState extends State<NavigationPage> {
   void _suscribeToConnectivityChanges() {
     _connectivitySubscription = _connectivity.onConnectivityChanged
         .listen((List<ConnectivityResult> result) {
-      setState(() {
-        _isConnected = !result.contains(ConnectivityResult.none);
-      });
+      bool actualState = _isConnectedToInternet;
+      bool newState = !result.contains(ConnectivityResult.none);
+      if (actualState != newState) {
+        setState(() {
+          _isConnectedToInternet = newState;
+        });
+
+        if (newState == false) {
+          _showConnectivityNoAvailableDialog(context);
+        }
+      }
     });
   }
 
@@ -179,7 +188,7 @@ class _NavigationPageState extends State<NavigationPage> {
       onError: (e) {
         if (e.runtimeType == LocationServiceDisabledException) {
           _showTurnOnLocationDialog(context);
-        }else if (e.runtimeType == TimeoutException){
+        } else if (e.runtimeType == TimeoutException) {
           _showLocationNoAvailableDialog(context);
         }
       },
@@ -268,6 +277,72 @@ class _NavigationPageState extends State<NavigationPage> {
     setState(() {
       _rightBottomWidget = newWidget;
     });
+  }
+
+  void _showConnectivityNoAvailableDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFF5F5F5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.signal_wifi_connected_no_internet_4_sharp,
+                    color: Color(0xFF4791DB),
+                    size: 100,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    "ERROR",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFD32F2F),
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                  const Text(
+                    "SE HA PERDIDO LA CONEXIÓN A INTERNET",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ImageButton(
+                    imagePath:
+                        "assets/images/ARASAACPictograms/refreshButton.png",
+                    size: 100,
+                    onPressed: () async {
+                      if (_isConnectedToInternet) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _showTurnOnLocationDialog(BuildContext context) {
@@ -415,6 +490,7 @@ class _NavigationPageState extends State<NavigationPage> {
           });
           _subscribeToLocationChanges();
           _suscribeToCompassChanges();
+          _suscribeToConnectivityChanges();
           _locationTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
             //TODO: quitar el comentario, solo está durante el desarrollo.
             //_getRoute();
@@ -438,6 +514,7 @@ class _NavigationPageState extends State<NavigationPage> {
         if (_isOnWalkNavigation) {
           _locationSubscription!.pause();
           _compassSubscription!.pause();
+          _connectivitySubscription!.pause();
           _locationTimer.cancel();
           _rightBottomWidget = const SizedBox();
           _isOnWalkNavigation = false;
@@ -453,6 +530,7 @@ class _NavigationPageState extends State<NavigationPage> {
         if (_isOnWalkNavigation) {
           _locationSubscription!.pause();
           _compassSubscription!.pause();
+          _connectivitySubscription!.pause();
           _locationTimer.cancel();
           _isOnWalkNavigation = false;
         }
