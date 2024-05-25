@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class WrongRouteDefinitionPage extends StatefulWidget {
+class ExceptionPage extends StatefulWidget {
   Exception exception;
-  WrongRouteDefinitionPage(this.exception);
+  ExceptionPage(this.exception);
 
   @override
-  _WrongRouteDefinitionPageState createState() =>
-      _WrongRouteDefinitionPageState();
+  _ExceptionPageState createState() =>
+      _ExceptionPageState();
 }
 
-class _WrongRouteDefinitionPageState extends State<WrongRouteDefinitionPage> {
+class _ExceptionPageState extends State<ExceptionPage> {
   @override
   void initState() {
     super.initState();

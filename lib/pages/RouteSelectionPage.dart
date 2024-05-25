@@ -17,6 +17,8 @@ import '../models/RoutePoint.dart';
 import '../models/ShortRoute.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'ExceptionPage.dart';
+
 class RouteSelectionPage extends StatefulWidget {
   const RouteSelectionPage({super.key});
 
@@ -138,67 +140,75 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   }
 
   Future<void> _getRoutes() async {
-    final AuthService authService =
-        Provider.of<AuthService>(context, listen: false);
-    User? user = authService.user;
-    List<ShortRoute> shortRoutes = [];
-    if (user != null) {
-      await _firestore
-          .collection("shortRoutes")
-          .doc(user.email)
-          .get()
-          .then((event) {
-        event.data()?.forEach((routeName, routeInformation) {
-          try {
-            var originData = routeInformation["origin"];
-            if (originData == null) {
-              throw Exception("$routeName no tiene origen");
+    try {
+      final AuthService authService =
+          Provider.of<AuthService>(context, listen: false);
+      User? user = authService.user;
+      List<ShortRoute> shortRoutes = [];
+      if (user != null) {
+        await _firestore
+            .collection("shortRoutes")
+            .doc(user.email)
+            .get()
+            .then((event) {
+          event.data()?.forEach((routeName, routeInformation) {
+            try {
+              var originData = routeInformation["origin"];
+              if (originData == null) {
+                throw Exception("$routeName no tiene origen");
+              }
+
+              var destinationData = routeInformation["destination"];
+              if (destinationData == null) {
+                throw Exception("$routeName no tiene destino");
+              }
+              if (originData['name'] is! String ||
+                  originData['image'] is! String ||
+                  originData['location'] is! GeoPoint) {
+                throw Exception(
+                    "Datos incorrectos en el origen del resumen de ruta $routeName");
+              }
+
+              RouteWaypoint origin = RouteWaypoint(
+                  name: originData['name'],
+                  type: "origin",
+                  pointImage: originData['image'],
+                  location: originData['location']);
+
+              if (destinationData['name'] is! String ||
+                  destinationData['image'] is! String ||
+                  destinationData['location'] is! GeoPoint) {
+                throw Exception(
+                    "Datos incorrectos en el destino del resumen de ruta $routeName");
+              }
+
+              RouteWaypoint destination = RouteWaypoint(
+                  name: destinationData['name'],
+                  type: "destination",
+                  pointImage: destinationData['image'],
+                  location: destinationData['location']);
+
+              shortRoutes.add(
+                ShortRoute(
+                    routeName: routeName,
+                    origin: origin,
+                    destination: destination),
+              );
+            } on Exception catch (e) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ExceptionPage(e)),
+              );
             }
-
-            var destinationData = routeInformation["destination"];
-            if (destinationData == null) {
-              throw Exception("$routeName no tiene destino");
-            }
-            if (originData['name'] is! String ||
-                originData['image'] is! String ||
-                originData['location'] is! GeoPoint) {
-              throw Exception(
-                  "Datos incorrectos en el origen del resumen de ruta $routeName");
-            }
-
-            RouteWaypoint origin = RouteWaypoint(
-                name: originData['name'],
-                type: "origin",
-                pointImage: originData['image'],
-                location: originData['location']);
-
-            if (destinationData['name'] is! String ||
-                destinationData['image'] is! String ||
-                destinationData['location'] is! GeoPoint) {
-              throw Exception(
-                  "Datos incorrectos en el destino del resumen de ruta $routeName");
-            }
-
-            RouteWaypoint destination = RouteWaypoint(
-                name: destinationData['name'],
-                type: "destination",
-                pointImage: destinationData['image'],
-                location: destinationData['location']);
-
-            shortRoutes.add(
-              ShortRoute(
-                  routeName: routeName,
-                  origin: origin,
-                  destination: destination),
-            );
-          } on Exception catch (e) {
-            print(e);
-          }
+          });
+          setState(() {
+            _shortRoute = shortRoutes;
+          });
         });
-        setState(() {
-          _shortRoute = shortRoutes;
-        });
-      });
+      }
+    } on Exception catch (e) {
+      // TODO
     }
   }
 

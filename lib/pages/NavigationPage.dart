@@ -26,7 +26,7 @@ import '../models/RoutePoint.dart';
 import '../services/AuthService.dart';
 import '../services/RouteTranslator.dart';
 import 'EndRoutePage.dart';
-import 'WrongRouteDefinitionPage.dart';
+import 'ExceptionPage.dart';
 
 class NavigationPage extends StatefulWidget {
   NavigationPage({Key? key, required this.routeName, required this.iniLocation})
@@ -113,7 +113,7 @@ class _NavigationPageState extends State<NavigationPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => WrongRouteDefinitionPage(e)),
+                builder: (context) => ExceptionPage(e)),
           );
         }
       });
