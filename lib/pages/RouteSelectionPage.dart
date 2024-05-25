@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:ez_maps/customWidgets/CallForInterruptedRouteDialog.dart';
 import 'package:ez_maps/customWidgets/ShortRouteWidget.dart';
 import 'package:ez_maps/services/AuthService.dart';
@@ -25,6 +26,8 @@ class RouteSelectionPage extends StatefulWidget {
 
 class _RouteSelectionPageState extends State<RouteSelectionPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final Connectivity _connectivity = Connectivity();
+  late bool _isInternetConnected;
 
   String? _startedRoute = null;
   bool? _hasLocationPermission;
@@ -44,11 +47,23 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
   Future<void> _initialLoad() async {
     _initialCheckPermissions().then((value) async {
       if (_hasLocationPermission == true) {
-        await _checkStartedRoute();
-        await _getLocation();
-        await _getRoutes();
-        _getNearbyRoutes();
+        await _checkConnectivity();
+        if (_isInternetConnected) {
+          await _checkStartedRoute();
+          await _getLocation();
+          await _getRoutes();
+          _getNearbyRoutes();
+        }
       }
+    });
+  }
+
+  Future<void> _checkConnectivity() async {
+    final List<ConnectivityResult> result =
+        await _connectivity.checkConnectivity();
+    bool isConnected = !result.contains(ConnectivityResult.none);
+    setState(() {
+      _isInternetConnected = isConnected;
     });
   }
 
@@ -83,9 +98,11 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
     });
   }
 
-  Future<void> _reloadPermissions() async {
+  Future<void> _reloadPage() async {
     _checkPermissions().then((value) async {
-      if (_hasLocationPermission == true) {
+      await _checkConnectivity();
+      if (_isInternetConnected) {
+        await _checkStartedRoute();
         await _getLocation();
         await _getRoutes();
         _getNearbyRoutes();
@@ -144,7 +161,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
             }
             if (originData['name'] is! String ||
                 originData['image'] is! String ||
-                originData['location'] is!  GeoPoint) {
+                originData['location'] is! GeoPoint) {
               throw Exception(
                   "Datos incorrectos en el origen del resumen de ruta $routeName");
             }
@@ -244,8 +261,55 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
                 height: 20.0,
               ),
               CustomButton("ACTIVAR PERMISOS", () async {
-                _reloadPermissions();
+                _reloadPage();
               }, true),
+            ],
+          ),
+        ],
+      ));
+    } else if (_isInternetConnected == false) {
+      return (Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.signal_wifi_connected_no_internet_4_sharp,
+                color: Color(0xFF4791DB),
+                size: 100,
+              ),
+              Text(
+                "NO HAY CONEXIÓN A INTERNET",
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Color(0xFF4791DB),
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "PULSA EL BOTÓN PARA REINTENTAR LA CONEXIÓN",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              ImageButton(
+                  imagePath:
+                  "assets/images/ARASAACPictograms/refreshButton.png",
+                  onPressed: _reloadPage,
+                  size: 100),
             ],
           ),
         ],
