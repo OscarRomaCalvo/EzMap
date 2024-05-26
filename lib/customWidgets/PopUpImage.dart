@@ -8,7 +8,7 @@ class PopUpImage extends StatelessWidget {
   PopUpImage({
     required this.imageURL,
     this.imageFit = BoxFit.cover,
-    this.placeholderAsset = 'assets/loading_placeholder.png',
+    this.placeholderAsset = 'assets/images/placehoderImage.png',
   });
 
   @override
@@ -19,24 +19,41 @@ class PopUpImage extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return Dialog(
-              child: FadeInImage(
-                placeholder: AssetImage("assets/images/placehoderImage.png"),
-                image: NetworkImage(imageURL),
-                fit: BoxFit.contain,
-              ),
+              child: _buildImage(),
             );
           },
         );
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: FadeInImage(
-          placeholder: AssetImage("assets/images/placehoderImage.png"),
-          image: NetworkImage(imageURL),
+        child: _buildImage(),
+      ),
+    );
+  }
+
+  Widget _buildImage() {
+    return Image.network(
+      imageURL,
+      fit: imageFit,
+      width: double.infinity,
+      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+        return Image.asset(
+          placeholderAsset,
           fit: imageFit,
           width: double.infinity,
-        ),
-      ),
+        );
+      },
+      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+        if (loadingProgress == null) {
+          return child;
+        } else {
+          return Image.asset(
+            placeholderAsset,
+            fit: imageFit,
+            width: double.infinity,
+          );
+        }
+      },
     );
   }
 }
