@@ -21,8 +21,10 @@ import 'package:ez_maps/customWidgets/WalkingNavigationWidget.dart';
 
 import 'package:provider/provider.dart';
 
+import '../customWidgets/BusNavigation/BusNavigationWidget.dart';
 import '../customWidgets/NextStepPopUp.dart';
 import '../customWidgets/ProgressBar.dart';
+import '../models/BusInstruction.dart';
 import '../models/Instruction.dart';
 import '../models/MLInstruction.dart';
 import '../models/RoutePoint.dart';
@@ -575,6 +577,23 @@ class _NavigationPageState extends State<NavigationPage> {
           child: MLNavigationWidget(
               actualPoint.name,
               _routeInstructions[_index] as MLInstruction,
+              _continueRoute,
+              _changeRightBottomWidget),
+        );
+      case 'bus':
+        if (_isOnWalkNavigation) {
+          _locationSubscription!.pause();
+          _compassSubscription!.pause();
+          _connectivitySubscription!.pause();
+          setState(() {
+            _isConnectedToInternet = null;
+          });
+          _locationTimer.cancel();
+          _isOnWalkNavigation = false;
+        }
+        return Expanded(
+          child: BusNavigationWidget(
+              _routeInstructions[_index] as BusInstruction,
               _continueRoute,
               _changeRightBottomWidget),
         );

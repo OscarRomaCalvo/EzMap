@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez_maps/exceptions/WrongWalkingInstructionException.dart';
+import 'package:ez_maps/models/BusInstruction.dart';
 
+import '../exceptions/WrongBusInstructionException.dart';
 import '../exceptions/WrongMLInstructionException.dart';
 import '../exceptions/WrongMetroInstructionException.dart';
 import '../exceptions/WrongWaypointException.dart';
@@ -26,7 +28,9 @@ class RouteTranslator {
       if (waypoint["tipo"] != "pie" &&
           waypoint["tipo"] != "destino" &&
           waypoint["tipo"] != "metro" &&
-          waypoint["tipo"] != "ml") {
+          waypoint["tipo"] != "ml" &&
+          waypoint["tipo"] != "bus"
+      ) {
         WrongWaypointException(routeName, waypointIndex);
       }
       RouteWaypoint routePoint = RouteWaypoint(
@@ -136,6 +140,37 @@ class RouteTranslator {
 
         MLInstruction mlInstruction = MLInstruction(mlStepList);
         routeInstructions.add(mlInstruction);
+      }else if(routeWaypoints[stepIndex].type == 'bus'){
+        List<BusStep> busStepList = [];
+
+        int busStepIndex = 1;
+
+        while (step["instruccion${busStepIndex}"] != null) {
+          var busStepElement = step["instruccion${busStepIndex}"];
+
+          if (busStepElement["texto"] is! String) {
+            throw WrongBusInstructionException(routeName, stepIndex);
+          }
+          String? urlImage;
+          if(busStepElement["urlImagen"] is String){
+            urlImage = busStepElement["urlImagen"];
+          }
+          BusStep busStep = BusStep(
+            busStepElement["texto"],
+            urlImage,
+          );
+
+          busStepList.add(busStep);
+
+          busStepIndex++;
+        }
+
+        if (busStepList.isEmpty) {
+          throw WrongBusInstructionException(routeName, stepIndex);
+        }
+
+        BusInstruction busInstruction = BusInstruction(busStepList);
+        routeInstructions.add(busInstruction);
       }
 
       stepIndex++;
