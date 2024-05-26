@@ -153,40 +153,40 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
             .then((event) {
           event.data()?.forEach((routeName, routeInformation) {
             try {
-              var originData = routeInformation["origin"];
+              var originData = routeInformation["origen"];
               if (originData == null) {
                 throw Exception("$routeName no tiene origen");
               }
 
-              var destinationData = routeInformation["destination"];
+              var destinationData = routeInformation["destino"];
               if (destinationData == null) {
                 throw Exception("$routeName no tiene destino");
               }
-              if (originData['name'] is! String ||
-                  originData['image'] is! String ||
-                  originData['location'] is! GeoPoint) {
+              if (originData['nombre'] is! String ||
+                  originData['urlImagen'] is! String ||
+                  originData['coordenadas'] is! GeoPoint) {
                 throw Exception(
                     "Datos incorrectos en el origen del resumen de ruta $routeName");
               }
 
               RouteWaypoint origin = RouteWaypoint(
-                  name: originData['name'],
-                  type: "origin",
-                  pointImage: originData['image'],
-                  location: originData['location']);
+                  name: originData['nombre'],
+                  type: "origen",
+                  pointImage: originData['urlImagen'],
+                  location: originData['coordenadas']);
 
-              if (destinationData['name'] is! String ||
-                  destinationData['image'] is! String ||
-                  destinationData['location'] is! GeoPoint) {
+              if (destinationData['nombre'] is! String ||
+                  destinationData['urlImagen'] is! String ||
+                  destinationData['coordenadas'] is! GeoPoint) {
                 throw Exception(
                     "Datos incorrectos en el destino del resumen de ruta $routeName");
               }
 
               RouteWaypoint destination = RouteWaypoint(
-                  name: destinationData['name'],
-                  type: "destination",
-                  pointImage: destinationData['image'],
-                  location: destinationData['location']);
+                  name: destinationData['nombre'],
+                  type: "destino",
+                  pointImage: destinationData['urlImagen'],
+                  location: destinationData['coordenadas']);
 
               shortRoutes.add(
                 ShortRoute(

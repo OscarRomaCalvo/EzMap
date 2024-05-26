@@ -7,13 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WarningTimer extends StatefulWidget {
-  final int duration;
+  final Duration duration;
   final double radius;
   final EdgeInsets padding;
 
   const WarningTimer(
       {super.key,
-      this.duration = 180,
+      required this.duration,
       this.radius = 27,
       this.padding = EdgeInsets.zero});
 
@@ -30,7 +30,7 @@ class _WarningTimerState extends State<WarningTimer> {
     setState(() {
       timerOn = true;
     });
-    Timer(Duration(seconds: widget.duration), () {
+    Timer(widget.duration, () {
       _showDialog();
       setState(() {
         timerOn = false;
@@ -129,7 +129,7 @@ class _WarningTimerState extends State<WarningTimer> {
         ? Padding(
             padding: widget.padding,
             child: CircularTimer(
-              duration: Duration(seconds: widget.duration),
+              duration: widget.duration,
               radius: widget.radius,
               color: const Color(0xFF4791DB),
               outline: true,

@@ -65,7 +65,7 @@ class _NavigationPageState extends State<NavigationPage> {
   bool _isNewStep = true;
 
   Widget _rightBottomWidget = const SizedBox();
-  Duration warningTimeOut = const Duration(minutes: 60);
+  Duration _warningTimeOut = const Duration(minutes: 60);
 
   @override
   void initState() {
@@ -118,7 +118,12 @@ class _NavigationPageState extends State<NavigationPage> {
           .get()
           .then((event) {
         try {
-          if (event.data()?["tiempoEstimado"] is double) {}
+          if (event.data()?["tiempoEstimado"] is int) {
+            int time = event.data()?["tiempoEstimado"];
+            setState(() {
+              event.data()?["tiempoEstimado"] = Duration(minutes: time);
+            });
+          }
           Map<String, dynamic> translatedRoute =
               RouteTranslator.translateRoute(event, widget.routeName);
           routeWaypoints = translatedRoute["routeWaypoints"];
@@ -495,7 +500,7 @@ class _NavigationPageState extends State<NavigationPage> {
   Widget _renderPage() {
     RouteWaypoint actualPoint = _routeWaypoints[_index];
     switch (actualPoint.type) {
-      case 'reference' || 'destination':
+      case 'pie' || 'destino':
         if (_isNewStep == true) {
           _getRoute();
           setState(() {
@@ -615,9 +620,9 @@ class _NavigationPageState extends State<NavigationPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const WarningTimer(
-                  duration: 180,
-                  padding: EdgeInsets.only(
+                WarningTimer(
+                  duration: _warningTimeOut,
+                  padding: const EdgeInsets.only(
                     left: 25.0,
                   ),
                 ),

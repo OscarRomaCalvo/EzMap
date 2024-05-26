@@ -113,8 +113,7 @@ class _InitMLStepWidgetState extends State<InitMLStepWidget> {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: PopUpImage(
-                  imageURL:
-                      "https://static.eldiario.es/clip/9e7db40a-bc86-4b51-afa8-09ce8fef4168_source-aspect-ratio_default_0.jpg",
+                  imageURL: widget.step.image,
                   imageFit: BoxFit.fitHeight,
                 ),
               )),

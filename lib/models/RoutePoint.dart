@@ -25,14 +25,4 @@ class RouteWaypoint {
     pointImage: pointImage,
     location: GeoPoint(latitude, longitude),
   );
-
-  Map<String, dynamic> makeSerializable() {
-    return {
-      'name': name,
-      'type': type,
-      'pointImage': pointImage,
-      'longitude': location.longitude,
-      'latitude': location.latitude,
-    };
-  }
 }

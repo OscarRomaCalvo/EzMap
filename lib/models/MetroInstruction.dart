@@ -11,6 +11,7 @@ class MetroStep{
   String direction;
   String line;
   int stopNumber;
+  String image;
 
-  MetroStep(this.destination, this.direction, this.line, this.stopNumber);
+  MetroStep(this.destination, this.direction, this.line, this.stopNumber, this.image);
 }

@@ -11,6 +11,7 @@ class MLStep{
   String direction;
   String line;
   int stopNumber;
+  String image;
 
-  MLStep(this.destination, this.direction, this.line, this.stopNumber);
+  MLStep(this.destination, this.direction, this.line, this.stopNumber, this.image);
 }

@@ -43,8 +43,8 @@ class _WalkingNavigationWidgetState extends State<WalkingNavigationWidget> {
   List<Marker> _renderRouteMarkers() {
     List<Marker> markers = [];
     for (var i = 0; i < widget.routeWaypoints.length; i++) {
-      if (widget.routeWaypoints[i].type == 'reference' ||
-          widget.routeWaypoints[i].type == 'destination') {
+      if (widget.routeWaypoints[i].type == 'pie' ||
+          widget.routeWaypoints[i].type == 'destino') {
         RouteWaypoint routePoint = widget.routeWaypoints[i];
         var marker = Marker(
           point: LatLng(

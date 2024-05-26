@@ -11,83 +11,84 @@ import '../models/RoutePoint.dart';
 import '../models/WalkInstruction.dart';
 
 class RouteTranslator {
-
-  static Map<String,dynamic> translateRoute(var event, String routeName) {
+  static Map<String, dynamic> translateRoute(var event, String routeName) {
     int waypointIndex = 0;
     List<RouteWaypoint> routeWaypoints = [];
     List<Instruction> routeInstructions = [];
 
-    event.data()?["waypoints"].forEach((waypoint) {
-      if (waypoint["name"] is! String ||
-          waypoint["type"] is! String ||
-          waypoint["pointImage"] is! String ||
-          waypoint["location"] is! GeoPoint) {
+    event.data()?["puntosMapa"].forEach((waypoint) {
+      if (waypoint["nombre"] is! String ||
+          waypoint["tipo"] is! String ||
+          waypoint["urlImagen"] is! String ||
+          waypoint["coordenadas"] is! GeoPoint) {
         WrongWaypointException(routeName, waypointIndex);
       }
-      if (waypoint["type"] != "reference" &&
-          waypoint["type"] != "destination" &&
-          waypoint["type"] != "metro" &&
-          waypoint["type"] != "ml") {
+      if (waypoint["tipo"] != "pie" &&
+          waypoint["tipo"] != "destino" &&
+          waypoint["tipo"] != "metro" &&
+          waypoint["tipo"] != "ml") {
         WrongWaypointException(routeName, waypointIndex);
       }
       RouteWaypoint routePoint = RouteWaypoint(
-          name: waypoint["name"],
-          type: waypoint["type"],
-          pointImage: waypoint["pointImage"],
-          location: waypoint["location"]);
+          name: waypoint["nombre"],
+          type: waypoint["tipo"],
+          pointImage: waypoint["urlImagen"],
+          location: waypoint["coordenadas"]);
 
       routeWaypoints.add(routePoint);
       waypointIndex++;
     });
 
     int stepIndex = 0;
-    event.data()?["steps"].forEach((step) {
-      if (routeWaypoints[stepIndex].type == 'reference' ||
-          routeWaypoints[stepIndex].type == 'destination') {
-        if (step["step1"] == null) {
+    event.data()?["instrucciones"].forEach((step) {
+      if (routeWaypoints[stepIndex].type == 'pie' ||
+          routeWaypoints[stepIndex].type == 'destino') {
+        if (step["instruccion1"] == null) {
           throw WrongWalkingInstructionException(routeName, stepIndex);
         }
-        if (step["step1"]["text"] is! String ||
-            step["step1"]["image"] is! String) {
+        if (step["instruccion1"]["texto"] is! String ||
+            step["instruccion1"]["urlImagen"] is! String) {
           throw WrongWalkingInstructionException(routeName, stepIndex);
         }
 
-        WalkStep firstStep =
-        WalkStep(step["step1"]["image"], step["step1"]["text"]);
+        WalkStep firstStep = WalkStep(
+            step["instruccion1"]["urlImagen"], step["instruccion1"]["texto"]);
         WalkStep? secondStep = null;
 
-        if (step["step2"] != null) {
-          if (step["step2"]["text"] is! String ||
-              step["step2"]["image"] is! String) {
+        if (step["instruccion2"] != null) {
+          if (step["instruccion2"]["texto"] is! String ||
+              step["instruccion2"]["urlImagen"] is! String) {
             throw WrongWalkingInstructionException(routeName, stepIndex);
           }
-          secondStep =
-              WalkStep(step["step2"]["image"], step["step2"]["text"]);
+          secondStep = WalkStep(
+              step["instruccion2"]["urlImagen"], step["instruccion2"]["texto"]);
         }
 
         WalkInstruction walkInstruction =
-        WalkInstruction(firstStep, secondStep);
+            WalkInstruction(firstStep, secondStep);
         routeInstructions.add(walkInstruction);
       } else if (routeWaypoints[stepIndex].type == 'metro') {
         List<MetroStep> metroStepList = [];
 
         int metroStepIndex = 1;
-        while (step["step${metroStepIndex}"] != null) {
-          var metroStepElement = step["step${metroStepIndex}"];
+        while (step["instruccion${metroStepIndex}"] != null) {
+          var metroStepElement = step["instruccion${metroStepIndex}"];
 
-          if (metroStepElement["destination"] is! String ||
-              metroStepElement["direction"] is! String ||
-              metroStepElement["line"] is! String ||
-              metroStepElement["stops"] is! int) {
+          if (metroStepElement["destino"] is! String ||
+              metroStepElement["direccion"] is! String ||
+              metroStepElement["linea"] is! String ||
+              metroStepElement["numeroDeParadas"] is! int ||
+              metroStepElement["imagenLinea"] is! String) {
             throw WrongMetroInstructionException(routeName, stepIndex);
-
           }
 
           MetroStep metroStep = MetroStep(
-              metroStepElement["destination"],
-              metroStepElement["direction"],
-              metroStepElement["line"],
-              metroStepElement["stops"]);
+            metroStepElement["destino"],
+            metroStepElement["direccion"],
+            metroStepElement["linea"],
+            metroStepElement["numeroDeParadas"],
+            metroStepElement["imagenLinea"],
+          );
 
           metroStepList.add(metroStep);
 
@@ -98,29 +99,31 @@ class RouteTranslator {
           throw WrongMetroInstructionException(routeName, stepIndex);
         }
 
-        MetroInstruction metroInstruction =
-        MetroInstruction(metroStepList);
+        MetroInstruction metroInstruction = MetroInstruction(metroStepList);
         routeInstructions.add(metroInstruction);
       } else if (routeWaypoints[stepIndex].type == 'ml') {
         List<MLStep> mlStepList = [];
 
         int mlStepIndex = 1;
 
-        while (step["step${mlStepIndex}"] != null) {
-          var mlStepElement = step["step${mlStepIndex}"];
+        while (step["instruccion${mlStepIndex}"] != null) {
+          var mlStepElement = step["instruccion${mlStepIndex}"];
 
-          if (mlStepElement["destination"] is! String ||
-              mlStepElement["direction"] is! String ||
-              mlStepElement["line"] is! String ||
-              mlStepElement["stops"] is! int) {
+          if (mlStepElement["destino"] is! String ||
+              mlStepElement["direccion"] is! String ||
+              mlStepElement["linea"] is! String ||
+              mlStepElement["numeroDeParadas"] is! int ||
+              mlStepElement["imagenLinea"] is! String) {
             throw WrongMLInstructionException(routeName, stepIndex);
           }
 
           MLStep mlStep = MLStep(
-              mlStepElement["destination"],
-              mlStepElement["direction"],
-              mlStepElement["line"],
-              mlStepElement["stops"]);
+            mlStepElement["destino"],
+            mlStepElement["direccion"],
+            mlStepElement["linea"],
+            mlStepElement["numeroDeParadas"],
+            mlStepElement["imagenLinea"],
+          );
 
           mlStepList.add(mlStep);
 
@@ -139,7 +142,8 @@ class RouteTranslator {
     });
 
     if (waypointIndex != stepIndex || waypointIndex == 0) {
-      throw Exception("No concuerda el número de waypoints y de instrucciones en la ruta $routeName");
+      throw Exception(
+          "No concuerda el número de waypoints y de instrucciones en la ruta $routeName");
     }
 
     return {
@@ -147,5 +151,4 @@ class RouteTranslator {
       'routeInstructions': routeInstructions,
     };
   }
-
 }
