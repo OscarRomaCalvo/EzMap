@@ -197,15 +197,20 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
             } on Exception catch (e) {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => ExceptionPage(e)),
+                MaterialPageRoute(builder: (context) => ExceptionPage(e)),
               );
             }
           });
           setState(() {
             _shortRoute = shortRoutes;
           });
-        });
+        }).onError(
+          (error, _) => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ExceptionPage(error as Exception)),
+          ),
+        );
       }
     } on Exception catch (e) {
       // TODO
@@ -317,7 +322,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
               ),
               ImageButton(
                   imagePath:
-                  "assets/images/ARASAACPictograms/refreshButton.png",
+                      "assets/images/ARASAACPictograms/refreshButton.png",
                   onPressed: _reloadPage,
                   size: 100),
             ],

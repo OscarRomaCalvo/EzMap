@@ -65,6 +65,7 @@ class _NavigationPageState extends State<NavigationPage> {
   bool _isNewStep = true;
 
   Widget _rightBottomWidget = const SizedBox();
+  Duration warningTimeOut = const Duration(minutes: 60);
 
   @override
   void initState() {
@@ -117,6 +118,7 @@ class _NavigationPageState extends State<NavigationPage> {
           .get()
           .then((event) {
         try {
+          if (event.data()?["tiempoEstimado"] is double) {}
           Map<String, dynamic> translatedRoute =
               RouteTranslator.translateRoute(event, widget.routeName);
           routeWaypoints = translatedRoute["routeWaypoints"];
@@ -137,7 +139,13 @@ class _NavigationPageState extends State<NavigationPage> {
             MaterialPageRoute(builder: (context) => ExceptionPage(e)),
           );
         }
-      });
+      }).onError(
+        (error, _) => Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ExceptionPage(error as Exception)),
+        ),
+      );
     }
   }
 
