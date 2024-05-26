@@ -59,7 +59,7 @@ class _NavigationPageState extends State<NavigationPage> {
   StreamSubscription<Position>? _locationSubscription;
   StreamSubscription<CompassEvent>? _compassSubscription;
   final Connectivity _connectivity = Connectivity();
-  bool _isConnectedToInternet = false;
+  bool? _isConnectedToInternet;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   bool _isOnWalkNavigation = false;
   bool _isNewStep = true;
@@ -141,16 +141,28 @@ class _NavigationPageState extends State<NavigationPage> {
     }
   }
 
+  Future<void> _checkInternetConnection() async {
+    if( _isConnectedToInternet == null){
+      final List<ConnectivityResult> result =
+          await _connectivity.checkConnectivity();
+      if(result.contains(ConnectivityResult.none)){
+        _showConnectivityNoAvailableDialog(context);
+      }
+    }
+  }
   void _suscribeToConnectivityChanges() {
     _connectivitySubscription = _connectivity.onConnectivityChanged
         .listen((List<ConnectivityResult> result) {
-      bool actualState = _isConnectedToInternet;
+      bool? actualState = _isConnectedToInternet;
       bool newState = !result.contains(ConnectivityResult.none);
       if (actualState != newState) {
         setState(() {
           _isConnectedToInternet = newState;
         });
-
+        if(newState == true){
+          setState(() {
+          });
+        }
         if (newState == false) {
           _showConnectivityNoAvailableDialog(context);
         }
@@ -331,8 +343,10 @@ class _NavigationPageState extends State<NavigationPage> {
                         "assets/images/ARASAACPictograms/refreshButton.png",
                     size: 100,
                     onPressed: () async {
-                      if (_isConnectedToInternet) {
+                      if (_isConnectedToInternet == true) {
                         Navigator.of(context).pop();
+                        setState(() {
+                        });
                       }
                     },
                   ),
@@ -483,6 +497,7 @@ class _NavigationPageState extends State<NavigationPage> {
               _continueRoute,
             );
           });
+          _checkInternetConnection();
         }
         if (!_isOnWalkNavigation) {
           setState(() {
@@ -515,6 +530,9 @@ class _NavigationPageState extends State<NavigationPage> {
           _locationSubscription!.pause();
           _compassSubscription!.pause();
           _connectivitySubscription!.pause();
+          setState((){
+            _isConnectedToInternet=null;
+          });
           _locationTimer.cancel();
           _rightBottomWidget = const SizedBox();
           _isOnWalkNavigation = false;
@@ -531,6 +549,9 @@ class _NavigationPageState extends State<NavigationPage> {
           _locationSubscription!.pause();
           _compassSubscription!.pause();
           _connectivitySubscription!.pause();
+          setState((){
+            _isConnectedToInternet=null;
+          });
           _locationTimer.cancel();
           _isOnWalkNavigation = false;
         }
