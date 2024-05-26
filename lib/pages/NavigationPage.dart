@@ -142,14 +142,15 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   Future<void> _checkInternetConnection() async {
-    if( _isConnectedToInternet == null){
+    if (_isConnectedToInternet == null) {
       final List<ConnectivityResult> result =
           await _connectivity.checkConnectivity();
-      if(result.contains(ConnectivityResult.none)){
+      if (result.contains(ConnectivityResult.none)) {
         _showConnectivityNoAvailableDialog(context);
       }
     }
   }
+
   void _suscribeToConnectivityChanges() {
     _connectivitySubscription = _connectivity.onConnectivityChanged
         .listen((List<ConnectivityResult> result) {
@@ -159,8 +160,9 @@ class _NavigationPageState extends State<NavigationPage> {
         setState(() {
           _isConnectedToInternet = newState;
         });
-        if(newState == true){
+        if (newState == true) {
           setState(() {
+            _index = _index;
           });
         }
         if (newState == false) {
@@ -346,6 +348,7 @@ class _NavigationPageState extends State<NavigationPage> {
                       if (_isConnectedToInternet == true) {
                         Navigator.of(context).pop();
                         setState(() {
+                          _index = _index;
                         });
                       }
                     },
@@ -530,8 +533,8 @@ class _NavigationPageState extends State<NavigationPage> {
           _locationSubscription!.pause();
           _compassSubscription!.pause();
           _connectivitySubscription!.pause();
-          setState((){
-            _isConnectedToInternet=null;
+          setState(() {
+            _isConnectedToInternet = null;
           });
           _locationTimer.cancel();
           _rightBottomWidget = const SizedBox();
@@ -549,8 +552,8 @@ class _NavigationPageState extends State<NavigationPage> {
           _locationSubscription!.pause();
           _compassSubscription!.pause();
           _connectivitySubscription!.pause();
-          setState((){
-            _isConnectedToInternet=null;
+          setState(() {
+            _isConnectedToInternet = null;
           });
           _locationTimer.cancel();
           _isOnWalkNavigation = false;

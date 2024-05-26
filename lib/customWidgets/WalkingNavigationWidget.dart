@@ -9,7 +9,7 @@ import '../models/Instruction.dart';
 import '../models/RoutePoint.dart';
 import 'PopUpMarker.dart';
 
-class WalkingNavigationWidget extends StatelessWidget {
+class WalkingNavigationWidget extends StatefulWidget {
   final bool completedLoad;
   final int index;
   final List<Instruction> routeInstructions;
@@ -35,12 +35,17 @@ class WalkingNavigationWidget extends StatelessWidget {
     required this.destination,
   }) : super(key: key);
 
+  @override
+  _WalkingNavigationWidgetState createState() => _WalkingNavigationWidgetState();
+}
+
+class _WalkingNavigationWidgetState extends State<WalkingNavigationWidget> {
   List<Marker> _renderRouteMarkers() {
     List<Marker> markers = [];
-    for (var i = 0; i < routeWaypoints.length; i++) {
-      if (routeWaypoints[i].type == 'reference' ||
-          routeWaypoints[i].type == 'destination') {
-        RouteWaypoint routePoint = routeWaypoints[i];
+    for (var i = 0; i < widget.routeWaypoints.length; i++) {
+      if (widget.routeWaypoints[i].type == 'reference' ||
+          widget.routeWaypoints[i].type == 'destination') {
+        RouteWaypoint routePoint = widget.routeWaypoints[i];
         var marker = Marker(
           point: LatLng(
               routePoint.location.latitude, routePoint.location.longitude),
@@ -69,7 +74,7 @@ class WalkingNavigationWidget extends StatelessWidget {
             height: double.infinity,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: InstructionWidget(routeInstructions[index] as WalkInstruction),
+              child: InstructionWidget(widget.routeInstructions[widget.index] as WalkInstruction),
             ),
           ),
         ),
@@ -79,22 +84,22 @@ class WalkingNavigationWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: Center(
               child: FlutterMap(
-                mapController: mapController,
+                mapController: widget.mapController,
                 options: MapOptions(
                     initialCenter: LatLng(
-                        currentLocation.latitude, currentLocation.longitude),
+                        widget.currentLocation.latitude, widget.currentLocation.longitude),
                     initialZoom: 18,
-                    initialRotation: mapRotation,
+                    initialRotation: widget.mapRotation,
                     interactionOptions:
-                        const InteractionOptions(flags: InteractiveFlag.none)),
+                    const InteractionOptions(flags: InteractiveFlag.none)),
                 children: [
                   TileLayer(
                     urlTemplate:
-                        'https://api.mapbox.com/styles/v1/oscarro/clsxlxk5s00bq01mee7tm7502/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoib3NjYXJybyIsImEiOiJjbHNjeXo5bGkwcHU4MmpubzM3dHZlc253In0.XC-Sp1-ecbNP0mCBpjhsxw',
+                    'https://api.mapbox.com/styles/v1/oscarro/clsxlxk5s00bq01mee7tm7502/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoib3NjYXJybyIsImEiOiJjbHNjeXo5bGkwcHU4MmpubzM3dHZlc253In0.XC-Sp1-ecbNP0mCBpjhsxw',
                   ),
                   PolylineLayer(polylines: [
                     Polyline(
-                      points: polylineCoordinates,
+                      points: widget.polylineCoordinates,
                       strokeWidth: 9,
                       color: const Color(0xFF4791DB),
                       borderStrokeWidth: 3,
@@ -106,8 +111,8 @@ class WalkingNavigationWidget extends StatelessWidget {
                     markers: _renderRouteMarkers() +
                         [
                           Marker(
-                            point: LatLng(currentLocation.latitude,
-                                currentLocation.longitude),
+                            point: LatLng(widget.currentLocation.latitude,
+                                widget.currentLocation.longitude),
                             width: 60,
                             height: 60,
                             child: const Stack(
