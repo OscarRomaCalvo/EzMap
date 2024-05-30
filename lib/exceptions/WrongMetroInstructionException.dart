@@ -6,6 +6,6 @@ class WrongMetroInstructionException implements Exception {
 
   @override
   String toString() {
-    return "Error en la definición del paso en metro $index en la ruta $routeName";
+    return "Error en la definición de la instrucción $index en la ruta $routeName";
   }
 }

@@ -6,6 +6,6 @@ class WrongWaypointException implements Exception {
 
   @override
   String toString() {
-    return "Error en la definición del waypoint $index en la ruta $routeName";
+    return "Error en la definición del puntoMapa $index en la ruta $routeName";
   }
 }

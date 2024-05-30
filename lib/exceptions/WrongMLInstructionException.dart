@@ -6,6 +6,6 @@ class WrongMLInstructionException implements Exception {
 
   @override
   String toString() {
-    return "Error en la definición del paso en ml $index en la ruta $routeName";
+    return "Error en la definición de la instrucción en ml $index en la ruta $routeName";
   }
 }

@@ -6,6 +6,6 @@ class WrongWalkingInstructionException implements Exception {
 
   @override
   String toString() {
-    return "Error en la definición del paso a pie $index en la ruta $routeName";
+    return "Error en la definición de la instrucción a pie $index en la ruta $routeName";
   }
 }

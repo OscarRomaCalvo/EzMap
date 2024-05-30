@@ -23,7 +23,7 @@ class RouteTranslator {
           waypoint["tipo"] is! String ||
           waypoint["urlImagen"] is! String ||
           waypoint["coordenadas"] is! GeoPoint) {
-        WrongWaypointException(routeName, waypointIndex);
+        throw WrongWaypointException(routeName, waypointIndex);
       }
       if (waypoint["tipo"] != "pie" &&
           waypoint["tipo"] != "destino" &&
@@ -31,7 +31,7 @@ class RouteTranslator {
           waypoint["tipo"] != "ml" &&
           waypoint["tipo"] != "bus"
       ) {
-        WrongWaypointException(routeName, waypointIndex);
+        throw WrongWaypointException(routeName, waypointIndex);
       }
       RouteWaypoint routePoint = RouteWaypoint(
           name: waypoint["nombre"],
