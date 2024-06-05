@@ -1,5 +1,6 @@
 import 'package:ez_maps/models/WalkInstruction.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -40,6 +41,8 @@ class WalkingNavigationWidget extends StatefulWidget {
 }
 
 class _WalkingNavigationWidgetState extends State<WalkingNavigationWidget> {
+  final String? _mapboxKey = dotenv.env['MAPBOX_KEY'];
+
   List<Marker> _renderRouteMarkers() {
     List<Marker> markers = [];
     for (var i = 0; i < widget.routeWaypoints.length; i++) {
@@ -95,7 +98,7 @@ class _WalkingNavigationWidgetState extends State<WalkingNavigationWidget> {
                 children: [
                   TileLayer(
                     urlTemplate:
-                    'https://api.mapbox.com/styles/v1/oscarro/clsxlxk5s00bq01mee7tm7502/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoib3NjYXJybyIsImEiOiJjbHNjeXo5bGkwcHU4MmpubzM3dHZlc253In0.XC-Sp1-ecbNP0mCBpjhsxw',
+                    'https://api.mapbox.com/styles/v1/oscarro/clsxlxk5s00bq01mee7tm7502/tiles/256/{z}/{x}/{y}@2x?access_token=$_mapboxKey',
                   ),
                   PolylineLayer(polylines: [
                     Polyline(

@@ -10,6 +10,7 @@ import 'package:ez_maps/models/MetroInstruction.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -45,6 +46,8 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
+  final String? _mapboxKey = dotenv.env['MAPBOX_KEY'];
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   late Position _currentLocation;
@@ -231,7 +234,7 @@ class _NavigationPageState extends State<NavigationPage> {
         "${_routeWaypoints[_index].location.longitude}%2C${_routeWaypoints[_index].location.latitude}";
     http
         .get(Uri.parse(
-            "https://api.mapbox.com/directions/v5/mapbox/walking/$currentLocationStr$nextStepStr?alternatives=false&continue_straight=true&geometries=polyline&overview=full&steps=false&access_token=sk.eyJ1Ijoib3NjYXJybyIsImEiOiJjbHN4bGM2cWowNDlpMmpvNWZ4aHU5NnRnIn0.qd21NR_okn06OeHnjrhqFA"))
+            "https://api.mapbox.com/directions/v5/mapbox/walking/$currentLocationStr$nextStepStr?alternatives=false&continue_straight=true&geometries=polyline&overview=full&steps=false&access_token=$_mapboxKey"))
         .then((response) {
       var jsonResponse = jsonDecode(response.body);
       String routeGeometry = jsonResponse["routes"][0]["geometry"];
