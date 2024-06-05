@@ -527,10 +527,9 @@ class _NavigationPageState extends State<NavigationPage> {
           _subscribeToLocationChanges();
           _suscribeToCompassChanges();
           _suscribeToConnectivityChanges();
-          _locationTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+          _locationTimer = Timer.periodic(const Duration(seconds: 15), (timer) {
             //TODO: quitar el comentario, solo está durante el desarrollo.
-            //_getRoute();
-            print("Coger Route");
+            _getRoute();
           });
         }
         return Expanded(
