@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class RouteWaypoint {
+class RoutePoint {
   String name;
   String type;
   String pointImage;
   GeoPoint location;
 
-  RouteWaypoint({
+  RoutePoint({
     required this.name,
     required this.type,
     required this.pointImage,
     required this.location,
   });
 
-  RouteWaypoint.fromLongAndLat(
+  RoutePoint.fromLongAndLat(
       String name,
       String type,
       String pointImage,

@@ -57,7 +57,7 @@ class _NavigationPageState extends State<NavigationPage> {
   bool _skipDispose = false;
   bool _completedLoad = false;
   int _index = 0;
-  List<RouteWaypoint> _routeWaypoints = [];
+  List<RoutePoint> _routeWaypoints = [];
   List<Instruction> _routeInstructions = [];
   PolylinePoints _polylinePoints = PolylinePoints();
   List<LatLng> _polylineCoordinates = [];
@@ -113,7 +113,7 @@ class _NavigationPageState extends State<NavigationPage> {
         Provider.of<AuthService>(context, listen: false);
     User? user = authService.user;
     if (user != null) {
-      List<RouteWaypoint> routeWaypoints = [];
+      List<RoutePoint> routeWaypoints = [];
       List<Instruction> routeInstructions = [];
       _firestore
           .collection("routes")
@@ -503,7 +503,7 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   Widget _renderPage() {
-    RouteWaypoint actualPoint = _routeWaypoints[_index];
+    RoutePoint actualPoint = _routeWaypoints[_index];
     switch (actualPoint.type) {
       case 'pie' || 'destino':
         if (_isNewStep == true) {

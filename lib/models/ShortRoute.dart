@@ -2,8 +2,8 @@ import 'RoutePoint.dart';
 
 class ShortRoute{
   String routeName;
-  RouteWaypoint origin;
-  RouteWaypoint destination;
+  RoutePoint origin;
+  RoutePoint destination;
 
   ShortRoute({required this.routeName, required this.origin, required this.destination});
 }

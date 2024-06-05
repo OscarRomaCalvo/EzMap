@@ -14,7 +14,7 @@ class WalkingNavigationWidget extends StatefulWidget {
   final bool completedLoad;
   final int index;
   final List<Instruction> routeInstructions;
-  final List<RouteWaypoint> routeWaypoints;
+  final List<RoutePoint> routeWaypoints;
   final VoidCallback continueRoute;
   final MapController mapController;
   final List<LatLng> polylineCoordinates;
@@ -48,7 +48,7 @@ class _WalkingNavigationWidgetState extends State<WalkingNavigationWidget> {
     for (var i = 0; i < widget.routeWaypoints.length; i++) {
       if (widget.routeWaypoints[i].type == 'pie' ||
           widget.routeWaypoints[i].type == 'destino') {
-        RouteWaypoint routePoint = widget.routeWaypoints[i];
+        RoutePoint routePoint = widget.routeWaypoints[i];
         var marker = Marker(
           point: LatLng(
               routePoint.location.latitude, routePoint.location.longitude),

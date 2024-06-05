@@ -169,7 +169,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
                     "Datos incorrectos en el origen del resumen de ruta $routeName");
               }
 
-              RouteWaypoint origin = RouteWaypoint(
+              RoutePoint origin = RoutePoint(
                   name: originData['nombre'],
                   type: "origen",
                   pointImage: originData['urlImagen'],
@@ -182,7 +182,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
                     "Datos incorrectos en el destino del resumen de ruta $routeName");
               }
 
-              RouteWaypoint destination = RouteWaypoint(
+              RoutePoint destination = RoutePoint(
                   name: destinationData['nombre'],
                   type: "destino",
                   pointImage: destinationData['urlImagen'],

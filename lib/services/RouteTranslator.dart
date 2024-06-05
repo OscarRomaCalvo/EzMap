@@ -15,7 +15,7 @@ import '../models/WalkInstruction.dart';
 class RouteTranslator {
   static Map<String, dynamic> translateRoute(var event, String routeName) {
     int waypointIndex = 0;
-    List<RouteWaypoint> routeWaypoints = [];
+    List<RoutePoint> routeWaypoints = [];
     List<Instruction> routeInstructions = [];
 
     event.data()?["puntosMapa"].forEach((waypoint) {
@@ -33,7 +33,7 @@ class RouteTranslator {
       ) {
         throw WrongWaypointException(routeName, waypointIndex);
       }
-      RouteWaypoint routePoint = RouteWaypoint(
+      RoutePoint routePoint = RoutePoint(
           name: waypoint["nombre"],
           type: waypoint["tipo"],
           pointImage: waypoint["urlImagen"],
