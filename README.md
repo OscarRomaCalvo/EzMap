@@ -1,18 +1,5 @@
-# ez_maps
+# EZ MAPS
 
-A new Flutter project.
+EZ maps es una aplicación de navegación diseñada para personas con discapacidad cognitiva.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-Try of multiaccount git
+Esta aplicación ha sido realizada por mi como Proyecto de Final de Grado de la carrera Tecnologías Para la Sociedad de la Información en la Universidad Politécnica de Madrid.
