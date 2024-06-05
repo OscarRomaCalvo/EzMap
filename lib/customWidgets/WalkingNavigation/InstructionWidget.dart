@@ -2,7 +2,7 @@ import 'package:ez_maps/models/WalkInstruction.dart';
 import 'package:flutter/material.dart';
 import 'package:ez_maps/customWidgets/PopUpImage.dart';
 
-import '../services/TextReader.dart';
+import '../../services/TextReader.dart';
 
 class InstructionWidget extends StatelessWidget {
   final WalkInstruction instruction;

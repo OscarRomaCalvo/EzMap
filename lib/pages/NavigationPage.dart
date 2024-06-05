@@ -18,7 +18,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
 import 'package:ez_maps/customWidgets/MLNavigation/MLNavigationWidget.dart';
 import 'package:ez_maps/customWidgets/MetroNavigation/MetroNavigationWidget.dart';
-import 'package:ez_maps/customWidgets/WalkingNavigationWidget.dart';
+import 'package:ez_maps/customWidgets/WalkingNavigation/WalkingNavigationWidget.dart';
 
 import 'package:provider/provider.dart';
 

@@ -4,11 +4,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:ez_maps/customWidgets/InstructionWidget.dart';
+import 'package:ez_maps/customWidgets/WalkingNavigation/InstructionWidget.dart';
 
-import '../models/Instruction.dart';
-import '../models/RoutePoint.dart';
-import 'PopUpMarker.dart';
+import '../../models/Instruction.dart';
+import '../../models/RoutePoint.dart';
+import '../PopUpMarker.dart';
 
 class WalkingNavigationWidget extends StatefulWidget {
   final bool completedLoad;
