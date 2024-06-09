@@ -70,7 +70,7 @@ class _NavigationPageState extends State<NavigationPage> {
   bool _isNewStep = true;
 
   Widget _rightBottomWidget = const SizedBox();
-  Duration _warningTimeOut = const Duration(minutes: 60);
+  Duration _warningTimeOut = const Duration(minutes: 1);
 
   @override
   void initState() {
@@ -169,7 +169,7 @@ class _NavigationPageState extends State<NavigationPage> {
     }
   }
 
-  void _suscribeToConnectivityChanges() {
+  void _subscribeToConnectivityChanges() {
     _connectivitySubscription = _connectivity.onConnectivityChanged
         .listen((List<ConnectivityResult> result) {
       bool? actualState = _isConnectedToInternet;
@@ -255,7 +255,7 @@ class _NavigationPageState extends State<NavigationPage> {
     return convertedCoordinates;
   }
 
-  void _suscribeToCompassChanges() {
+  void _subscribeToCompassChanges() {
     List<double> lastHeadings = [];
     _compassSubscription = FlutterCompass.events?.listen((CompassEvent event) {
       if (event.heading == null) {
@@ -525,8 +525,8 @@ class _NavigationPageState extends State<NavigationPage> {
             _isOnWalkNavigation = true;
           });
           _subscribeToLocationChanges();
-          _suscribeToCompassChanges();
-          _suscribeToConnectivityChanges();
+          _subscribeToCompassChanges();
+          _subscribeToConnectivityChanges();
           _locationTimer = Timer.periodic(const Duration(seconds: 15), (timer) {
             //TODO: quitar el comentario, solo está durante el desarrollo.
             _getRoute();
