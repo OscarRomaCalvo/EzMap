@@ -116,10 +116,10 @@ class _NavigationPageState extends State<NavigationPage> {
       List<RoutePoint> routeWaypoints = [];
       List<Instruction> routeInstructions = [];
       _firestore
-          .collection("routes")
+          .collection("rutas")
           .doc(user.email)
           .collection(widget.routeName)
-          .doc("infoRoute")
+          .doc("infoRuta")
           .get()
           .then((event) {
         try {

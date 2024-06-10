@@ -147,7 +147,7 @@ class _RouteSelectionPageState extends State<RouteSelectionPage> {
       List<ShortRoute> shortRoutes = [];
       if (user != null) {
         await _firestore
-            .collection("shortRoutes")
+            .collection("resumenDeRutas")
             .doc(user.email)
             .get()
             .then((event) {
