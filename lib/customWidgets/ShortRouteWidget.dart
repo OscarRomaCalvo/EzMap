@@ -45,7 +45,7 @@ class ShortRouteWidget extends StatelessWidget {
                     Text(
                       shortRoute.origin.name,
                       style: const TextStyle(
-                        fontSize: 30,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
@@ -54,7 +54,7 @@ class ShortRouteWidget extends StatelessWidget {
                   ]),
                 ),
                 const Icon(Icons.arrow_right_alt,
-                    color: Color(0xFF4791DB), size: 70),
+                    color: Color(0xFF4791DB), size: 60),
                 Expanded(
                   flex: 1,
                   child: Column(children: [
@@ -63,7 +63,7 @@ class ShortRouteWidget extends StatelessWidget {
                     Text(
                       shortRoute.destination.name,
                       style: const TextStyle(
-                        fontSize: 30,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
