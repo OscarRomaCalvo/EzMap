@@ -125,9 +125,9 @@ class _NavigationPageState extends State<NavigationPage> {
         try {
           if (event.data()?["tiempoEstimado"] is int) {
             int time = event.data()?["tiempoEstimado"];
-            setState(() {
-              event.data()?["tiempoEstimado"] = Duration(minutes: time);
-            });
+            if (time != null && time is int){setState(() {
+              _warningTimeOut = Duration(minutes: time);
+            });}
           }
           Map<String, dynamic> translatedRoute =
               RouteTranslator.translateRoute(event, widget.routeName);
