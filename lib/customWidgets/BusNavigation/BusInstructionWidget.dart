@@ -23,7 +23,7 @@ class _BusInstructionWidgetState extends State<BusInstructionWidget> {
   Widget _showStepImage() {
     final stepImage = widget.step.image;
     return stepImage != null
-        ? PopUpImage(imageURL: stepImage)
+        ? Flexible (child: PopUpImage(imageURL: stepImage))
         : const SizedBox();
   }
 
