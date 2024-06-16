@@ -24,7 +24,7 @@ class _CallForInterruptedRouteDialogState
   }
 
   void _launchPhoneApp() async {
-    final Uri telUri = Uri(scheme: 'tel', path: '+34665396808');
+    final Uri telUri = Uri(scheme: 'tel');
     try {
       launchUrl(telUri);
     } catch (e) {
