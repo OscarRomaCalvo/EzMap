@@ -78,7 +78,6 @@ class _WarningTimerState extends State<WarningTimer> {
                       imagePath: "assets/images/ARASAACPictograms/phone.png",
                       onPressed: () async {
                         _launchPhoneApp();
-                        print("LLAMANDO...");
                       },
                       showBorder: true,
                       backgroundColor: const Color(0xFF4791DB),

@@ -301,7 +301,6 @@ class _NavigationPageState extends State<NavigationPage> {
         _routeWaypoints[_index].location.longitude);
     double distance =
         const Distance().as(LengthUnit.Meter, currentLatLng, nextStepLatLng);
-    print(distance > 20);
     return distance > 20;
   }
 
@@ -528,7 +527,6 @@ class _NavigationPageState extends State<NavigationPage> {
           _subscribeToCompassChanges();
           _subscribeToConnectivityChanges();
           _locationTimer = Timer.periodic(const Duration(seconds: 15), (timer) {
-            //TODO: quitar el comentario, solo está durante el desarrollo.
             _getRoute();
           });
         }
